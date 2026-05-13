@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>My Docs</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">My Docs</a>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#welcome-to-the-cisco-live-26-ios-xe-programmablity-lab-unlock-the-foundation-explore-the-future" class="nav-link">Welcome to the Cisco Live 26 IOS XE Programmablity Lab - Unlock the Foundation, Explore the Future</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#cisco-ios-xe-version-261" class="nav-link">Cisco IOS XE Version 26.1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#lab-introduction" class="nav-link">Lab Introduction</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#lab-environment" class="nav-link">Lab environment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#accessing-the-lab-environment" class="nav-link">Accessing the lab environment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#lab-modules" class="nav-link">Lab Modules</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#day-0-device-onboarding-with-secure-zero-touch-provisioning" class="nav-link">Day 0 Device Onboarding with Secure Zero Touch Provisioning</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#day-1-device-config-with-atomic-config-replace" class="nav-link">Day 1 Device Config with Atomic Config Replace</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#day-2-device-monitoring-with-opentelemetry-splunk" class="nav-link">Day 2 Device Monitoring with OpenTelemetry &amp; Splunk</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#tooling-module" class="nav-link">Tooling Module</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#infrastructure-as-code-with-terraform-and-cisco-ios-xe" class="nav-link">Infrastructure as Code with Terraform and Cisco IOS XE</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#feedback" class="nav-link">Feedback</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="welcome-to-the-cisco-live-26-ios-xe-programmablity-lab-unlock-the-foundation-explore-the-future">Welcome to the Cisco Live 26 IOS XE Programmablity Lab - Unlock the Foundation, Explore the Future</h1>
+<h2 id="cisco-ios-xe-version-261">Cisco IOS XE Version 26.1</h2>
+<h3 id="this-lab-guide-serves-as-the-cisco-live-us-las-vegas-programmability-and-automation-lab-with-catalyst-ios-xe-platforms-session-ltrens-1680">This lab guide serves as the Cisco Live US (Las Vegas) Programmability and Automation Lab with Catalyst IOS XE Platforms session LTRENS-1680</h3>
+<h1 id="lab-introduction">Lab Introduction</h1>
+<p>To access the lab, you will need to SSH to the VM specific host. From the VM host you will have access to the switch and the remaining software dependencies for the lab. Please find below the actual lab environment and instructions.</p>
+<h1 id="lab-environment">Lab environment</h1>
+<p>See lab environment access information provided by instrcutors. </p>
+<h1 id="accessing-the-lab-environment">Accessing the lab environment</h1>
+<ol>
+<li>
+<p>Identify your pod#.</p>
+</li>
+<li>
+<p>Open two terminal windows and SSH to both. One window will be used to configure the VM. The second window is for telnet access into the C9350.</p>
+</li>
+<li>
+<p>To SSH into the VM, copy/paste the below line into <strong>the first</strong> terminal sessions. Replace the ## symbol on the SSH command with your pod number. Use the password given to you by the facilitator.</p>
+</li>
+</ol>
+<p><code>ssh -p 3389 -L 18480:localhost:8480 -L 13000:localhost:3000 auto@pod##-xelab.cisco.com</code></p>
+<p>Once you logged into the VM, the first time you login, you'll see this question:</p>
+<p><code>Are you sure you want to continue connecting (yes/no/[fingerprint])?</code> </p>
+<p>Type, <code>yes</code> to continue </p>
+<ol>
+<li>Similarly, in the second terminal window, run the following command. Replace the ## symbol on the SSH command with your pod number. Use the password is the same one that was given to you by the facilitator in the previous step.</li>
+</ol>
+<p><code>auto@pod##-xelab.cisco.com</code></p>
+<p>Next, telnet into the Catalyst 9350 in the same window. </p>
+<p><code>telnet 10.1.1.15</code></p>
+<p>Use the following credentials: admin / Cisco123</p>
+<ol>
+<li>Once you finished accesing via SSH and telnet into the VM and the switch respectively, you should be ready to proceed with the lab modules.</li>
+</ol>
+<h1 id="lab-modules">Lab Modules</h1>
+<p>Lab modules can be completed in any order. Mark the lab completed in the <a href="https://app.smartsheet.com/b/form/134240eac2d84a57acd4efc24fd8f3d0">SmartSheet</a> form once you have successfully completed each module. </p>
+<h2 id="day-0-device-onboarding-with-secure-zero-touch-provisioning">Day 0 Device Onboarding with Secure Zero Touch Provisioning</h2>
+<p>[Module content to be added]</p>
+<h2 id="day-1-device-config-with-atomic-config-replace">Day 1 Device Config with Atomic Config Replace</h2>
+<h3 id="introduction-to-atomic-config-replace-acr">Introduction to Atomic Config Replace (ACR)</h3>
+<p>Atomic Config Replace (ACR) is a powerful NETCONF operation that allows network operators to fully replace the entire running configuration on a Cisco IOS XE device in a single atomic transaction. Unlike traditional configuration methods that apply changes line-by-line, ACR provides:</p>
+<ul>
+<li><strong>Atomic operations</strong>: All changes are applied together or rolled back completely</li>
+<li><strong>Syntax validation</strong>: Pre-checks configuration syntax before applying</li>
+<li><strong>Dependency checking</strong>: Verifies configuration dependencies</li>
+<li><strong>Automatic rollback</strong>: Returns to previous state if not confirmed</li>
+<li><strong>Error isolation</strong>: Identifies exact line numbers of configuration errors</li>
+</ul>
+<p>For more information and Python examples, visit the <a href="https://github.com/jeremycohoe/cisco-ios-xe-atomic-config-replace">Cisco IOS XE Atomic Config Replace GitHub repository</a>.</p>
+<h3 id="python-script-workflow-overview">Python Script Workflow Overview</h3>
+<p>The ACR Python script follows a 13-step workflow to safely apply configuration changes:</p>
+<ol>
+<li>Start</li>
+<li>Initialize Device</li>
+<li>Netconf Connect</li>
+<li>Discard Changes</li>
+<li>Get Pre-check Config</li>
+<li>Apply Config (edit_config)</li>
+<li>Get Post-check Config</li>
+<li>Compare Pre &amp; Post Configs</li>
+<li>Confirmed Commit</li>
+<li>Get Post-confirmed Commit Config</li>
+<li>Commit Changes</li>
+<li>Compare Pre &amp; Final Configs</li>
+<li>End</li>
+</ol>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Before starting the ACR demos, ensure you have:</p>
+<ol>
+<li>SSH access to the lab VM</li>
+<li>Telnet access to the C9300 switch (10.1.1.15)</li>
+<li>Python 3 installed on the VM</li>
+<li>Required Python libraries (ncclient, xml, netmiko, difflib, lxml)</li>
+</ol>
+<h3 id="lab-setup">Lab Setup</h3>
+<p>From your SSH session on the VM, clone the ACR repository and navigate to the directory:</p>
+<pre><code class="language-bash">cd ~
+git clone https://github.com/jeremycohoe/cisco-ios-xe-atomic-config-replace.git
+cd cisco-ios-xe-atomic-config-replace
+</code></pre>
+<p>Install required Python dependencies:</p>
+<pre><code class="language-bash">pip3 install ncclient netmiko lxml --user
+</code></pre>
+<h3 id="demo-1-syntax-dependency-error-isolation">Demo 1: Syntax &amp; Dependency Error Isolation</h3>
+<p>In this demo, you will learn how ACR detects and isolates syntax errors in configuration files, providing the exact line number where errors occur.</p>
+<h4 id="objective">Objective</h4>
+<p>Experience how ACR validates configuration syntax before applying changes and identifies the specific line where errors exist.</p>
+<h4 id="steps">Steps</h4>
+<p><strong>Step 1: Prepare the target configuration file</strong></p>
+<p>First, let's create a configuration file with an intentional syntax error. Create a file called <code>target_C9K_config.xml</code>:</p>
+<pre><code class="language-bash">nano target_C9K_config.xml
+</code></pre>
+<p>Add a basic configuration with a syntax error (we'll intentionally add an invalid line). For example:</p>
+<pre><code class="language-xml">&lt;config xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;native xmlns=&quot;http://cisco.com/ns/yang/Cisco-IOS-XE-native&quot;&gt;
+    &lt;hostname&gt;C9300-ACR-Test&lt;/hostname&gt;
+    &lt;interface&gt;
+      &lt;GigabitEthernet&gt;
+        &lt;name&gt;1/0/1&lt;/name&gt;
+        &lt;description&gt;Test Interface with Error&lt;/description&gt;
+        &lt;invalid-command&gt;this-will-cause-error&lt;/invalid-command&gt;
+      &lt;/GigabitEthernet&gt;
+    &lt;/interface&gt;
+  &lt;/native&gt;
+&lt;/config&gt;
+</code></pre>
+<p>Save and exit (Ctrl+X, Y, Enter).</p>
+<p><strong>Step 2: Run the ACR operation with the erroneous configuration</strong></p>
+<p>Execute the Python script to send a full-replace operation to the C9300 switch:</p>
+<pre><code class="language-bash">python3 acr.py --host 10.1.1.15 --username admin --password Cisco123 --config target_C9K_config.xml
+</code></pre>
+<p><strong>Step 3: Observe the syntax error detection</strong></p>
+<p>The ACR process will validate the configuration and identify the syntax error. You should see output similar to:</p>
+<pre><code>Error detected in configuration file: target_C9K_config.xml
+Line 9: &lt;invalid-command&gt;this-will-cause-error&lt;/invalid-command&gt;
+Syntax Error: Invalid configuration command
+</code></pre>
+<p>ACR provides the <strong>exact line number</strong> where the error occurs, making it easy to identify and fix issues.</p>
+<p><strong>Step 4: Fix the syntax error</strong></p>
+<p>Edit the configuration file and remove or correct the invalid line:</p>
+<pre><code class="language-bash">nano target_C9K_config.xml
+</code></pre>
+<p>Remove the line with <code>&lt;invalid-command&gt;</code> and save the file.</p>
+<p><strong>Step 5: Send the corrected configuration</strong></p>
+<p>Run the ACR operation again with the corrected file:</p>
+<pre><code class="language-bash">python3 acr.py --host 10.1.1.15 --username admin --password Cisco123 --config target_C9K_config.xml
+</code></pre>
+<p><strong>Step 6: Verify successful application</strong></p>
+<p>You should now see output indicating:</p>
+<pre><code>Configuration validation: SUCCESS
+Configuration applied successfully
+Waiting for confirmation...
+</code></pre>
+<p><strong>Key Takeaway</strong>: ACR performs pre-validation of configuration syntax, catching errors before they impact the device and providing precise error locations for quick troubleshooting.</p>
+<hr />
+<h3 id="demo-2-automatic-rollback-without-confirm-commit">Demo 2: Automatic Rollback Without Confirm Commit</h3>
+<p>This demo demonstrates ACR's automatic rollback feature. When a configuration is applied but not confirmed within the timeout period, the device automatically reverts to its previous known-good state.</p>
+<h4 id="objective_1">Objective</h4>
+<p>Understand the safety mechanism of ACR's automatic rollback when a confirm commit is not issued.</p>
+<h4 id="steps_1">Steps</h4>
+<p><strong>Step 1: Prepare a valid target configuration</strong></p>
+<p>Create a new configuration file that will be applied but not confirmed:</p>
+<pre><code class="language-bash">nano target_C9K_rollback_test.xml
+</code></pre>
+<p>Add a valid configuration (example):</p>
+<pre><code class="language-xml">&lt;config xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;native xmlns=&quot;http://cisco.com/ns/yang/Cisco-IOS-XE-native&quot;&gt;
+    &lt;hostname&gt;C9300-ACR-Rollback-Test&lt;/hostname&gt;
+    &lt;interface&gt;
+      &lt;GigabitEthernet&gt;
+        &lt;name&gt;1/0/2&lt;/name&gt;
+        &lt;description&gt;Testing ACR Rollback Feature&lt;/description&gt;
+      &lt;/GigabitEthernet&gt;
+    &lt;/interface&gt;
+  &lt;/native&gt;
+&lt;/config&gt;
+</code></pre>
+<p>Save and exit.</p>
+<p><strong>Step 2: Check the current hostname</strong></p>
+<p>From your telnet session to the switch, verify the current hostname:</p>
+<pre><code>show run | include hostname
+</code></pre>
+<p>Note the current hostname for comparison.</p>
+<p><strong>Step 3: Send the full-replace operation without confirming</strong></p>
+<p>Run the ACR script with the <code>--no-confirm</code> flag (if available) or simply don't send the confirm commit:</p>
+<pre><code class="language-bash">python3 acr.py --host 10.1.1.15 --username admin --password Cisco123 --config target_C9K_rollback_test.xml --no-confirm
+</code></pre>
+<p><strong>Step 4: Observe the configuration is applied</strong></p>
+<p>Immediately check from your telnet session that the configuration has been applied:</p>
+<pre><code>show run | include hostname
+</code></pre>
+<p>You should see the new hostname: <code>C9300-ACR-Rollback-Test</code></p>
+<p><strong>Step 5: Wait for automatic rollback</strong></p>
+<p>The ACR process has a default timeout (typically 30-60 seconds). Since no confirm commit was issued, watch as the device automatically rolls back to its previous configuration.</p>
+<p>After the timeout period, check the hostname again:</p>
+<pre><code>show run | include hostname
+</code></pre>
+<p><strong>Step 6: Verify the rollback</strong></p>
+<p>The hostname should have reverted to its original value. The configuration has automatically rolled back because no "confirm commit" was issued within the timeout window.</p>
+<p><strong>Step 7: Apply configuration with proper confirmation</strong></p>
+<p>Now run the script properly and send the confirm commit:</p>
+<pre><code class="language-bash">python3 acr.py --host 10.1.1.15 --username admin --password Cisco123 --config target_C9K_rollback_test.xml --confirm
+</code></pre>
+<p>When prompted, confirm the changes. The configuration will now persist.</p>
+<p><strong>Key Takeaway</strong>: ACR provides a safety net for configuration changes. If the network operator loses connectivity or fails to confirm the changes, the device automatically returns to its previous known-good state, preventing accidental lockouts or misconfigurations.</p>
+<hr />
+<h3 id="understanding-the-acr-lifecycle-day-1-to-day-n">Understanding the ACR Lifecycle: Day 1 to Day N</h3>
+<p>ACR is designed for ongoing configuration management throughout the device lifecycle:</p>
+<ul>
+<li><strong>Day 1</strong>: Initial device configuration applied with ACR (e.g., <code>acr-day1.py</code> and <code>day1.xml</code>)</li>
+<li>Config: <code>ACR/jcohoe-c9300x-border1-acr-day1.xml</code></li>
+<li>
+<p>Hostname: <code>jcohoe-c9300x-border1-acr-day1</code></p>
+</li>
+<li>
+<p><strong>Day N</strong>: Subsequent configuration updates applied with ACR (e.g., <code>acr-dayn.py</code> and <code>dayn.xml</code>)</p>
+</li>
+<li>Config: <code>ACR/jcohoe-c9300x-border1-acr-dayn.xml</code></li>
+<li>Hostname: <code>jcohoe-c9300x-border1-acr-dayn</code></li>
+</ul>
+<p>Each iteration replaces the entire configuration atomically, ensuring consistency and enabling easy rollback to previous day configurations if needed.</p>
+<hr />
+<h3 id="additional-exercises-optional">Additional Exercises (Optional)</h3>
+<ol>
+<li><strong>Compare configurations</strong>: Use the Python script's diff functionality to compare pre and post configurations</li>
+<li><strong>Test dependency errors</strong>: Create a configuration with dependency issues (e.g., referencing a non-existent VLAN)</li>
+<li><strong>Timing tests</strong>: Experiment with different confirm-timeout values</li>
+<li><strong>Configuration templates</strong>: Create your own XML configuration templates for common deployment scenarios</li>
+</ol>
+<hr />
+<h3 id="troubleshooting-tips">Troubleshooting Tips</h3>
+<ul>
+<li><strong>NETCONF not enabled</strong>: Ensure NETCONF is enabled on the switch with <code>netconf-yang</code></li>
+<li><strong>Connection errors</strong>: Verify IP reachability to 10.1.1.15 and correct credentials (admin/Cisco123)</li>
+<li><strong>XML syntax errors</strong>: Validate XML structure using online validators before applying</li>
+<li><strong>Python library errors</strong>: Ensure all required libraries are installed with <code>pip3 list</code></li>
+</ul>
+<hr />
+<h3 id="summary">Summary</h3>
+<p>In this module, you've learned how to:
+- Use Atomic Config Replace for full configuration management
+- Identify and isolate syntax errors in configurations
+- Leverage automatic rollback for safe configuration changes
+- Apply ACR in a Day 1 to Day N operational model</p>
+<p>ACR provides a robust, safe, and efficient method for managing Cisco IOS XE device configurations at scale using NETCONF/YANG.</p>
+<h2 id="day-2-device-monitoring-with-opentelemetry-splunk">Day 2 Device Monitoring with OpenTelemetry &amp; Splunk</h2>
+<h3 id="introduction-to-model-driven-telemetry">Introduction to Model-Driven Telemetry</h3>
+<p>Model-Driven Telemetry (MDT) is a modern approach to monitoring network devices that provides real-time, high-frequency operational data streaming. Unlike traditional polling methods (SNMP), MDT uses a push model where the device streams data to collectors at defined intervals.</p>
+<p><strong>Benefits of Model-Driven Telemetry:</strong>
+- <strong>Real-time monitoring</strong>: Sub-second visibility into device operations
+- <strong>High-frequency data</strong>: Stream data at intervals as low as 100ms
+- <strong>Structured data</strong>: Uses YANG models for consistent data format
+- <strong>Reduced overhead</strong>: Push model reduces network traffic vs polling
+- <strong>Scalable</strong>: Efficiently monitor thousands of data points</p>
+<p><strong>MDT Architecture Components:</strong></p>
+<ol>
+<li><strong>Publisher (Network Device)</strong>: Cisco IOS XE device that streams telemetry data</li>
+<li><strong>Collector</strong>: Receives and processes telemetry streams (e.g., Telegraf, Pipeline)</li>
+<li><strong>Time-Series Database</strong>: Stores telemetry data (e.g., InfluxDB, Prometheus)</li>
+<li><strong>Visualization</strong>: Displays data in dashboards (e.g., Grafana, Splunk)</li>
+</ol>
+<h3 id="configuring-telemetry-subscriptions-on-the-catalyst-9300">Configuring Telemetry Subscriptions on the Catalyst 9300</h3>
+<p>This section focuses on configuring Model-Driven Telemetry subscriptions on the Catalyst 9300 switch to monitor key operational metrics.</p>
+<h4 id="understanding-telemetry-subscriptions">Understanding Telemetry Subscriptions</h4>
+<p>Every process or metric you want to monitor requires a subscription. A subscription defines:</p>
+<ul>
+<li><strong>What to monitor</strong>: XPath filter specifying YANG data path</li>
+<li><strong>Encoding</strong>: Data format (encode-kvgpb, encode-json, encode-xml)</li>
+<li><strong>Stream type</strong>: yang-push (for operational data)</li>
+<li><strong>Update policy</strong>: How often to send data (periodic or on-change)</li>
+<li><strong>Receiver</strong>: Where to send the telemetry data (IP, port, protocol)</li>
+</ul>
+<h4 id="lab-scenario">Lab Scenario</h4>
+<p>We'll create four telemetry subscriptions to monitor:</p>
+<ol>
+<li><strong>CPU Utilization</strong> - Track processor usage</li>
+<li><strong>Power over Ethernet (PoE)</strong> - Monitor PoE operational data</li>
+<li><strong>Memory Statistics</strong> - Track memory consumption</li>
+<li><strong>Temperature</strong> - Monitor device temperature sensors</li>
+</ol>
+<h4 id="configuration-details">Configuration Details</h4>
+<ul>
+<li><strong>Encoding</strong>: <code>encode-kvgpb</code> (Key-Value Google Protocol Buffers)</li>
+<li><strong>Stream</strong>: <code>yang-push</code> (for operational datastore monitoring)</li>
+<li><strong>Update interval</strong>: <code>6000</code> milliseconds (6 seconds)</li>
+<li><strong>Source address</strong>: Switch IP <code>10.1.1.15</code></li>
+<li><strong>Receiver</strong>: Collector at <code>10.1.1.3</code> port <code>57500</code> using <code>grpc-tcp</code></li>
+</ul>
+<h4 id="step-by-step-configuration">Step-by-Step Configuration</h4>
+<p><strong>Step 1: Access the switch</strong></p>
+<p>From your telnet session to the Catalyst 9300:</p>
+<pre><code>telnet 10.1.1.15
+</code></pre>
+<p>Login with credentials: admin / Cisco123</p>
+<p><strong>Step 2: Configure CPU Utilization Subscription</strong></p>
+<pre><code>configure terminal
+telemetry ietf subscription 1010
+ encoding encode-kvgpb
+ filter xpath /process-cpu-ios-xe-oper:cpu-usage/cpu-utilization/five-seconds
+ source-address 10.1.1.15
+ stream yang-push
+ update-policy periodic 6000
+ receiver ip address 10.1.1.3 57500 protocol grpc-tcp
+</code></pre>
+<p><strong>Explanation:</strong>
+- <code>subscription 1010</code>: Unique subscription ID
+- <code>filter xpath</code>: Points to CPU utilization data in the YANG model
+- <code>five-seconds</code>: Monitors 5-second CPU average
+- <code>periodic 6000</code>: Sends updates every 6 seconds</p>
+<p><strong>Step 3: Configure PoE Subscription</strong></p>
+<pre><code>telemetry ietf subscription 1020
+ encoding encode-kvgpb 
+ filter xpath /poe-ios-xe-oper:poe-oper-data
+ source-address 10.1.1.15
+ stream yang-push
+ update-policy periodic 6000
+ receiver ip address 10.1.1.3 57500 protocol grpc-tcp
+</code></pre>
+<p><strong>Explanation:</strong>
+- Monitors Power over Ethernet operational data
+- Tracks power consumption and PoE port status</p>
+<p><strong>Step 3: Configure Memory Statistics Subscription</strong></p>
+<pre><code>telemetry ietf subscription 1030
+ encoding encode-kvgpb
+ filter xpath /memory-ios-xe-oper:memory-statistics/memory-statistic
+ source-address 10.1.1.15
+ stream yang-push
+ update-policy periodic 6000
+ receiver ip address 10.1.1.3 57500 protocol grpc-tcp
+</code></pre>
+<p><strong>Explanation:</strong>
+- Monitors memory usage statistics
+- Tracks used, free, and total memory</p>
+<p><strong>Step 4: Configure Temperature Subscription</strong></p>
+<pre><code>telemetry ietf subscription 1040
+ encoding encode-kvgpb
+ filter xpath /oc-platform:components/component/state/temperature
+ source-address 10.1.1.15
+ stream yang-push
+ update-policy periodic 6000
+ receiver ip address 10.1.1.3 57500 protocol grpc-tcp
+</code></pre>
+<p><strong>Explanation:</strong>
+- Uses OpenConfig YANG model for platform data
+- Monitors temperature sensors across device components</p>
+<p><strong>Step 5: Exit and save configuration</strong></p>
+<pre><code>end
+write memory
+</code></pre>
+<p><strong>Step 6: Verify subscriptions</strong></p>
+<p>Check that subscriptions are active:</p>
+<pre><code>show telemetry ietf subscription all
+</code></pre>
+<p>You should see all four subscriptions (1010, 1020, 1030, 1040) listed with their status.</p>
+<p>Check subscription details:</p>
+<pre><code>show telemetry ietf subscription 1010 detail
+</code></pre>
+<hr />
+<h3 id="visualizing-telemetry-data-with-grafana">Visualizing Telemetry Data with Grafana</h3>
+<p>Grafana is an open-source analytics and visualization platform that connects to time-series databases to create real-time dashboards.</p>
+<p><strong>Grafana Benefits:</strong>
+- <strong>Multi-datasource support</strong>: Connects to InfluxDB, Prometheus, Elasticsearch, etc.
+- <strong>Customizable dashboards</strong>: Create tailored views for your metrics
+- <strong>Alerting</strong>: Set thresholds and receive notifications
+- <strong>Plugin ecosystem</strong>: Extend functionality with community plugins</p>
+<h4 id="data-flow-architecture">Data Flow Architecture</h4>
+<pre><code>Catalyst 9300 → gRPC/TCP → Telegraf Collector → InfluxDB → Grafana Dashboard
+</code></pre>
+<ol>
+<li><strong>Switch</strong>: Streams telemetry data via gRPC</li>
+<li><strong>Telegraf</strong>: Collects and processes telemetry streams</li>
+<li><strong>InfluxDB</strong>: Stores time-series data</li>
+<li><strong>Grafana</strong>: Queries InfluxDB and displays dashboards</li>
+</ol>
+<h4 id="accessing-the-grafana-dashboard">Accessing the Grafana Dashboard</h4>
+<p><strong>Step 1: Open Grafana in your browser</strong></p>
+<p>The SSH tunnel you created earlier forwards Grafana to your local machine:</p>
+<pre><code>http://localhost:13000/
+</code></pre>
+<p><strong>Step 2: Login to Grafana</strong></p>
+<ul>
+<li><strong>Username</strong>: admin</li>
+<li><strong>Password</strong>: Cisco123</li>
+</ul>
+<p><strong>Step 3: Navigate to the IOS XE Telemetry Dashboard</strong></p>
+<p>Once logged in, you should see a pre-configured dashboard with panels for:</p>
+<ul>
+<li><strong>CPU Utilization</strong>: 5-second CPU usage trends</li>
+<li><strong>Memory Consumption</strong>: Current and average memory usage</li>
+<li><strong>Temperature Readings</strong>: Max, min, and average temperatures</li>
+<li><strong>Power Statistics</strong>: PoE consumption and status</li>
+</ul>
+<p><strong>Step 4: Adjust time range (if needed)</strong></p>
+<p>If data isn't displaying, adjust the time range in the top-right corner:
+- Click the time range selector
+- Select "Last 5 minutes" or "Last 15 minutes"
+- Enable auto-refresh (5s or 10s intervals)</p>
+<h4 id="understanding-the-dashboard-panels">Understanding the Dashboard Panels</h4>
+<p><strong>CPU Utilization Panel:</strong>
+- Shows real-time CPU usage from subscription 1010
+- Displays 5-second average CPU percentage
+- Useful for identifying performance issues</p>
+<p><strong>Memory Statistics Panel:</strong>
+- Tracks memory consumption patterns
+- Shows used vs. free memory
+- Helps identify memory leaks or capacity issues</p>
+<p><strong>Temperature Panel:</strong>
+- Displays temperature sensors from subscription 1040
+- Shows min, max, and average temperatures
+- Critical for thermal monitoring</p>
+<p><strong>PoE Power Panel:</strong>
+- Shows PoE operational data from subscription 1020
+- Tracks power consumption per port
+- Monitors PoE budget utilization</p>
+<h4 id="exploring-grafana-features">Exploring Grafana Features</h4>
+<p><strong>Create Custom Panels:</strong></p>
+<ol>
+<li>Click "Add panel" on the dashboard</li>
+<li>Select your data source (InfluxDB)</li>
+<li>Build queries to visualize specific metrics</li>
+<li>Customize visualization type (graph, gauge, table)</li>
+</ol>
+<p><strong>Set Up Alerts:</strong></p>
+<ol>
+<li>Edit a panel</li>
+<li>Navigate to the "Alert" tab</li>
+<li>Configure alert conditions (e.g., CPU &gt; 80%)</li>
+<li>Add notification channels (email, Slack, etc.)</li>
+</ol>
+<p><strong>Export Dashboards:</strong></p>
+<ul>
+<li>Share dashboards with team members</li>
+<li>Export as JSON for version control</li>
+<li>Import community dashboards from Grafana.com</li>
+</ul>
+<hr />
+<h3 id="introduction-to-opentelemetry">Introduction to OpenTelemetry</h3>
+<p>OpenTelemetry (OTel) is an open-source observability framework that provides a vendor-agnostic approach to collecting, processing, and exporting telemetry data (metrics, logs, and traces).</p>
+<p><strong>OpenTelemetry Benefits:</strong>
+- <strong>Vendor-neutral</strong>: Works with any observability backend (Splunk, Datadog, etc.)
+- <strong>Unified instrumentation</strong>: Single standard for metrics, logs, and traces
+- <strong>Language support</strong>: SDKs for Python, Go, Java, and more
+- <strong>Flexible architecture</strong>: Collectors can process and route data</p>
+<p><strong>OpenTelemetry Architecture:</strong></p>
+<pre><code>Data Sources → OTel Collector → Processors → Exporters → Backends (Splunk, etc.)
+</code></pre>
+<h4 id="opentelemetry-components">OpenTelemetry Components</h4>
+<ol>
+<li><strong>Instrumentation</strong>: SDKs and libraries to generate telemetry</li>
+<li><strong>Collector</strong>: Receives, processes, and exports telemetry</li>
+<li><strong>Protocol (OTLP)</strong>: Standard protocol for telemetry data exchange</li>
+<li><strong>Exporters</strong>: Send data to observability platforms</li>
+</ol>
+<hr />
+<h3 id="integrating-network-telemetry-with-opentelemetry-and-splunk">Integrating Network Telemetry with OpenTelemetry and Splunk</h3>
+<p>Splunk is a powerful platform for searching, monitoring, and analyzing machine-generated data. By integrating OpenTelemetry with Splunk, you can correlate network telemetry with application and infrastructure data.</p>
+<h4 id="architecture-ios-xe-opentelemetry-splunk">Architecture: IOS XE → OpenTelemetry → Splunk</h4>
+<pre><code>Catalyst 9300 → Telegraf → OpenTelemetry Collector → Splunk HEC
+                                                     ↓
+                                               Splunk Enterprise
+</code></pre>
+<p><strong>Integration Benefits:</strong>
+- <strong>Centralized observability</strong>: Network + App + Infra in one platform
+- <strong>Advanced analytics</strong>: Use Splunk's search and correlation capabilities
+- <strong>Alerting and dashboards</strong>: Splunk's visualization and alerting
+- <strong>Compliance</strong>: Meet audit and compliance requirements</p>
+<h4 id="opentelemetry-collector-configuration">OpenTelemetry Collector Configuration</h4>
+<p>The OpenTelemetry Collector receives telemetry data and exports it to Splunk using the HTTP Event Collector (HEC).</p>
+<p><strong>Example OTel Collector Configuration (otel-collector-config.yaml):</strong></p>
+<pre><code class="language-yaml">receivers:
+  # Receive telemetry from Telegraf
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  # Add resource attributes
+  resource:
+    attributes:
+      - key: deployment.environment
+        value: &quot;production&quot;
+        action: upsert
+      - key: device.type
+        value: &quot;catalyst-9300&quot;
+        action: upsert
+
+  # Batch telemetry for efficiency
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+
+exporters:
+  # Export to Splunk HEC
+  splunk_hec:
+    token: &quot;YOUR-SPLUNK-HEC-TOKEN&quot;
+    endpoint: &quot;https://splunk.example.com:8088/services/collector&quot;
+    source: &quot;iosxe:telemetry&quot;
+    sourcetype: &quot;iosxe:mdt&quot;
+    index: &quot;network_telemetry&quot;
+    tls:
+      insecure_skip_verify: false
+
+  # Also export to logging for debugging
+  logging:
+    loglevel: info
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [resource, batch]
+      exporters: [splunk_hec, logging]
+</code></pre>
+<h4 id="configuring-splunk-http-event-collector-hec">Configuring Splunk HTTP Event Collector (HEC)</h4>
+<p><strong>Step 1: Enable HEC in Splunk</strong></p>
+<ol>
+<li>Log into Splunk Web</li>
+<li>Navigate to <strong>Settings → Data Inputs</strong></li>
+<li>Click <strong>HTTP Event Collector</strong></li>
+<li>Click <strong>Global Settings</strong></li>
+<li>Enable "All Tokens"</li>
+<li>Set HTTP Port (default: 8088)</li>
+</ol>
+<p><strong>Step 2: Create HEC Token</strong></p>
+<ol>
+<li>Click <strong>New Token</strong></li>
+<li>Name: "iosxe-telemetry"</li>
+<li>Source type: "iosxe:mdt"</li>
+<li>Index: "network_telemetry"</li>
+<li>Click <strong>Review → Submit</strong></li>
+<li>Copy the token value</li>
+</ol>
+<p><strong>Step 3: Configure OpenTelemetry Collector</strong></p>
+<p>Update the <code>otel-collector-config.yaml</code> with your Splunk details:</p>
+<pre><code class="language-yaml">exporters:
+  splunk_hec:
+    token: &quot;PASTE-YOUR-TOKEN-HERE&quot;
+    endpoint: &quot;https://your-splunk-server:8088/services/collector&quot;
+    source: &quot;catalyst-9300&quot;
+    sourcetype: &quot;iosxe:mdt&quot;
+    index: &quot;network_telemetry&quot;
+</code></pre>
+<p><strong>Step 4: Start OpenTelemetry Collector</strong></p>
+<pre><code class="language-bash">cd ~/otel-collector
+./otelcol --config otel-collector-config.yaml
+</code></pre>
+<h4 id="configuring-telegraf-to-export-to-opentelemetry">Configuring Telegraf to Export to OpenTelemetry</h4>
+<p>Modify the Telegraf configuration to forward to OTel Collector:</p>
+<p><strong>Edit telegraf.conf:</strong></p>
+<pre><code class="language-toml"># Receive gRPC telemetry from IOS XE
+[[inputs.cisco_telemetry_mdt]]
+  transport = &quot;grpc&quot;
+  service_address = &quot;:57500&quot;
+
+# Output to OpenTelemetry Collector
+[[outputs.opentelemetry]]
+  service_address = &quot;localhost:4317&quot;
+  compression = &quot;gzip&quot;
+
+  [outputs.opentelemetry.attributes]
+    source = &quot;catalyst-9300&quot;
+    location = &quot;datacenter-1&quot;
+</code></pre>
+<p><strong>Restart Telegraf:</strong></p>
+<pre><code class="language-bash">sudo systemctl restart telegraf
+</code></pre>
+<hr />
+<h3 id="creating-splunk-dashboards-for-network-telemetry">Creating Splunk Dashboards for Network Telemetry</h3>
+<p>Once telemetry data flows into Splunk, you can create powerful dashboards and searches.</p>
+<h4 id="basic-splunk-searches-for-ios-xe-telemetry">Basic Splunk Searches for IOS XE Telemetry</h4>
+<p><strong>Search 1: View all telemetry data</strong></p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt
+| table _time, source, metric_name, metric_value
+</code></pre>
+<p><strong>Search 2: CPU Utilization over time</strong></p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;cpu-utilization&quot;
+| timechart avg(metric_value) as &quot;Average CPU %&quot;
+</code></pre>
+<p><strong>Search 3: Memory usage trends</strong></p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;memory-usage&quot;
+| timechart avg(metric_value) as &quot;Memory Used (MB)&quot;
+</code></pre>
+<p><strong>Search 4: Temperature alerts</strong></p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;temperature&quot;
+| where metric_value &gt; 75
+| stats count by source, component
+</code></pre>
+<p><strong>Search 5: Correlate network and application metrics</strong></p>
+<pre><code class="language-spl">index=network_telemetry OR index=application_logs
+| stats avg(cpu_usage) as network_cpu, avg(app_response_time) as app_latency by _time span=5m
+| eval correlation=if(network_cpu&gt;80 AND app_latency&gt;1000, &quot;High&quot;, &quot;Normal&quot;)
+</code></pre>
+<h4 id="creating-a-splunk-dashboard">Creating a Splunk Dashboard</h4>
+<p><strong>Step 1: Save your searches</strong></p>
+<p>After running searches, click "Save As → Dashboard Panel"</p>
+<p><strong>Step 2: Build the dashboard</strong></p>
+<ol>
+<li>Navigate to <strong>Dashboards → Create New Dashboard</strong></li>
+<li>Name: "IOS XE Network Telemetry"</li>
+<li>Add panels for each metric:</li>
+<li>CPU Utilization (Line chart)</li>
+<li>Memory Usage (Area chart)</li>
+<li>Temperature (Single value with trend)</li>
+<li>Interface Statistics (Table)</li>
+</ol>
+<p><strong>Step 3: Set up real-time monitoring</strong></p>
+<ul>
+<li>Enable real-time search on panels</li>
+<li>Set refresh intervals (30s, 1m, etc.)</li>
+<li>Configure drill-downs for detailed analysis</li>
+</ul>
+<p><strong>Step 4: Create alerts</strong></p>
+<ol>
+<li>Click <strong>Settings → Searches, reports, and alerts</strong></li>
+<li>Create new alert</li>
+<li>Define search query</li>
+<li>Set trigger conditions</li>
+<li>Configure alert actions (email, webhook, etc.)</li>
+</ol>
+<p><strong>Example Alert: High CPU</strong></p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;cpu-utilization&quot;
+| stats avg(metric_value) as cpu_avg by source
+| where cpu_avg &gt; 80
+</code></pre>
+<p>Trigger: When number of results &gt; 0
+Action: Send email to network-ops@company.com</p>
+<hr />
+<h3 id="advanced-use-cases">Advanced Use Cases</h3>
+<h4 id="use-case-1-predictive-analytics">Use Case 1: Predictive Analytics</h4>
+<p>Use Splunk's Machine Learning Toolkit to predict issues:</p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;cpu-utilization&quot;
+| fit DensityFunction metric_value by source
+| predict metric_value as predicted_cpu
+</code></pre>
+<h4 id="use-case-2-anomaly-detection">Use Case 2: Anomaly Detection</h4>
+<p>Identify unusual patterns:</p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt
+| anomalydetection metric_value by metric_name
+</code></pre>
+<h4 id="use-case-3-multi-device-correlation">Use Case 3: Multi-Device Correlation</h4>
+<p>Compare metrics across multiple switches:</p>
+<pre><code class="language-spl">index=network_telemetry sourcetype=iosxe:mdt
+| stats avg(metric_value) as avg_value by source, metric_name
+| where metric_name=&quot;cpu-utilization&quot;
+| sort -avg_value
+</code></pre>
+<hr />
+<h3 id="troubleshooting">Troubleshooting</h3>
+<p><strong>Issue 1: No data in Grafana</strong></p>
+<ul>
+<li>Verify subscriptions are active: <code>show telemetry ietf subscription all</code></li>
+<li>Check Telegraf is running: <code>sudo systemctl status telegraf</code></li>
+<li>Verify InfluxDB is storing data: <code>influx -execute 'SHOW DATABASES'</code></li>
+<li>Check time range in Grafana dashboard</li>
+</ul>
+<p><strong>Issue 2: OTel Collector not forwarding to Splunk</strong></p>
+<ul>
+<li>Verify HEC token is valid</li>
+<li>Check network connectivity to Splunk server</li>
+<li>Review OTel Collector logs: <code>journalctl -u otel-collector -f</code></li>
+<li>Test HEC endpoint with curl:</li>
+</ul>
+<pre><code class="language-bash">curl -k https://splunk-server:8088/services/collector \
+  -H &quot;Authorization: Splunk YOUR-TOKEN&quot; \
+  -d '{&quot;event&quot;: &quot;test&quot;}'
+</code></pre>
+<p><strong>Issue 3: Telegraf not receiving telemetry</strong></p>
+<ul>
+<li>Verify switch can reach receiver IP (10.1.1.3)</li>
+<li>Check firewall rules allow gRPC traffic (port 57500)</li>
+<li>Review Telegraf logs: <code>sudo journalctl -u telegraf -f</code></li>
+</ul>
+<hr />
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li><strong>Model-Driven Telemetry provides real-time visibility</strong> into network device operations</li>
+<li><strong>Subscriptions are flexible</strong> - monitor any YANG data path with custom intervals</li>
+<li><strong>Grafana offers powerful visualization</strong> for time-series telemetry data</li>
+<li><strong>OpenTelemetry provides vendor-neutral observability</strong> with flexible routing</li>
+<li><strong>Splunk integration enables advanced analytics</strong> and correlation with other data sources</li>
+<li><strong>Combining MDT + OTel + Splunk</strong> creates a comprehensive observability platform</li>
+</ol>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/179/b_179_programmability_cg/model_driven_telemetry.html">Cisco Model-Driven Telemetry Documentation</a></li>
+<li><a href="https://opentelemetry.io/docs/">OpenTelemetry Documentation</a></li>
+<li><a href="https://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector">Splunk HEC Documentation</a></li>
+<li><a href="https://grafana.com/docs/">Grafana Documentation</a></li>
+<li><a href="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/cisco_telemetry_mdt">Telegraf Cisco MDT Input Plugin</a></li>
+</ul>
+<h3 id="next-steps">Next Steps</h3>
+<p>You've now completed:
+- <strong>Day 0</strong>: Secure device onboarding with SZTP
+- <strong>Day 1</strong>: Configuration management with Atomic Config Replace
+- <strong>Day 2</strong>: Monitoring and observability with MDT, OpenTelemetry, and Splunk</p>
+<p>Continue exploring the <strong>Tooling Module</strong> to learn Infrastructure as Code with Terraform!</p>
+<hr />
+<h1 id="tooling-module">Tooling Module</h1>
+<h2 id="infrastructure-as-code-with-terraform-and-cisco-ios-xe">Infrastructure as Code with Terraform and Cisco IOS XE</h2>
+<h3 id="introduction-to-terraform-provider-for-ios-xe">Introduction to Terraform Provider for IOS XE</h3>
+<p>Terraform is a declarative Infrastructure as Code (IaC) tool that allows you to define and provision network infrastructure using configuration files. The <a href="https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs">Cisco IOS XE Terraform Provider</a> enables you to manage IOS XE devices using both NETCONF and RESTCONF protocols.</p>
+<p><strong>Benefits of using Terraform with IOS XE:</strong>
+- <strong>Declarative configuration</strong>: Define desired state, Terraform handles the how
+- <strong>Version control</strong>: Track configuration changes in Git
+- <strong>Repeatability</strong>: Apply the same configuration across multiple devices
+- <strong>Idempotent</strong>: Safe to run multiple times without side effects
+- <strong>State management</strong>: Track actual vs. desired configuration state</p>
+<h3 id="prerequisites_1">Prerequisites</h3>
+<p>Before starting, ensure you have:</p>
+<ol>
+<li>Terraform installed on the VM</li>
+<li>Access to the C9300 switch (10.1.1.15)</li>
+<li>NETCONF enabled on the switch</li>
+</ol>
+<h3 id="lab-setup_1">Lab Setup</h3>
+<p><strong>Step 1: Install Terraform</strong></p>
+<p>From your SSH session on the VM, install Terraform:</p>
+<pre><code class="language-bash"># Download Terraform (check for latest version at terraform.io) This step has already been done for you in this environment
+# cd ~
+# wget https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip
+# unzip terraform_1.7.0_linux_amd64.zip
+# sudo mv terraform /usr/local/bin/
+# terraform version
+</code></pre>
+<p><strong>Step 2: Create a working directory</strong></p>
+<pre><code class="language-bash">mkdir -p ~/CLUS2026-terraform-iosxe-lab
+cd ~/CLUS2026-terraform-iosxe-lab
+</code></pre>
+<h3 id="demo-1-configure-extended-acls-and-apply-to-interface">Demo 1: Configure Extended ACLs and Apply to Interface</h3>
+<p>In this demo, you'll use Terraform to create an extended Access Control List (ACL) and apply it to an interface on the C9300 switch.</p>
+<h4 id="objective_2">Objective</h4>
+<p>Learn how to use Terraform to configure network security policies using ACLs via NETCONF/YANG.</p>
+<h4 id="steps_2">Steps</h4>
+<p><strong>Step 1: Create the Terraform provider configuration</strong></p>
+<p>Create a file called <code>provider.tf</code>:</p>
+<pre><code class="language-bash">nano provider.tf
+</code></pre>
+<p>Add the following content:</p>
+<pre><code class="language-hcl">terraform {
+  required_providers {
+    iosxe = {
+      source  = &quot;CiscoDevNet/iosxe&quot;
+      version = &quot;~&gt; 0.17.0&quot;
+    }
+  }
+}
+
+provider &quot;iosxe&quot; {
+  username = &quot;admin&quot;
+  password = &quot;Cisco123&quot;
+  host     = &quot;10.1.1.15&quot;
+  protocol = &quot;netconf&quot;
+  insecure = true
+}
+</code></pre>
+<p>Save and exit (Ctrl+X, Y, Enter).</p>
+<p><strong>Step 2: Create the Extended ACL configuration</strong></p>
+<p>Create a file called <code>acl.tf</code>:</p>
+<pre><code class="language-bash">nano acl.tf
+</code></pre>
+<p>Add the following configuration to create an extended ACL:</p>
+<pre><code class="language-hcl"># Extended ACL for securing management traffic
+resource &quot;iosxe_access_list_extended&quot; &quot;management_acl&quot; {
+  name = &quot;MGMT_ACCESS&quot;
+
+  entries = [
+    {
+      sequence                 = 10
+      remark                   = &quot;Allow SSH from management subnet&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;tcp&quot;
+      source_prefix            = &quot;10.0.0.0&quot;
+      source_prefix_mask       = &quot;0.0.255.255&quot;
+      destination_any          = true
+      destination_port_equal   = &quot;22&quot;
+    },
+    {
+      sequence                 = 20
+      remark                   = &quot;Allow HTTPS from management subnet&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;tcp&quot;
+      source_prefix            = &quot;10.0.0.0&quot;
+      source_prefix_mask       = &quot;0.0.255.255&quot;
+      destination_any          = true
+      destination_port_equal   = &quot;443&quot;
+    },
+    {
+      sequence                 = 30
+      remark                   = &quot;Allow ICMP for troubleshooting&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;icmp&quot;
+      source_any               = true
+      destination_any          = true
+    },
+    {
+      sequence                 = 40
+      remark                   = &quot;Deny all other traffic&quot;
+      ace_rule_action          = &quot;deny&quot;
+      ace_rule_protocol        = &quot;ip&quot;
+      source_any               = true
+      destination_any          = true
+      log                      = true
+    }
+  ]
+}
+
+# Additional ACL for data plane traffic
+resource &quot;iosxe_access_list_extended&quot; &quot;data_acl&quot; {
+  name = &quot;DATA_TRAFFIC&quot;
+
+  entries = [
+    {
+      sequence                 = 10
+      remark                   = &quot;Permit established TCP connections&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;tcp&quot;
+      source_any               = true
+      destination_any          = true
+      established              = true
+    },
+    {
+      sequence                 = 20
+      remark                   = &quot;Permit HTTP traffic&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;tcp&quot;
+      source_any               = true
+      destination_any          = true
+      destination_port_equal   = &quot;80&quot;
+    },
+    {
+      sequence                 = 30
+      remark                   = &quot;Permit DNS queries&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;udp&quot;
+      source_any               = true
+      destination_any          = true
+      destination_port_equal   = &quot;53&quot;
+    }
+  ]
+}
+</code></pre>
+<p>Save and exit.</p>
+<p><strong>Step 3: Apply ACL to an interface</strong></p>
+<p>Create a file called <code>interface.tf</code>:</p>
+<pre><code class="language-bash">nano interface.tf
+</code></pre>
+<p>Add configuration to apply the ACL to an interface:</p>
+<pre><code class="language-hcl"># Configure GigabitEthernet interface with ACL
+resource &quot;iosxe_interface_ethernet&quot; &quot;ge1_0_1&quot; {
+  type                      = &quot;GigabitEthernet&quot;
+  name                      = &quot;1/0/1&quot;
+  description               = &quot;Managed by Terraform - ACL Applied&quot;
+  shutdown                  = false
+  ip_access_group_in_enable = true
+  ip_access_group_in        = iosxe_access_list_extended.data_acl.name
+  ip_access_group_out_enable = true
+  ip_access_group_out       = iosxe_access_list_extended.management_acl.name
+}
+</code></pre>
+<p>Save and exit.</p>
+<p><strong>Step 4: Initialize Terraform</strong></p>
+<p>Initialize Terraform to download the IOS XE provider:</p>
+<pre><code class="language-bash">terraform init
+</code></pre>
+<p>You should see output indicating the provider was successfully installed.</p>
+<p><strong>Step 5: Validate the configuration</strong></p>
+<p>Check for syntax errors:</p>
+<pre><code class="language-bash">terraform validate
+</code></pre>
+<p><strong>Step 6: Preview the changes</strong></p>
+<p>See what Terraform will configure:</p>
+<pre><code class="language-bash">terraform plan
+</code></pre>
+<p>Review the output carefully. Terraform will show you:
+- Resources to be created
+- ACL entries that will be configured
+- Interface settings that will be applied</p>
+<p><strong>Step 7: Apply the configuration</strong></p>
+<p>Apply the configuration to the switch:</p>
+<pre><code class="language-bash">terraform apply
+</code></pre>
+<p>Type <code>yes</code> when prompted to confirm.</p>
+<p><strong>Step 8: Verify on the device</strong></p>
+<p>From your telnet session to the switch, verify the ACLs were created:</p>
+<pre><code>show ip access-lists MGMT_ACCESS
+show ip access-lists DATA_TRAFFIC
+show running-config interface GigabitEthernet1/0/1
+</code></pre>
+<p><strong>Key Takeaway</strong>: Terraform provides a declarative way to configure ACLs and apply them to interfaces, with built-in validation and state tracking.</p>
+<hr />
+<h3 id="demo-2-vlan-configuration-with-terraform">Demo 2: VLAN Configuration with Terraform</h3>
+<p>In this demo, you'll create VLANs using Terraform and understand how to manage switching configurations as code.</p>
+<h4 id="objective_3">Objective</h4>
+<p>Learn how to provision VLANs declaratively using Terraform.</p>
+<h4 id="steps_3">Steps</h4>
+<p><strong>Step 1: Create VLAN configuration</strong></p>
+<p>Create a file called <code>vlans.tf</code>:</p>
+<pre><code class="language-bash">nano vlans.tf
+</code></pre>
+<p>Add VLAN definitions:</p>
+<pre><code class="language-hcl"># Development VLAN
+resource &quot;iosxe_vlan&quot; &quot;dev_vlan&quot; {
+  vlan_id  = 100
+  name     = &quot;DEVELOPMENT&quot;
+  shutdown = false
+}
+
+# Production VLAN
+resource &quot;iosxe_vlan&quot; &quot;prod_vlan&quot; {
+  vlan_id  = 200
+  name     = &quot;PRODUCTION&quot;
+  shutdown = false
+}
+
+# Guest VLAN
+resource &quot;iosxe_vlan&quot; &quot;guest_vlan&quot; {
+  vlan_id  = 300
+  name     = &quot;GUEST_NETWORK&quot;
+  shutdown = false
+}
+
+# Management VLAN
+resource &quot;iosxe_vlan&quot; &quot;mgmt_vlan&quot; {
+  vlan_id  = 999
+  name     = &quot;MANAGEMENT&quot;
+  shutdown = false
+}
+</code></pre>
+<p>Save and exit.</p>
+<p><strong>Step 2: Plan and apply</strong></p>
+<p>Preview the changes:</p>
+<pre><code class="language-bash">terraform plan
+</code></pre>
+<p>Apply the VLAN configuration:</p>
+<pre><code class="language-bash">terraform apply
+</code></pre>
+<p>Type <code>yes</code> to confirm.</p>
+<p><strong>Step 3: Verify on the device</strong></p>
+<p>From the switch:</p>
+<pre><code>show vlan brief
+show vlan id 100
+show vlan id 200
+</code></pre>
+<p><strong>Step 4: Modify a VLAN (demonstrating updates)</strong></p>
+<p>Edit <code>vlans.tf</code> to change a VLAN name:</p>
+<pre><code class="language-bash">nano vlans.tf
+</code></pre>
+<p>Change the Development VLAN name:</p>
+<pre><code class="language-hcl">resource &quot;iosxe_vlan&quot; &quot;dev_vlan&quot; {
+  vlan_id  = 100
+  name     = &quot;DEV_UPDATED&quot;  # Changed from DEVELOPMENT
+  shutdown = false
+}
+</code></pre>
+<p>Save and apply:</p>
+<pre><code class="language-bash">terraform apply
+</code></pre>
+<p>Terraform will detect the change and update only that VLAN. Verify:</p>
+<pre><code>show vlan id 100
+</code></pre>
+<p><strong>Key Takeaway</strong>: Terraform tracks state and only applies changes that differ from the current configuration, making updates efficient and predictable.</p>
+<hr />
+<h3 id="demo-3-complete-network-segment-with-acl-vlan-and-interface">Demo 3: Complete Network Segment with ACL, VLAN, and Interface</h3>
+<p>This comprehensive demo combines ACLs, VLANs, and interface configuration to provision a complete network segment.</p>
+<h4 id="objective_4">Objective</h4>
+<p>Build a complete network configuration using Infrastructure as Code principles.</p>
+<h4 id="steps_4">Steps</h4>
+<p><strong>Step 1: Create a complete configuration file</strong></p>
+<p>Create <code>complete_config.tf</code>:</p>
+<pre><code class="language-bash">nano complete_config.tf
+</code></pre>
+<p>Add a comprehensive configuration:</p>
+<pre><code class="language-hcl"># Security VLAN
+resource &quot;iosxe_vlan&quot; &quot;security_vlan&quot; {
+  vlan_id  = 500
+  name     = &quot;SECURITY_ZONE&quot;
+  shutdown = false
+}
+
+# Security ACL
+resource &quot;iosxe_access_list_extended&quot; &quot;security_acl&quot; {
+  name = &quot;SECURITY_ZONE_ACL&quot;
+
+  entries = [
+    {
+      sequence                 = 10
+      remark                   = &quot;Allow HTTPS to security appliances&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;tcp&quot;
+      source_any               = true
+      destination_prefix       = &quot;10.5.5.0&quot;
+      destination_prefix_mask  = &quot;0.0.0.255&quot;
+      destination_port_equal   = &quot;443&quot;
+    },
+    {
+      sequence                 = 20
+      remark                   = &quot;Allow syslog&quot;
+      ace_rule_action          = &quot;permit&quot;
+      ace_rule_protocol        = &quot;udp&quot;
+      source_any               = true
+      destination_prefix       = &quot;10.5.5.10&quot;
+      destination_prefix_mask  = &quot;0.0.0.0&quot;
+      destination_port_equal   = &quot;514&quot;
+    },
+    {
+      sequence                 = 30
+      remark                   = &quot;Deny and log all other traffic&quot;
+      ace_rule_action          = &quot;deny&quot;
+      ace_rule_protocol        = &quot;ip&quot;
+      source_any               = true
+      destination_any          = true
+      log                      = true
+    }
+  ]
+}
+
+# Configure interface for security VLAN
+resource &quot;iosxe_interface_ethernet&quot; &quot;security_interface&quot; {
+  type                      = &quot;GigabitEthernet&quot;
+  name                      = &quot;1/0/2&quot;
+  description               = &quot;Security Zone - Managed by Terraform&quot;
+  shutdown                  = false
+  ip_access_group_in_enable = true
+  ip_access_group_in        = iosxe_access_list_extended.security_acl.name
+
+  # Dependencies ensure proper order
+  depends_on = [
+    iosxe_vlan.security_vlan,
+    iosxe_access_list_extended.security_acl
+  ]
+}
+</code></pre>
+<p>Save and exit.</p>
+<p><strong>Step 2: Apply the complete configuration</strong></p>
+<pre><code class="language-bash">terraform plan
+terraform apply
+</code></pre>
+<p><strong>Step 3: View Terraform state</strong></p>
+<p>Terraform maintains state of all managed resources:</p>
+<pre><code class="language-bash">terraform show
+terraform state list
+</code></pre>
+<p><strong>Step 4: Verify the complete configuration</strong></p>
+<p>From the switch:</p>
+<pre><code>show vlan id 500
+show ip access-lists SECURITY_ZONE_ACL
+show running-config interface GigabitEthernet1/0/2
+</code></pre>
+<hr />
+<h3 id="terraform-best-practices-for-ios-xe">Terraform Best Practices for IOS XE</h3>
+<ol>
+<li><strong>Use version control</strong>: Store <code>.tf</code> files in Git for change tracking</li>
+<li><strong>State management</strong>: Keep <code>terraform.tfstate</code> backed up (or use remote state)</li>
+<li><strong>Module reuse</strong>: Create reusable modules for common patterns</li>
+<li><strong>Validate before apply</strong>: Always run <code>terraform plan</code> first</li>
+<li><strong>Use variables</strong>: Parameterize configurations with <code>variables.tf</code></li>
+<li><strong>Documentation</strong>: Comment your code with <code>#</code> and resource descriptions</li>
+</ol>
+<h3 id="advanced-exercise-using-variables">Advanced Exercise: Using Variables</h3>
+<p>Create a <code>variables.tf</code> file to make your configuration more flexible:</p>
+<pre><code class="language-hcl">variable &quot;switch_ip&quot; {
+  description = &quot;IP address of the IOS XE device&quot;
+  type        = string
+  default     = &quot;10.1.1.15&quot;
+}
+
+variable &quot;switch_username&quot; {
+  description = &quot;Username for device authentication&quot;
+  type        = string
+  default     = &quot;admin&quot;
+  sensitive   = true
+}
+
+variable &quot;switch_password&quot; {
+  description = &quot;Password for device authentication&quot;
+  type        = string
+  default     = &quot;Cisco123&quot;
+  sensitive   = true
+}
+</code></pre>
+<p>Then update <code>provider.tf</code> to use variables:</p>
+<pre><code class="language-hcl">provider &quot;iosxe&quot; {
+  username = var.switch_username
+  password = var.switch_password
+  host     = var.switch_ip
+  protocol = &quot;netconf&quot;
+  insecure = true
+}
+</code></pre>
+<h3 id="cleanup-optional">Cleanup (Optional)</h3>
+<p>To remove all Terraform-managed resources:</p>
+<pre><code class="language-bash">terraform destroy
+</code></pre>
+<p>Type <code>yes</code> to confirm. This will remove all ACLs, VLANs, and interface configurations created by Terraform.</p>
+<h3 id="additional-resources_1">Additional Resources</h3>
+<ul>
+<li><a href="https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs">Terraform IOS XE Provider Documentation</a></li>
+<li><a href="https://www.terraform.io/docs/cloud/guides/recommended-practices/index.html">Terraform Best Practices</a></li>
+<li><a href="https://github.com/YangModels/yang/tree/master/vendor/cisco/xe">IOS XE YANG Models</a></li>
+</ul>
+<h3 id="summary_1">Summary</h3>
+<p>In this module, you learned how to:
+- Install and configure the Terraform IOS XE provider
+- Create extended ACLs using declarative configuration
+- Provision VLANs with Infrastructure as Code
+- Apply ACLs to interfaces programmatically
+- Manage configuration state with Terraform
+- Build complete network segments using IaC principles</p>
+<p>Terraform provides a powerful, version-controlled approach to network configuration management that integrates seamlessly with modern DevOps workflows.</p>
+<hr />
+<h1 id="feedback">Feedback</h1>
+<p>Mark the lab completed and provide any feedback and comments in the <a href="https://app.smartsheet.com/b/form/3c15e982ec7c40a089ccfdeb375776e0">SmartSheet</a> form once you have successfully completed the modules above.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-05-13 18:14:29.212342+00:00
+-->
