@@ -2,13 +2,15 @@
 
 ## Overview
 
-Day 2 focuses on modern network observability using model-driven telemetry, OpenTelemetry, and advanced monitoring protocols.
+Day 2 focuses on modern network observability using model-driven telemetry, OpenTelemetry, and Splunk.
+
+This track uses an OTel-only pipeline for telemetry collection and export.
 
 ### What You'll Learn
 
 - Model-Driven Telemetry (MDT) fundamentals
-- OpenTelemetry integration with network devices
-- Splunk for network analytics
+- OpenTelemetry integration with IOS XE telemetry
+- Splunk HEC ingestion and dashboard-based analytics
 - gNXI innovations (POLL/ONCE, ACL & VRF enhancements)
 
 ### Topics Covered
@@ -21,14 +23,22 @@ Day 2 focuses on modern network observability using model-driven telemetry, Open
 ## Lab Modules
 
 ### [OpenTelemetry + Splunk](opentelemetry-splunk.md)
-Learn how to collect, process, and visualize network telemetry data using OpenTelemetry and Splunk.
+Learn how to ingest IOS XE telemetry directly into OpenTelemetry and export to Splunk.
 
 **Topics:**
 
 - Model-Driven Telemetry configuration
-- OpenTelemetry Collector setup
+- OpenTelemetry Collector (`cisco_telemetry`) setup
 - Splunk HEC integration
-- Dashboard creation
+- Dashboard import and validation
+
+**Reference implementation (upstream repo):**
+
+- [otel-grpc-cisco-receiver repository](https://github.com/jeremycohoe/otel-grpc-cisco-receiver)
+- [README.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/README.md)
+- [SPLUNK-SETUP.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/SPLUNK-SETUP.md)
+- [docs/CONFIG.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/CONFIG.md)
+- [docs/SECURITY.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/SECURITY.md)
 
 ---
 

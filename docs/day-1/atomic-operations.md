@@ -140,13 +140,12 @@ These values are already set in the inventory files—no changes needed.
 
 ## Installation
 
-### Step 1: Clone the Repository
+### Step 1: Change to the ACR Lab Directory
 
 From your SSH session on the lab pod VM:
 
 ```bash
 cd ~
-git clone https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible.git
 cd iosxe-atomic-netconf-ansible/atomic-netconf-ansible
 ```
 
