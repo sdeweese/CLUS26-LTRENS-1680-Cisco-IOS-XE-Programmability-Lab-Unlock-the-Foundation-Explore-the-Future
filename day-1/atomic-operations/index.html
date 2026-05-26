@@ -1,0 +1,2657 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Unlock the Foundation, Explore the Future - Cisco Live Las Vegas 2026">
+      
+      
+        <meta name="author" content="Cisco DevNet">
+      
+      
+        <link rel="canonical" href="https://sdeweese.github.io/CLUS26-LTRENS-1680/day-1/atomic-operations/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../terraform-netconf/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Atomic Config Replace - CLUS26 IOS XE Programmability Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#atomic-config-replace-acr-with-ansible" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CLUS26 IOS XE Programmability Lab" class="md-header__button md-logo" aria-label="CLUS26 IOS XE Programmability Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CLUS26 IOS XE Programmability Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Atomic Config Replace
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub Repository
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../intro/" class="md-tabs__link">
+          
+  
+  
+  Introduction
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../day-0/" class="md-tabs__link">
+          
+  
+  
+  Day 0 - Device Onboarding
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Day 1 - Device Config
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../day-2/" class="md-tabs__link">
+          
+  
+  
+  Day 2 - Device Monitoring
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../day-n/" class="md-tabs__link">
+          
+  
+  
+  Day N - Device Optimization
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../resources/" class="md-tabs__link">
+          
+  
+  
+  Resources
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CLUS26 IOS XE Programmability Lab" class="md-nav__button md-logo" aria-label="CLUS26 IOS XE Programmability Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CLUS26 IOS XE Programmability Lab
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub Repository
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Introduction
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YANG Model Innovations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 0 - Device Onboarding
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 0 - Device Onboarding
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day-0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 0 Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day-0/sztp-onboarding/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SZTP Onboarding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1 - Device Config
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 1 - Device Config
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 1 Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Atomic Config Replace
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Atomic Config Replace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-ansible-netconf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Ansible + NETCONF?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-parallel-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Parallel Workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atomic-workflow-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atomic Workflow — Step by Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-on-the-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Happens on the Device
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ios-xe-device-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOS XE Device Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workstation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workstation Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-clone-the-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Clone the Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-verify-ansible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Verify Ansible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-install-required-ansible-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Install Required Ansible Collections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-verify-python-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Verify Python Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start Guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-verify-device-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Verify Device Readiness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-capture-baseline-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Capture Baseline Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-edit-desired-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Edit Desired Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-preview-changes-safe-dry-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Preview Changes (Safe Dry Run)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-push-with-dry-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test Push with Dry Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-live-push-commit-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Live Push (Commit Changes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Verify Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#playbook-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Playbook Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Playbook Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli-rpc-workflow-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI-RPC Workflow (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yangxml-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YANG/XML Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-device-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Device Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technical-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technical Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-config-ios-cli-trans-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How config-ios-cli-trans Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ios-xe-2611-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IOS XE 26.1.1+ Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-multi-interface-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Multi-Interface Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-vlan-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: VLAN Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-rollback-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Rollback Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Links
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference Links">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#official-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Official Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Repositories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative Approaches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../terraform-netconf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terraform + NETCONF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible-gnmi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible + gNMI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pyats-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyATS Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2 - Device Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day 2 - Device Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day 2 Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day-2/opentelemetry-splunk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenTelemetry + Splunk
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day-2/gnxi-innovations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    gNXI Innovations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day N - Device Optimization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Day N - Device Optimization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day-n/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Day N Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../day-n/app-hosting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    App Hosting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Resources
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resources Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/yang-suite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YANG Suite Labs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/sandboxes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevNet Sandboxes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../resources/swagger-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Swagger API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Day 1 - Device Config
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="atomic-config-replace-acr-with-ansible">Atomic Config Replace (ACR) with Ansible<a class="headerlink" href="#atomic-config-replace-acr-with-ansible" title="Permanent link">&para;</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>Atomic Config Replace (ACR) is a powerful configuration management approach that replaces the entire device configuration in a single atomic transaction. This lab uses an <strong>Ansible-based framework</strong> that runs over NETCONF to provide safe, repeatable, and auditable configuration management for Cisco IOS XE devices.</p>
+<h3 id="why-ansible-netconf">Why Ansible + NETCONF?<a class="headerlink" href="#why-ansible-netconf" title="Permanent link">&para;</a></h3>
+<p>Unlike traditional CLI-based configuration methods that apply changes line-by-line, this framework provides:</p>
+<ul>
+<li><strong>Atomic operations</strong>: All changes succeed together or fail together (no partial configs)</li>
+<li><strong>Safe preview</strong>: Stage changes to candidate datastore, review diffs, then commit or discard</li>
+<li><strong>Automated backups</strong>: Before/after configs captured automatically</li>
+<li><strong>Idempotent workflows</strong>: Safe to run multiple times without side effects</li>
+<li><strong>Version control ready</strong>: Configuration files tracked in Git</li>
+<li><strong>No SSH/CLI required</strong>: All operations use NETCONF for structured, reliable communication</li>
+</ul>
+<h3 id="two-parallel-workflows">Two Parallel Workflows<a class="headerlink" href="#two-parallel-workflows" title="Permanent link">&para;</a></h3>
+<p>This framework supports two approaches (both over NETCONF):</p>
+<ol>
+<li><strong>CLI-RPC workflow</strong> (recommended) — Work with familiar IOS CLI text, delivered via the <code>Cisco-IOS-XE-cli-rpc</code> YANG model</li>
+<li><strong>YANG/XML workflow</strong> — Use native YANG/XML payloads with standard NETCONF <code>edit-config</code></li>
+</ol>
+<p>Both workflows use the <strong>candidate datastore</strong> and <strong>atomic commit</strong> for safe, all-or-nothing configuration replacement.</p>
+<hr />
+<blockquote>
+<p><strong>📦 Lab Framework Source</strong></p>
+<p>This lab follows the <strong>IOS XE Atomic Config Replace — Ansible Framework</strong> developed by Jeremy Cohoe.</p>
+<p><strong>GitHub Repository</strong>: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible">jeremycohoe/iosxe-atomic-netconf-ansible</a></p>
+<p>The repository provides production-ready Ansible playbooks, inventory templates, and comprehensive documentation for atomic configuration management on Cisco IOS XE devices. We'll clone this repository and use its playbooks throughout this lab module.</p>
+</blockquote>
+<hr />
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                        Your Lab Pod VM                          │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                 │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  configs/desired/           Ansible            NETCONF (830)    │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌──────────────┐      ┌────────────┐      ┌────────────────┐  │
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ hostname.cfg  │─────▶│  Playbook  │─────▶│  IOS XE Device │  │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │ (CLI text)    │      │  (06/07)   │  SSH │  26.1.1+       │  │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └──────────────┘      └────────────┘      └────────────────┘  │
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                              │                     │            │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  configs/baseline/           │              ┌──────┴──────┐     │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ┌──────────────┐            │              │  Candidate  │     │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │ baseline.cfg  │           │              │  Datastore  │     │
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │ (reference)   │           │              └──────┬──────┘     │
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  └──────────────┘            │                     │            │
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                              │               commit (atomic)    │
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  configs/backups/            │                     │            │
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  ┌──────────────┐            │              ┌──────┴──────┐     │
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │ pre_atomic_*.cfg │◀───────┘              │   Running   │     │
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │ (auto backup) │                          │   Config    │     │
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  └──────────────┘                           └─────────────┘     │
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└─────────────────────────────────────────────────────────────────┘
+</span></code></pre></div>
+<h3 id="atomic-workflow-step-by-step">Atomic Workflow — Step by Step<a class="headerlink" href="#atomic-workflow-step-by-step" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│ Precheck │────▶│ Baseline │────▶│   Edit   │────▶│ Preview  │────▶│   Push   │
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│          │     │ Capture  │     │ Desired  │     │  (diff)  │     │  (atomic)│
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│ 01       │     │ 05       │     │ .cfg     │     │ 07       │     │ 06       │
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>└──────────┘     └──────────┘     └──────────┘     └──────────┘     └──────────┘
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Verify           Pull              Make            Stage to         Stage to
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  NETCONF,         running           your            candidate,       candidate,
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  candidate,       config as         changes         diff vs          diff, then
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  atomic-cfg       CLI text                          running,         COMMIT +
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                                                     discard          save
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                                                     (safe)           (atomic)
+</span></code></pre></div>
+<h3 id="what-happens-on-the-device">What Happens on the Device<a class="headerlink" href="#what-happens-on-the-device" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Stage</strong> — Desired config is pushed to the candidate datastore using <code>config-ios-cli-trans</code> with <code>&lt;do-commit&gt;false&lt;/do-commit&gt;</code>. Running config is untouched.</li>
+<li><strong>Diff</strong> — Candidate is compared against running using <code>get-modelled-config-clis</code> on both datastores. You see exactly what will change.</li>
+<li><strong>Commit</strong> (live push only) — Candidate is atomically committed to running. All-or-nothing — if any part fails, the entire transaction rolls back.</li>
+<li><strong>Save</strong> — Running config is written to startup.</li>
+</ol>
+<blockquote>
+<p><strong>Dry run (default)</strong>: Steps 1–2 only, then discard. The device is never modified.</p>
+</blockquote>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h3 id="ios-xe-device-requirements">IOS XE Device Requirements<a class="headerlink" href="#ios-xe-device-requirements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IOS XE version</td>
+<td>26.1.1 or later</td>
+</tr>
+<tr>
+<td>NETCONF</td>
+<td>Enabled and reachable on port 830</td>
+</tr>
+<tr>
+<td>Candidate datastore</td>
+<td>Explicitly enabled (not on by default)</td>
+</tr>
+<tr>
+<td>Atomic config</td>
+<td>Feature flag enabled</td>
+</tr>
+<tr>
+<td>Credentials</td>
+<td>Local user with privilege 15</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Enable on the lab switch:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conf t
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  netconf-yang
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  netconf-yang feature candidate-datastore
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  yang-interfaces feature atomic-config
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>end
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>write memory
+</span></code></pre></div>
+<blockquote>
+<p><strong>Note</strong>: After enabling candidate datastore, NETCONF restarts automatically (~60 seconds). Wait before testing connectivity.</p>
+</blockquote>
+<h3 id="workstation-requirements">Workstation Requirements<a class="headerlink" href="#workstation-requirements" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Software</th>
+<th>Version</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.10+</td>
+<td>Runtime</td>
+</tr>
+<tr>
+<td>Ansible</td>
+<td>2.15+</td>
+<td>Automation framework</td>
+</tr>
+<tr>
+<td>ncclient</td>
+<td>0.6.13+</td>
+<td>NETCONF client (used by Ansible netconf plugin)</td>
+</tr>
+<tr>
+<td>lxml</td>
+<td>any</td>
+<td>XML parsing (ncclient dependency)</td>
+</tr>
+<tr>
+<td>paramiko</td>
+<td>any</td>
+<td>SSH transport for NETCONF</td>
+</tr>
+<tr>
+<td>xmltodict</td>
+<td>any</td>
+<td>XML parsing helpers</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lab-environment">Lab Environment<a class="headerlink" href="#lab-environment" title="Permanent link">&para;</a></h3>
+<p>The lab pod VM is pre-configured to access:</p>
+<ul>
+<li><strong>Lab switch</strong>: <code>10.1.1.5:830</code> (hostname: <code>c9300x-lab</code>)</li>
+<li><strong>Credentials</strong>: <code>admin</code> / <code>Cisco123</code></li>
+</ul>
+<p>These values are already set in the inventory files—no changes needed.</p>
+<hr />
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-clone-the-repository">Step 1: Clone the Repository<a class="headerlink" href="#step-1-clone-the-repository" title="Permanent link">&para;</a></h3>
+<p>From your SSH session on the lab pod VM:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>~
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible.git
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">cd</span><span class="w"> </span>iosxe-atomic-netconf-ansible/atomic-netconf-ansible
+</span></code></pre></div>
+<h3 id="step-2-verify-ansible">Step 2: Verify Ansible<a class="headerlink" href="#step-2-verify-ansible" title="Permanent link">&para;</a></h3>
+<p>Lab pods typically ship with Ansible pre-installed:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ansible<span class="w"> </span>--version
+</span></code></pre></div>
+<p>Expected output: Ansible 2.15 or later</p>
+<h3 id="step-3-install-required-ansible-collections">Step 3: Install Required Ansible Collections<a class="headerlink" href="#step-3-install-required-ansible-collections" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
+</span></code></pre></div>
+<p>This installs:</p>
+<ul>
+<li><code>ansible.netcommon</code></li>
+<li><code>ansible.utils</code></li>
+<li><code>community.general</code></li>
+</ul>
+<h3 id="step-4-verify-python-dependencies">Step 4: Verify Python Dependencies<a class="headerlink" href="#step-4-verify-python-dependencies" title="Permanent link">&para;</a></h3>
+<p>If you encounter errors about missing Python libraries, install them:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>ansible<span class="w"> </span>ncclient<span class="w"> </span>lxml<span class="w"> </span>xmltodict<span class="w"> </span>paramiko
+</span></code></pre></div>
+<hr />
+<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>atomic-netconf-ansible/
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── ansible.cfg                              # Ansible settings (YAML output, timeouts)
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>├── requirements.yml                         # Ansible Galaxy dependencies
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>├── README.md                                # GitHub repository documentation
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>├── inventory/
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│   ├── hosts.yml                            # Pre-configured: c9300x-lab @ 10.1.1.5
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│   └── group_vars/
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│       ├── all/
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│       │   ├── vars.yml                     # Connection settings, config paths
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│       │   └── vault.yml                    # Credentials (admin/Cisco123)
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│       └── access_switches/
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│           └── vars.yml                     # Group-specific overrides
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>├── playbooks/
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│   ├── 01_precheck.yml                      # Verify device readiness
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│   ├── 02_baseline_capture.yml              # Capture running config (YANG/XML)
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│   ├── 03_atomic_push.yml                   # Atomic push (YANG/XML)
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│   ├── 04_diff_preview.yml                  # Diff preview (YANG/XML)
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│   ├── 05_baseline_capture_cli.yml          # Capture running config (CLI-RPC)
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│   ├── 06_atomic_push_cli.yml               # Atomic push (CLI-RPC) — includes before/after
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│   └── 07_diff_preview_cli.yml              # Diff preview (CLI-RPC)
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>├── configs/
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│   ├── baseline/&lt;hostname&gt;/baseline.cfg     # Reference configs (auto-generated)
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│   ├── desired/&lt;hostname&gt;.cfg               # Desired configs (EDIT THESE)
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│   └── backups/&lt;hostname&gt;/                  # Pre/post-commit backups
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│       ├── pre_atomic_*.cfg                 #   Before commit snapshot
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>│       └── post_atomic_*.cfg                #   After commit snapshot
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>│
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>└── docs/
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>    └── quickstart.md                        # Detailed step-by-step walkthrough
+</span></code></pre></div>
+<hr />
+<h2 id="quick-start-guide">Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permanent link">&para;</a></h2>
+<p>All commands are run from inside the <code>atomic-netconf-ansible/</code> directory.</p>
+<h3 id="step-1-verify-device-readiness">Step 1: Verify Device Readiness<a class="headerlink" href="#step-1-verify-device-readiness" title="Permanent link">&para;</a></h3>
+<p>Run the precheck playbook to verify NETCONF connectivity, candidate datastore support, and atomic config capability:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/01_precheck.yml
+</span></code></pre></div>
+<p><strong>What it checks:</strong>
+- NETCONF connectivity on port 830
+- Candidate datastore enabled
+- Atomic config feature enabled
+- IOS XE version 26.1.1+</p>
+<p>Expected output: All checks passed (green)</p>
+<h3 id="step-2-capture-baseline-configuration">Step 2: Capture Baseline Configuration<a class="headerlink" href="#step-2-capture-baseline-configuration" title="Permanent link">&para;</a></h3>
+<p>Pull the current running configuration from the device and save it as your baseline:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/05_baseline_capture_cli.yml
+</span></code></pre></div>
+<p><strong>What it creates:</strong>
+- <code>configs/baseline/c9300x-lab/baseline.cfg</code> — Reference copy (don't edit)
+- <code>configs/desired/c9300x-lab.cfg</code> — Your working copy (edit this)</p>
+<p>Both files contain the complete device configuration in IOS CLI format.</p>
+<h3 id="step-3-edit-desired-configuration">Step 3: Edit Desired Configuration<a class="headerlink" href="#step-3-edit-desired-configuration" title="Permanent link">&para;</a></h3>
+<p>Open the desired configuration file and make your changes:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>nano<span class="w"> </span>configs/desired/c9300x-lab.cfg
+</span></code></pre></div>
+<p><strong>Example changes:</strong></p>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="w"> </span>interface TenGigabitEthernet1/0/1
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="gd">- description Uplink Port</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="gi">+ description UPLINK-TO-DIST-SW</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w"> </span> shutdown
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w"> </span> switchport access vlan 30
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w"> </span>exit
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="gi">+interface TenGigabitEthernet1/0/2</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="gi">+ description TEST-PORT-FOR-DEMO</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="gi">+ switchport access vlan 100</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="gi">+ no shutdown</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="gi">+exit</span>
+</span></code></pre></div>
+<blockquote>
+<p><strong>Important</strong>: This file contains the <strong>complete</strong> device configuration. Atomic config replace performs a full replace — anything you remove from this file will be removed from the device. Keep all physical interfaces defined.</p>
+</blockquote>
+<p>Save and exit (Ctrl+X, Y, Enter).</p>
+<h3 id="step-4-preview-changes-safe-dry-run">Step 4: Preview Changes (Safe Dry Run)<a class="headerlink" href="#step-4-preview-changes-safe-dry-run" title="Permanent link">&para;</a></h3>
+<p>Stage your desired config to the candidate datastore, generate a diff against running config, then discard. The device is never modified:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/07_diff_preview_cli.yml
+</span></code></pre></div>
+<p><strong>What you'll see:</strong></p>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>DIFF: c9300x-lab
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="gd">- description Uplink Port</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="gi">+ description UPLINK-TO-DIST-SW</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="gi">+interface TenGigabitEthernet1/0/2</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="gi">+ description TEST-PORT-FOR-DEMO</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="gi">+ switchport access vlan 100</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="gi">+ no shutdown</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="gi">+exit</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>Lines added: 5
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>Lines removed: 1
+</span></code></pre></div>
+<p><strong>Diff symbols:</strong>
+- <code>+</code> = Lines being added
+- <code>-</code> = Lines being removed
+- <code></code> = Unchanged context</p>
+<p>If the diff looks incorrect or you see unexpected changes, <strong>do not proceed to Step 5</strong>. Go back to Step 3 and fix your desired config file.</p>
+<h3 id="step-5-test-push-with-dry-run">Step 5: Test Push with Dry Run<a class="headerlink" href="#step-5-test-push-with-dry-run" title="Permanent link">&para;</a></h3>
+<p>Perform a complete dry run that stages the config, shows the diff, and creates a backup — but does <strong>not</strong> commit to running:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml
+</span></code></pre></div>
+<p><strong>What happens:</strong>
+1. Captures current running config (pre-backup)
+2. Stages desired config to candidate datastore
+3. Shows diff (same as Step 4)
+4. <strong>Discards</strong> candidate (device unchanged)
+5. Saves pre-backup to <code>configs/backups/c9300x-lab/pre_atomic_&lt;timestamp&gt;.cfg</code></p>
+<p>This is your final safety check before the live push.</p>
+<h3 id="step-6-live-push-commit-changes">Step 6: Live Push (Commit Changes)<a class="headerlink" href="#step-6-live-push-commit-changes" title="Permanent link">&para;</a></h3>
+<p>When you're confident the changes are correct, run the live push:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>-e<span class="w"> </span><span class="nv">dry_run</span><span class="o">=</span><span class="nb">false</span>
+</span></code></pre></div>
+<p><strong>What happens:</strong>
+1. Captures BEFORE snapshot
+2. Stages config to candidate
+3. Shows diff
+4. <strong>Commits atomically</strong> to running config
+5. Saves running config to startup
+6. Captures AFTER snapshot
+7. Saves both snapshots to <code>configs/backups/c9300x-lab/</code></p>
+<p><strong>Atomic guarantee</strong>: If any part of the commit fails (syntax error, dependency issue, etc.), the <strong>entire transaction rolls back</strong> automatically. Running config is never left in a partial state.</p>
+<h3 id="step-7-verify-changes">Step 7: Verify Changes<a class="headerlink" href="#step-7-verify-changes" title="Permanent link">&para;</a></h3>
+<p>Re-run the preview playbook to confirm no diff remains:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/07_diff_preview_cli.yml
+</span></code></pre></div>
+<p>Expected output: <code>Desired matches running (no diff)</code></p>
+<p>You can also verify from the device CLI:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># SSH to the switch</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ssh<span class="w"> </span>admin@10.1.1.5
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Check the changes</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>show<span class="w"> </span>run<span class="w"> </span>interface<span class="w"> </span>TenGigabitEthernet1/0/1
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>show<span class="w"> </span>run<span class="w"> </span>interface<span class="w"> </span>TenGigabitEthernet1/0/2
+</span></code></pre></div>
+<hr />
+<h2 id="playbook-reference">Playbook Reference<a class="headerlink" href="#playbook-reference" title="Permanent link">&para;</a></h2>
+<h3 id="cli-rpc-workflow-recommended">CLI-RPC Workflow (Recommended)<a class="headerlink" href="#cli-rpc-workflow-recommended" title="Permanent link">&para;</a></h3>
+<p>Work with familiar IOS CLI text—but the payload is delivered over NETCONF using the <code>Cisco-IOS-XE-cli-rpc</code> YANG model. No SSH/CLI session is opened.</p>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Playbook</th>
+<th>Purpose</th>
+<th>Device Modified?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td><code>01_precheck.yml</code></td>
+<td>Verify NETCONF, candidate, atomic support</td>
+<td>No</td>
+</tr>
+<tr>
+<td>05</td>
+<td><code>05_baseline_capture_cli.yml</code></td>
+<td>Pull running config as CLI text via CLI-RPC</td>
+<td>No</td>
+</tr>
+<tr>
+<td>07</td>
+<td><code>07_diff_preview_cli.yml</code></td>
+<td>Stage to candidate, diff, discard</td>
+<td>No</td>
+</tr>
+<tr>
+<td>06</td>
+<td><code>06_atomic_push_cli.yml</code></td>
+<td>Full config replace via CLI-RPC</td>
+<td>Dry run: No<br>Live: Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage examples:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Precheck</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/01_precheck.yml
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Capture baseline</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/05_baseline_capture_cli.yml
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Preview (safe dry run)</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/07_diff_preview_cli.yml
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Push (dry run - default)</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># Push (live commit)</span>
+</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>-e<span class="w"> </span><span class="nv">dry_run</span><span class="o">=</span><span class="nb">false</span>
+</span></code></pre></div>
+<h3 id="yangxml-workflow">YANG/XML Workflow<a class="headerlink" href="#yangxml-workflow" title="Permanent link">&para;</a></h3>
+<p>Work with native YANG/XML config payloads using standard NETCONF <code>edit-config</code> with <code>operation="replace"</code>. No CLI-RPC involvement.</p>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Playbook</th>
+<th>Purpose</th>
+<th>Device Modified?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td><code>01_precheck.yml</code></td>
+<td>Verify NETCONF, candidate, atomic support</td>
+<td>No</td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02_baseline_capture.yml</code></td>
+<td>Pull running config as XML</td>
+<td>No</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04_diff_preview.yml</code></td>
+<td>Stage to candidate, preview, discard</td>
+<td>No</td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03_atomic_push.yml</code></td>
+<td>Full config replace via edit-config</td>
+<td>Dry run: No<br>Live: Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Usage examples:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Precheck</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/01_precheck.yml
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Capture baseline (XML)</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/02_baseline_capture.yml
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Preview (safe dry run)</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/04_diff_preview.yml
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Push (dry run - default)</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/03_atomic_push.yml
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># Push (live commit)</span>
+</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/03_atomic_push.yml<span class="w"> </span>-e<span class="w"> </span><span class="nv">dry_run</span><span class="o">=</span><span class="nb">false</span>
+</span></code></pre></div>
+<hr />
+<h2 id="multi-device-usage">Multi-Device Usage<a class="headerlink" href="#multi-device-usage" title="Permanent link">&para;</a></h2>
+<p>The default lab pod inventory contains a single switch (<code>c9300x-lab</code>), so playbooks automatically run against that host. If you extend the inventory with additional devices, target a subset with <code>--limit</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Single device</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>--limit<span class="w"> </span>c9300x-lab
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Device group</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>--limit<span class="w"> </span>access_switches
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Multiple specific devices</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>--limit<span class="w"> </span><span class="s2">&quot;c9300x-lab,switch-02&quot;</span>
+</span></code></pre></div>
+<p>Without <code>--limit</code>, playbooks run against all devices in the <code>iosxe</code> group.</p>
+<hr />
+<h2 id="technical-details">Technical Details<a class="headerlink" href="#technical-details" title="Permanent link">&para;</a></h2>
+<h3 id="how-config-ios-cli-trans-works">How config-ios-cli-trans Works<a class="headerlink" href="#how-config-ios-cli-trans-works" title="Permanent link">&para;</a></h3>
+<p>The <code>config-ios-cli-trans</code> RPC from the <code>Cisco-IOS-XE-cli-rpc</code> YANG model accepts a <code>&lt;do-commit&gt;</code> leaf that controls whether the RPC auto-commits to running:</p>
+<table>
+<thead>
+<tr>
+<th><code>&lt;do-commit&gt;</code> Value</th>
+<th>Candidate Datastore</th>
+<th>Running Config</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>true</code> (default if omitted)</td>
+<td>Written</td>
+<td>Also written</td>
+<td>Quick one-shot apply</td>
+</tr>
+<tr>
+<td><code>false</code></td>
+<td>Written</td>
+<td>Untouched</td>
+<td>Safe stage → diff → commit pattern</td>
+</tr>
+</tbody>
+</table>
+<p>All playbooks in this toolkit use <code>&lt;do-commit&gt;false&lt;/do-commit&gt;</code> so that:</p>
+<ul>
+<li>Preview and dry-run can safely stage → diff → discard</li>
+<li>Live push explicitly commits only after showing the diff</li>
+</ul>
+<h3 id="ios-xe-2611-benefits">IOS XE 26.1.1+ Benefits<a class="headerlink" href="#ios-xe-2611-benefits" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Crypto certificates abstracted</strong> — No filtering or special handling needed during baseline capture</li>
+<li><strong>Candidate datastore</strong> — Enables safe stage-then-commit workflows</li>
+<li><strong>Atomic config</strong> — Ensures all-or-nothing config replacement with automatic rollback on failure</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NETCONF connection refused</td>
+<td>Verify <code>netconf-yang</code> is enabled; check port 830 reachability</td>
+</tr>
+<tr>
+<td>NETCONF connection timeout</td>
+<td>Increase <code>command_timeout</code> in ansible.cfg; verify network path to the switch</td>
+</tr>
+<tr>
+<td>Precheck fails on candidate</td>
+<td>Run <code>netconf-yang feature candidate-datastore</code> on device; wait 60s for NETCONF restart</td>
+</tr>
+<tr>
+<td>Precheck fails on atomic config</td>
+<td>Run <code>yang-interfaces feature atomic-config</code> on device</td>
+</tr>
+<tr>
+<td>"Sync is in progress" error</td>
+<td>Device busy with previous RPC — wait 30s and retry</td>
+</tr>
+<tr>
+<td><code>get-modelled-config-clis</code> slow</td>
+<td>Normal — this RPC is heavy. Allow 30–60s per device</td>
+</tr>
+<tr>
+<td>Diff shows unexpected reordering</td>
+<td>YANG normalization reorders some CLI — focus on &plusmn; lines</td>
+</tr>
+<tr>
+<td>Diff shows no changes</td>
+<td>Desired config already matches running</td>
+</tr>
+<tr>
+<td>Push commit fails</td>
+<td>Running config is untouched (atomic rollback). Check error message and fix desired config</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="additional-exercises">Additional Exercises<a class="headerlink" href="#additional-exercises" title="Permanent link">&para;</a></h2>
+<h3 id="exercise-1-multi-interface-configuration">Exercise 1: Multi-Interface Configuration<a class="headerlink" href="#exercise-1-multi-interface-configuration" title="Permanent link">&para;</a></h3>
+<p>Edit your desired config to add descriptions and VLANs to multiple interfaces, then preview and push the changes.</p>
+<h3 id="exercise-2-vlan-management">Exercise 2: VLAN Management<a class="headerlink" href="#exercise-2-vlan-management" title="Permanent link">&para;</a></h3>
+<p>Add new VLANs (e.g., VLAN 200, 300) to the desired config. Preview to see them staged, then commit.</p>
+<h3 id="exercise-3-rollback-test">Exercise 3: Rollback Test<a class="headerlink" href="#exercise-3-rollback-test" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Capture a baseline</li>
+<li>Make and commit changes</li>
+<li>Restore the baseline by copying <code>baseline.cfg</code> over <code>desired/&lt;hostname&gt;.cfg</code></li>
+<li>Preview and push to roll back</li>
+</ol>
+<h3 id="exercise-4-error-handling">Exercise 4: Error Handling<a class="headerlink" href="#exercise-4-error-handling" title="Permanent link">&para;</a></h3>
+<p>Intentionally create an invalid configuration (e.g., reference a non-existent VLAN in an interface config). Attempt to push and observe the atomic rollback behavior.</p>
+<hr />
+<h2 id="reference-links">Reference Links<a class="headerlink" href="#reference-links" title="Permanent link">&para;</a></h2>
+<h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/xe-26/prog-xe-26-book.html">Cisco IOS XE Programmability Guide — Atomic Config Replace</a></li>
+<li>YANG model: <code>Cisco-IOS-XE-cli-rpc</code> (revision 2026-02-01, v1.3.0)</li>
+</ul>
+<h3 id="github-repositories">GitHub Repositories<a class="headerlink" href="#github-repositories" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>This Ansible framework</strong>: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible">jeremycohoe/iosxe-atomic-netconf-ansible</a></li>
+<li><strong>Detailed walkthrough</strong>: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible/blob/main/atomic-netconf-ansible/docs/quickstart.md">docs/quickstart.md</a></li>
+<li><strong>Python-based ACR examples</strong>: <a href="https://github.com/jeremycohoe/cisco-ios-xe-atomic-config-replace">jeremycohoe/cisco-ios-xe-atomic-config-replace</a></li>
+</ul>
+<h3 id="alternative-approaches">Alternative Approaches<a class="headerlink" href="#alternative-approaches" title="Permanent link">&para;</a></h3>
+<p>If you prefer Python-based workflows, see the older Python ACR examples preserved in this repository:</p>
+<ul>
+<li><a href="../../atomic-operations/old-python-based-content/">atomic-operations/old-python-based-content/</a></li>
+</ul>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>In this module, you've learned how to:</p>
+<p>✅ Use Ansible + NETCONF for atomic configuration replacement<br />
+✅ Stage configurations to candidate datastore for safe preview<br />
+✅ Generate diffs to see exactly what will change before committing<br />
+✅ Perform atomic commits with automatic rollback on failure<br />
+✅ Capture before/after snapshots for audit trails<br />
+✅ Work with both CLI-RPC and YANG/XML workflows  </p>
+<p>This Ansible-based approach provides a production-ready framework for managing IOS XE device configurations at scale with safety, auditability, and repeatability.</p>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>✅ Completed: Day 1 - Atomic Config Replace</p>
+<p><strong>Continue with Day 1:</strong></p>
+<p>➡️ <a href="../terraform-netconf/">Terraform + NETCONF</a> - Learn Infrastructure as Code</p>
+<p><strong>Or explore:</strong></p>
+<ul>
+<li><a href="../ansible-gnmi/">Ansible + gNMI</a></li>
+<li><a href="../pyats-testing/">PyATS Testing</a></li>
+<li><a href="../">Day 1 Overview</a></li>
+<li><a href="../../day-2/">Day 2: Device Monitoring</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Day 1 Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Day 1 Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../terraform-netconf/" class="md-footer__link md-footer__link--next" aria-label="Next: Terraform + NETCONF">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Terraform + NETCONF
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Cisco Systems, Inc. All rights reserved.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://developer.cisco.com" target="_blank" rel="noopener" title="developer.cisco.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M351.9 280H161c2.9 64.5 17.2 123.9 37.5 167.4 11.4 24.5 23.7 41.8 35.1 52.4 11.2 10.5 18.9 12.2 22.9 12.2s11.7-1.7 22.9-12.2c11.4-10.6 23.7-28 35.1-52.4 20.3-43.5 34.6-102.9 37.5-167.4zm-191-48h190.9c-2.8-64.5-17.1-123.9-37.4-167.4-11.4-24.4-23.7-41.8-35.1-52.4C268.1 1.7 260.4 0 256.4 0s-11.7 1.7-22.9 12.2c-11.4 10.6-23.7 28-35.1 52.4-20.3 43.5-34.6 102.9-37.5 167.4m-48 0c3.5-85.6 25.6-165.1 57.9-217.3C78.7 47.3 10.9 131.2 1.5 232zM1.5 280c9.4 100.8 77.2 184.7 169.3 217.3-32.3-52.2-54.4-131.7-57.9-217.3zm398.4 0c-3.5 85.6-25.6 165.1-57.9 217.3 92.1-32.7 159.9-116.5 169.3-217.3zm111.4-48C501.9 131.2 434.1 47.3 342 14.7c32.3 52.2 54.4 131.7 57.9 217.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotation", "content.code.copy", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

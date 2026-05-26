@@ -12,25 +12,31 @@
         <meta name="author" content="Cisco DevNet">
       
       
+        <link rel="canonical" href="https://sdeweese.github.io/CLUS26-LTRENS-1680/intro/">
       
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../day-0/">
       
       
         
       
       
-      <link rel="icon" href="/CLUS26-LTRENS-1680/assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>CLUS26 IOS XE Programmability Lab</title>
+        <title>YANG Model Innovations - CLUS26 IOS XE Programmability Lab</title>
       
     
     
-      <link rel="stylesheet" href="/CLUS26-LTRENS-1680/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/CLUS26-LTRENS-1680/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +55,7 @@
       
     
     
-    <script>__md_scope=new URL("/CLUS26-LTRENS-1680/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,6 +79,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#introduction" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +96,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/CLUS26-LTRENS-1680/." title="CLUS26 IOS XE Programmability Lab" class="md-header__button md-logo" aria-label="CLUS26 IOS XE Programmability Lab" data-md-component="logo">
+    <a href=".." title="CLUS26 IOS XE Programmability Lab" class="md-header__button md-logo" aria-label="CLUS26 IOS XE Programmability Lab" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -105,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              YANG Model Innovations
             
           </span>
         </div>
@@ -212,7 +223,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/CLUS26-LTRENS-1680/." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -229,11 +240,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="/CLUS26-LTRENS-1680/intro/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -253,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/CLUS26-LTRENS-1680/day-0/" class="md-tabs__link">
+        <a href="../day-0/" class="md-tabs__link">
           
   
   
@@ -273,7 +286,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/CLUS26-LTRENS-1680/day-1/" class="md-tabs__link">
+        <a href="../day-1/" class="md-tabs__link">
           
   
   
@@ -293,7 +306,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/CLUS26-LTRENS-1680/day-2/" class="md-tabs__link">
+        <a href="../day-2/" class="md-tabs__link">
           
   
   
@@ -313,7 +326,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/CLUS26-LTRENS-1680/day-n/" class="md-tabs__link">
+        <a href="../day-n/" class="md-tabs__link">
           
   
   
@@ -333,7 +346,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/CLUS26-LTRENS-1680/resources/" class="md-tabs__link">
+        <a href="../resources/" class="md-tabs__link">
           
   
   
@@ -375,7 +388,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/CLUS26-LTRENS-1680/." title="CLUS26 IOS XE Programmability Lab" class="md-nav__button md-logo" aria-label="CLUS26 IOS XE Programmability Lab" data-md-component="logo">
+    <a href=".." title="CLUS26 IOS XE Programmability Lab" class="md-nav__button md-logo" aria-label="CLUS26 IOS XE Programmability Lab" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -405,7 +418,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -429,26 +442,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -466,7 +484,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -481,10 +499,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/intro/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YANG Model Innovations
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -500,6 +545,76 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#yang-model-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YANG Model Innovations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="YANG Model Innovations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-new-in-ios-xe-261" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's New in IOS XE 26.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -571,7 +686,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-0/" class="md-nav__link">
+      <a href="../day-0/" class="md-nav__link">
         
   
   
@@ -599,7 +714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-0/sztp-onboarding/" class="md-nav__link">
+      <a href="../day-0/sztp-onboarding/" class="md-nav__link">
         
   
   
@@ -686,7 +801,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-1/" class="md-nav__link">
+      <a href="../day-1/" class="md-nav__link">
         
   
   
@@ -714,7 +829,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-1/atomic-operations/" class="md-nav__link">
+      <a href="../day-1/atomic-operations/" class="md-nav__link">
         
   
   
@@ -742,7 +857,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-1/terraform-netconf/" class="md-nav__link">
+      <a href="../day-1/terraform-netconf/" class="md-nav__link">
         
   
   
@@ -770,7 +885,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-1/ansible-gnmi/" class="md-nav__link">
+      <a href="../day-1/ansible-gnmi/" class="md-nav__link">
         
   
   
@@ -798,7 +913,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-1/pyats-testing/" class="md-nav__link">
+      <a href="../day-1/pyats-testing/" class="md-nav__link">
         
   
   
@@ -885,7 +1000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-2/" class="md-nav__link">
+      <a href="../day-2/" class="md-nav__link">
         
   
   
@@ -913,7 +1028,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-2/opentelemetry-splunk/" class="md-nav__link">
+      <a href="../day-2/opentelemetry-splunk/" class="md-nav__link">
         
   
   
@@ -941,7 +1056,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-2/gnxi-innovations/" class="md-nav__link">
+      <a href="../day-2/gnxi-innovations/" class="md-nav__link">
         
   
   
@@ -1028,7 +1143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-n/" class="md-nav__link">
+      <a href="../day-n/" class="md-nav__link">
         
   
   
@@ -1056,7 +1171,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/day-n/app-hosting/" class="md-nav__link">
+      <a href="../day-n/app-hosting/" class="md-nav__link">
         
   
   
@@ -1143,7 +1258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/resources/" class="md-nav__link">
+      <a href="../resources/" class="md-nav__link">
         
   
   
@@ -1171,7 +1286,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/resources/yang-suite/" class="md-nav__link">
+      <a href="../resources/yang-suite/" class="md-nav__link">
         
   
   
@@ -1199,7 +1314,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/resources/sandboxes/" class="md-nav__link">
+      <a href="../resources/sandboxes/" class="md-nav__link">
         
   
   
@@ -1227,7 +1342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/CLUS26-LTRENS-1680/resources/swagger-api/" class="md-nav__link">
+      <a href="../resources/swagger-api/" class="md-nav__link">
         
   
   
@@ -1273,11 +1388,95 @@
   
 
 
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
+<h2 id="yang-model-innovations">YANG Model Innovations<a class="headerlink" href="#yang-model-innovations" title="Permanent link">&para;</a></h2>
+<p>YANG (Yet Another Next Generation) is a data modeling language used to model configuration and state data manipulated by network management protocols like NETCONF, RESTCONF, and gNMI.</p>
+<h3 id="whats-new-in-ios-xe-261">What's New in IOS XE 26.1<a class="headerlink" href="#whats-new-in-ios-xe-261" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Enhanced YANG models for better programmability</li>
+<li>Improved OpenConfig support</li>
+<li>Native YANG models for advanced features</li>
+<li>Better alignment with industry standards</li>
+</ul>
+<h3 id="key-benefits">Key Benefits<a class="headerlink" href="#key-benefits" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Standardized Data Models</strong>: Consistent way to interact with network devices</li>
+<li><strong>Programmatic Access</strong>: APIs that speak YANG for automation</li>
+<li><strong>Validation</strong>: Built-in data validation before configuration changes</li>
+<li><strong>Vendor Neutral</strong>: Industry standard supported across vendors</li>
+</ul>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>✅ Completed: Introduction - YANG Model Innovations</p>
+<p><strong>Continue your learning journey:</strong></p>
+<p>➡️ <a href="../day-0/">Day 0: Device Onboarding</a> - Learn Secure Zero Touch Provisioning (SZTP)</p>
+<p><strong>Or jump to:</strong>
+- <a href="../day-1/">Day 1: Device Configuration</a>
+- <a href="../day-2/">Day 2: Device Monitoring</a>
+- <a href="../resources/">Resources</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -1297,6 +1496,44 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../day-0/" class="md-footer__link md-footer__link--next" aria-label="Next: Day 0 Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Day 0 Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -1350,10 +1587,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/CLUS26-LTRENS-1680/", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotation", "content.code.copy", "toc.integrate"], "search": "/CLUS26-LTRENS-1680/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotation", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/CLUS26-LTRENS-1680/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
