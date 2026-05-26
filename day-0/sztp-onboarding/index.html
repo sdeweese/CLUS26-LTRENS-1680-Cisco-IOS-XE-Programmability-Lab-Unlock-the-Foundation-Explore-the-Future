@@ -817,10 +817,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-prepare-device" class="md-nav__link">
+  <a href="#a-core-components-in-this-lab" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Prepare Device
+        A) Core components in this lab
       
     </span>
   </a>
@@ -828,10 +828,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-power-on-device" class="md-nav__link">
+  <a href="#hands-on-runbook" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Power On Device
+        B) One-switch runbook (recommended sequence)
       
     </span>
   </a>
@@ -839,10 +839,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-verify-onboarding" class="md-nav__link">
+  <a href="#c-fast-troubleshooting-checklist-single-switch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Verify Onboarding
+        C) Fast troubleshooting checklist (single switch)
       
     </span>
   </a>
@@ -920,6 +920,17 @@
     <span class="md-ellipsis">
       
         Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cisco-live-on-demand-sessions-relevant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cisco Live On-Demand Sessions (Relevant)
       
     </span>
   </a>
@@ -1737,28 +1748,223 @@
 </span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">}</span>
 </span></code></pre></div>
 <h2 id="device-onboarding-demo">Device Onboarding Demo<a class="headerlink" href="#device-onboarding-demo" title="Permanent link">&para;</a></h2>
-<h3 id="step-1-prepare-device">Step 1: Prepare Device<a class="headerlink" href="#step-1-prepare-device" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Connect device to network with DHCP</li>
-<li>Ensure device can reach bootstrap server</li>
-<li>Verify device has factory default config</li>
-</ol>
-<h3 id="step-2-power-on-device">Step 2: Power On Device<a class="headerlink" href="#step-2-power-on-device" title="Permanent link">&para;</a></h3>
-<p>Device will automatically:</p>
+<p>Use this section in two phases:</p>
 <ul>
-<li>Obtain IP via DHCP</li>
-<li>Discover bootstrap server</li>
-<li>Validate ownership voucher</li>
-<li>Download bootstrap configuration</li>
-<li>Apply configuration</li>
+<li><strong>A) Core components in this lab</strong> sets the stage and explains the architecture.</li>
+<li><strong>B) One-switch runbook</strong> is where the hands-on work begins.</li>
 </ul>
-<h3 id="step-3-verify-onboarding">Step 3: Verify Onboarding<a class="headerlink" href="#step-3-verify-onboarding" title="Permanent link">&para;</a></h3>
-<p>Check device logs:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>show logging | include SZTP
-</span></code></pre></div></p>
-<p>Verify configuration:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>show running-config
-</span></code></pre></div></p>
+<p>If you want to jump directly to hands-on: <a href="#hands-on-runbook">Go to B) One-switch runbook</a></p>
+<h3 id="a-core-components-in-this-lab">A) Core components in this lab<a class="headerlink" href="#a-core-components-in-this-lab" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Switch (IOS-XE client)</p>
+<ul>
+<li>Sends DHCP discover, learns option 143, then performs mTLS to the SZTP server.</li>
+</ul>
+</li>
+<li>
+<p>DHCP server</p>
+<ul>
+<li>Delivers RFC 8572 option 143 containing the redirecter URL.</li>
+<li>In this lab, URL is <code>https://10.1.1.3:8080</code>.</li>
+</ul>
+</li>
+<li>
+<p>Redirecter service (sztpd redirect mode, port 8080)</p>
+<ul>
+<li>Returns redirect-information pointing the switch to bootstrap on port 9090.</li>
+</ul>
+</li>
+<li>
+<p>Bootstrap service (sztpd running mode, port 9090)</p>
+<ul>
+<li>Verifies device identity and returns signed onboarding-information.</li>
+<li>In this repo it maps the C9300 PID to <code>first-onboarding-information</code>.</li>
+</ul>
+</li>
+<li>
+<p>Voucher and owner certificates</p>
+<ul>
+<li>Ownership voucher and owner cert chain establish ownership trust.</li>
+<li>Files are mounted from local_files.</li>
+</ul>
+</li>
+<li>
+<p>Artifact payloads</p>
+<ul>
+<li>first-configuration.xml (minimal placeholder config)</li>
+<li>first-pre-configuration-script.sh (actual day-0 switch config logic)</li>
+<li>Optional post script and image artifacts</li>
+</ul>
+</li>
+</ol>
+<h3 id="hands-on-runbook">B) One-switch runbook (recommended sequence)<a class="headerlink" href="#hands-on-runbook" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Console to the C9300 switch</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>console-helper
+</span></code></pre></div>
+</li>
+<li>
+<p>Set your lab values in env file</p>
+<p>Edit config/catalyst/c9300.env:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">SZTP_URL</span><span class="o">=</span>https://10.1.1.3:8080
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">SZTP_DEVICE_SN</span><span class="o">=</span>C9300-24T
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">SZTP_VOUCHER_FILE</span><span class="o">=</span>/local_files/FCW2126G05V.vcj
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">SZTP_OWNER_CERT_FILE</span><span class="o">=</span>/local_files/owner_cert_chain.cms
+</span></code></pre></div>
+</li>
+<li>
+<p>Validate ownership artifacts before bringing up containers</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>scripts/validate-sztp-artifacts.sh
+</span></code></pre></div>
+</li>
+<li>
+<p>Choose DHCP mode</p>
+<ul>
+<li>Option A: Use container DHCP</li>
+</ul>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>config/catalyst/c9300.env<span class="w"> </span>--profile<span class="w"> </span>dhcp<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<ul>
+<li>Option B: Use existing upstream DHCP (as used in this lab). Ensure option 143 is correctly encoded and points to 10.1.1.3:8080.</li>
+</ul>
+</li>
+<li>
+<p>Confirm containers are up</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker<span class="w"> </span>ps<span class="w"> </span>--format<span class="w"> </span><span class="s1">&#39;table {{.Names}}\t{{.Status}}&#39;</span>
+</span></code></pre></div>
+<p>Expected: sztp-bootstrap-1 and sztp-redirecter-1 are present and healthy.</p>
+<p>If they are not up, run:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>config/catalyst/c9300.env<span class="w"> </span>up<span class="w"> </span>-d
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>docker<span class="w"> </span>ps<span class="w"> </span>--format<span class="w"> </span><span class="s1">&#39;table {{.Names}}\t{{.Status}}&#39;</span>
+</span></code></pre></div>
+<p>Pre-demo check: inspect mounted SZTP files in the bootstrap container</p>
+<ol>
+<li>Confirm mount points from host VM into bootstrap container:</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>docker<span class="w"> </span>inspect<span class="w"> </span>sztp-bootstrap-1<span class="w"> </span>--format<span class="w"> </span><span class="s1">&#39;{{range .Mounts}}{{println .Source &quot; -&gt; &quot; .Destination}}{{end}}&#39;</span>
+</span></code></pre></div>
+<ol>
+<li>Inspect the expected artifact folder inside the container:</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>sztp-bootstrap-1<span class="w"> </span>sh<span class="w"> </span>-lc<span class="w"> </span><span class="s1">&#39;ls -lah /local_files&#39;</span>
+</span></code></pre></div>
+<ol>
+<li>Verify voucher and owner cert files are present:</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>sztp-bootstrap-1<span class="w"> </span>sh<span class="w"> </span>-lc<span class="w"> </span><span class="s1">&#39;ls -lah /local_files/*.vcj /local_files/*owner* 2&gt;/dev/null&#39;</span>
+</span></code></pre></div>
+<ol>
+<li>Locate pre and post configuration payload files:</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>sztp-bootstrap-1<span class="w"> </span>sh<span class="w"> </span>-lc<span class="w"> </span><span class="s1">&#39;find / -type f \( -name &quot;*pre*config*&quot; -o -name &quot;*post*config*&quot; -o -name &quot;*onboarding*&quot; -o -name &quot;*.xml&quot; -o -name &quot;*.sh&quot; \) 2&gt;/dev/null | sort&#39;</span>
+</span></code></pre></div>
+<ol>
+<li>Confirm runtime SZTP environment paths the container is using:</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>sztp-bootstrap-1<span class="w"> </span>sh<span class="w"> </span>-lc<span class="w"> </span><span class="s1">&#39;env | grep &quot;^SZTP_&quot; | sort&#39;</span>
+</span></code></pre></div>
+<p>What to confirm before continuing:</p>
+<ul>
+<li><code>SZTP_VOUCHER_FILE</code> and <code>SZTP_OWNER_CERT_FILE</code> point to valid files visible in container.</li>
+<li><code>first-pre-configuration-script.sh</code> and any post/script payloads are present.</li>
+<li>Host-to-container mount mapping includes your expected artifact directory.</li>
+</ul>
+</li>
+<li>
+<p>Run preflight checks</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>scripts/sztp-preflight.sh<span class="w"> </span>--env-file<span class="w"> </span>config/catalyst/c9300.env
+</span></code></pre></div>
+</li>
+<li>
+<p>Verify bootstrap patches/log markers and SBI behavior</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>docker<span class="w"> </span>logs<span class="w"> </span>sztp-bootstrap-1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;sitecustomize:&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">SZTP_URL</span><span class="o">=</span>https://10.1.1.3:8080<span class="w"> </span>bash<span class="w"> </span>scripts/verify-sztp.sh
+</span></code></pre></div>
+<p>Expected verify result: 401 access-denied (this is good and confirms mTLS endpoint behavior).</p>
+</li>
+<li>
+<p>Reset and reload the switch so SZTP re-triggers</p>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>enable
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>write erase
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>yes
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>reload
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>no
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>yes
+</span></code></pre></div>
+Example:</p>
+<p><img alt="Trigger SZTP by reset and reload" src="../../images/day0/day0-trigger-sztp.png" /></p>
+<p><em>Steps to trigger SZTP process to begin</em></p>
+</li>
+<li>
+<p>Watch onboarding from host and switch</p>
+<p>On host:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>docker<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>sztp-bootstrap-1<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s1">&#39;signed|onboard|injected|error|404&#39;</span>
+</span></code></pre></div>
+<p>On switch:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>show logging process sztp internal start last 20 minutes
+</span></code></pre></div>
+<p>Examples (captured in sequence). There are log snips omitted between each screenshot.</p>
+<p><img alt="Switch SZTP internal logs - part 1" src="../../images/day0/day0-show-logging-1.png" /></p>
+<p><em>Important in image 1: confirm option 143/bootstrap-server-list discovery and redirect start (8080 path).</em> </p>
+<p><img alt="Switch SZTP internal logs - part 2" src="../../images/day0/day0-show-logging-2.png" /></p>
+<p><em>Important in image 2: confirm voucher and owner certificate chain verification success (no reject/fail markers).</em> </p>
+<p><img alt="Switch SZTP internal logs - part 3" src="../../images/day0/day0-show-logging-3.png" /></p>
+<p><em>Important in image 3: confirm conveyed/signed onboarding information accepted and transition toward successful completion.</em></p>
+<p>Reference example: <a href="../sztp-internal-logs-example/">Full SZTP internal logs example</a></p>
+</li>
+<li>
+<p>Confirm successful end state</p>
+<ul>
+<li>Switch sees bootstrap-server-list from option 143.
+  <img alt="DHCP option 143 received for SZTP redirecter" src="../../images/day0/day0-dhcp-received.png" /></li>
+</ul>
+<p><em>DHCP provides SZTP bootstrap-server-list via option 143</em>
+- Voucher signature and owner certificate chain verification pass.
+- Conveyed information is signed and accepted.
+- Day-0 configurations from first-pre-configuration-script.sh are applied.</p>
+<p><img alt="SZTP validation and expected verify outcome" src="../../images/day0/day0-sztp-validation.png" /></p>
+<p><em>Validation checks and expected 401 access-denied indicate correct mTLS endpoint behavior</em></p>
+</li>
+</ol>
+<h3 id="c-fast-troubleshooting-checklist-single-switch">C) Fast troubleshooting checklist (single switch)<a class="headerlink" href="#c-fast-troubleshooting-checklist-single-switch" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>No SZTP attempt seen</p>
+<ul>
+<li>Recheck DHCP option 143 framing and run write erase before reload.</li>
+</ul>
+</li>
+<li>
+<p>404 or RPC path errors</p>
+<ul>
+<li>Ensure SZTP_URL is scheme + host + port only (no RESTCONF path).</li>
+</ul>
+</li>
+<li>
+<p>Certificate chain verification failures</p>
+<ul>
+<li>Re-run scripts/validate-sztp-artifacts.sh and confirm voucher, PDC, and owner chain match.</li>
+</ul>
+</li>
+<li>
+<p>Redirect works but onboarding fails</p>
+<ul>
+<li>Check device registration key and mapping in sztpd templates and bootstrap logs.</li>
+</ul>
+</li>
+<li>
+<p>SZTP containers are not running</p>
+<ul>
+<li>Start them with docker compose and re-check status.</li>
+<li>Commands:</li>
+</ul>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>config/catalyst/c9300.env<span class="w"> </span>up<span class="w"> </span>-d
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>docker<span class="w"> </span>ps<span class="w"> </span>--format<span class="w"> </span><span class="s1">&#39;table {{.Names}}\t{{.Status}}&#39;</span>
+</span></code></pre></div>
+</li>
+</ol>
 <h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Certificate Validation</strong>: Always validate device and server certificates</li>
@@ -1770,12 +1976,12 @@
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="device-not-bootstrapping">Device Not Bootstrapping<a class="headerlink" href="#device-not-bootstrapping" title="Permanent link">&para;</a></h3>
 <p><strong>Check DHCP option 143</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On DHCP server</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>ip<span class="w"> </span>dhcp<span class="w"> </span>binding
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># On DHCP server</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>show<span class="w"> </span>ip<span class="w"> </span>dhcp<span class="w"> </span>binding
 </span></code></pre></div></p>
 <p><strong>Verify bootstrap server reachability</strong>:
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From device</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ping<span class="w"> </span>bootstrap.example.com
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># From device</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>ping<span class="w"> </span>bootstrap.example.com
 </span></code></pre></div></p>
 <h3 id="ownership-voucher-rejected">Ownership Voucher Rejected<a class="headerlink" href="#ownership-voucher-rejected" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1794,10 +2000,23 @@
 <h2 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://datatracker.ietf.org/doc/html/rfc8572">IETF RFC 8572 - Secure Zero Touch Provisioning</a></li>
+<li><a href="https://blogs.cisco.com/developer/secureztp01">Cisco blog - Secure ZTP overview</a></li>
 <li><a href="https://www.cisco.com/c/en/us/support/docs/switches/catalyst-9000/sztp-guide.html">Cisco SZTP Documentation</a></li>
 <li><a href="https://github.com/sdeweese/sztp">SZTP Scripts Repository</a></li>
 <li><a href="https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/README.md">SZTP Scripts README</a></li>
+<li><a href="https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/run_bulk_vouchers.sh">MASA OV generation script (bulk)</a></li>
+<li><a href="https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/masa_get_voucher.py">MASA OV download script (single serial)</a></li>
 </ul>
+<h2 id="cisco-live-on-demand-sessions-relevant">Cisco Live On-Demand Sessions (Relevant)<a class="headerlink" href="#cisco-live-on-demand-sessions-relevant" title="Permanent link">&para;</a></h2>
+<p>Use the Cisco Live Session Catalog and search by session ID/title (availability varies by event and release timing):</p>
+<ul>
+<li>Cisco Live Session Catalog: https://www.ciscolive.com/global/learn/session-catalog.html</li>
+<li>LTRENS-1680: Unlock the Foundation, Explore the Future (includes Day 0 SZTP onboarding)</li>
+<li>DEVNET-1232: Swagger Into RESTCONF: Navigating the IOS XE API and DevNet Sandboxes</li>
+<li>BRKOPS-2594: Navigating the SNMP-Free Journey with Model-Driven Telemetry</li>
+<li>DEVWKS-2810: The Atomic Shift (NETCONF/YANG and ACR workflow)</li>
+</ul>
+<p>For the full curated IOS XE session list used by this lab, see: <a href="https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/CLUS26-IOS-XE-Sessions.md">Cisco Live IOS XE sessions</a></p>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>✅ Completed: Day 0 - SZTP Onboarding</p>
