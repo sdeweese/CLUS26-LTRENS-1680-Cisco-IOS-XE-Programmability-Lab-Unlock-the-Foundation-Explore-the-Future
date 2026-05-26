@@ -103,33 +103,223 @@ After generating ownership vouchers, you need to set up a bootstrap server to de
 
 ## Device Onboarding Demo
 
-### Step 1: Prepare Device
+Use this section in two phases:
 
-1. Connect device to network with DHCP
-2. Ensure device can reach bootstrap server
-3. Verify device has factory default config
+- **A) Core components in this lab** sets the stage and explains the architecture.
+- **B) One-switch runbook** is where the hands-on work begins.
 
-### Step 2: Power On Device
+If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-on-runbook)
 
-Device will automatically:
+### A) Core components in this lab
 
-- Obtain IP via DHCP
-- Discover bootstrap server
-- Validate ownership voucher
-- Download bootstrap configuration
-- Apply configuration
+1. Switch (IOS-XE client)
+    - Sends DHCP discover, learns option 143, then performs mTLS to the SZTP server.
 
-### Step 3: Verify Onboarding
+2. DHCP server
+    - Delivers RFC 8572 option 143 containing the redirecter URL.
+    - In this lab, URL is `https://10.1.1.3:8080`.
 
-Check device logs:
-```
-show logging | include SZTP
-```
+3. Redirecter service (sztpd redirect mode, port 8080)
+    - Returns redirect-information pointing the switch to bootstrap on port 9090.
 
-Verify configuration:
-```
-show running-config
-```
+4. Bootstrap service (sztpd running mode, port 9090)
+    - Verifies device identity and returns signed onboarding-information.
+    - In this repo it maps the C9300 PID to `first-onboarding-information`.
+
+5. Voucher and owner certificates
+    - Ownership voucher and owner cert chain establish ownership trust.
+    - Files are mounted from local_files.
+
+6. Artifact payloads
+    - first-configuration.xml (minimal placeholder config)
+    - first-pre-configuration-script.sh (actual day-0 switch config logic)
+    - Optional post script and image artifacts
+
+### B) One-switch runbook (recommended sequence) {#hands-on-runbook}
+
+1. Console to the C9300 switch
+
+    ```sh
+    console-helper
+    ```
+
+2. Set your lab values in env file
+
+    Edit config/catalyst/c9300.env:
+
+    ```sh
+    SZTP_URL=https://10.1.1.3:8080
+    SZTP_DEVICE_SN=C9300-24T
+    SZTP_VOUCHER_FILE=/local_files/FCW2126G05V.vcj
+    SZTP_OWNER_CERT_FILE=/local_files/owner_cert_chain.cms
+    ```
+
+3. Validate ownership artifacts before bringing up containers
+
+    ```sh
+    scripts/validate-sztp-artifacts.sh
+    ```
+
+4. Choose DHCP mode
+
+    - Option A: Use container DHCP
+
+    ```sh
+    docker compose --env-file config/catalyst/c9300.env --profile dhcp up -d
+    ```
+
+    - Option B: Use existing upstream DHCP (as used in this lab). Ensure option 143 is correctly encoded and points to 10.1.1.3:8080.
+
+5. Confirm containers are up
+
+    ```sh
+    docker ps --format 'table {{.Names}}\t{{.Status}}'
+    ```
+
+    Expected: sztp-bootstrap-1 and sztp-redirecter-1 are present and healthy.
+
+    If they are not up, run:
+
+    ```sh
+    docker compose --env-file config/catalyst/c9300.env up -d
+    docker ps --format 'table {{.Names}}\t{{.Status}}'
+    ```
+
+    Pre-demo check: inspect mounted SZTP files in the bootstrap container
+
+    1. Confirm mount points from host VM into bootstrap container:
+
+    ```sh
+    docker inspect sztp-bootstrap-1 --format '{{range .Mounts}}{{println .Source " -> " .Destination}}{{end}}'
+    ```
+
+    2. Inspect the expected artifact folder inside the container:
+
+    ```sh
+    docker exec -it sztp-bootstrap-1 sh -lc 'ls -lah /local_files'
+    ```
+
+    3. Verify voucher and owner cert files are present:
+
+    ```sh
+    docker exec -it sztp-bootstrap-1 sh -lc 'ls -lah /local_files/*.vcj /local_files/*owner* 2>/dev/null'
+    ```
+
+    4. Locate pre and post configuration payload files:
+
+    ```sh
+    docker exec -it sztp-bootstrap-1 sh -lc 'find / -type f \( -name "*pre*config*" -o -name "*post*config*" -o -name "*onboarding*" -o -name "*.xml" -o -name "*.sh" \) 2>/dev/null | sort'
+    ```
+
+    5. Confirm runtime SZTP environment paths the container is using:
+
+    ```sh
+    docker exec -it sztp-bootstrap-1 sh -lc 'env | grep "^SZTP_" | sort'
+    ```
+
+    What to confirm before continuing:
+
+    - `SZTP_VOUCHER_FILE` and `SZTP_OWNER_CERT_FILE` point to valid files visible in container.
+    - `first-pre-configuration-script.sh` and any post/script payloads are present.
+    - Host-to-container mount mapping includes your expected artifact directory.
+
+6. Run preflight checks
+
+    ```sh
+    scripts/sztp-preflight.sh --env-file config/catalyst/c9300.env
+    ```
+
+7. Verify bootstrap patches/log markers and SBI behavior
+
+    ```sh
+    docker logs sztp-bootstrap-1 2>&1 | grep -E 'sitecustomize:' | sort -u
+    SZTP_URL=https://10.1.1.3:8080 bash scripts/verify-sztp.sh
+    ```
+
+    Expected verify result: 401 access-denied (this is good and confirms mTLS endpoint behavior).
+
+8. Reset and reload the switch so SZTP re-triggers
+
+    ```text
+    enable
+    write erase
+    yes
+    reload
+    no
+    yes
+    ```
+    Example:
+
+    ![Trigger SZTP by reset and reload](../images/day0/day0-trigger-sztp.png)
+
+    *Steps to trigger SZTP process to begin*
+
+9. Watch onboarding from host and switch
+
+    On host:
+
+    ```sh
+    docker logs -f sztp-bootstrap-1 2>&1 | grep -iE 'signed|onboard|injected|error|404'
+    ```
+
+    On switch:
+
+    ```text
+    show logging process sztp internal start last 20 minutes
+    ```
+
+    Examples (captured in sequence). There are log snips omitted between each screenshot.
+
+    ![Switch SZTP internal logs - part 1](../images/day0/day0-show-logging-1.png)
+
+    *Important in image 1: confirm option 143/bootstrap-server-list discovery and redirect start (8080 path).* 
+
+    ![Switch SZTP internal logs - part 2](../images/day0/day0-show-logging-2.png)
+
+    *Important in image 2: confirm voucher and owner certificate chain verification success (no reject/fail markers).* 
+
+    ![Switch SZTP internal logs - part 3](../images/day0/day0-show-logging-3.png)
+
+    *Important in image 3: confirm conveyed/signed onboarding information accepted and transition toward successful completion.*
+
+    Reference example: [Full SZTP internal logs example](sztp-internal-logs-example.md)
+
+10. Confirm successful end state
+
+    - Switch sees bootstrap-server-list from option 143.
+      ![DHCP option 143 received for SZTP redirecter](../images/day0/day0-dhcp-received.png)
+
+      *DHCP provides SZTP bootstrap-server-list via option 143*
+    - Voucher signature and owner certificate chain verification pass.
+    - Conveyed information is signed and accepted.
+    - Day-0 configurations from first-pre-configuration-script.sh are applied.
+
+      ![SZTP validation and expected verify outcome](../images/day0/day0-sztp-validation.png)
+
+      *Validation checks and expected 401 access-denied indicate correct mTLS endpoint behavior*
+
+### C) Fast troubleshooting checklist (single switch)
+
+1. No SZTP attempt seen
+    - Recheck DHCP option 143 framing and run write erase before reload.
+
+2. 404 or RPC path errors
+    - Ensure SZTP_URL is scheme + host + port only (no RESTCONF path).
+
+3. Certificate chain verification failures
+    - Re-run scripts/validate-sztp-artifacts.sh and confirm voucher, PDC, and owner chain match.
+
+4. Redirect works but onboarding fails
+    - Check device registration key and mapping in sztpd templates and bootstrap logs.
+
+5. SZTP containers are not running
+    - Start them with docker compose and re-check status.
+    - Commands:
+
+    ```sh
+    docker compose --env-file config/catalyst/c9300.env up -d
+    docker ps --format 'table {{.Names}}\t{{.Status}}'
+    ```
 
 ## Security Considerations
 
@@ -172,9 +362,24 @@ ping bootstrap.example.com
 ## Additional Resources
 
 - [IETF RFC 8572 - Secure Zero Touch Provisioning](https://datatracker.ietf.org/doc/html/rfc8572)
+- [Cisco blog - Secure ZTP overview](https://blogs.cisco.com/developer/secureztp01)
 - [Cisco SZTP Documentation](https://www.cisco.com/c/en/us/support/docs/switches/catalyst-9000/sztp-guide.html)
 - [SZTP Scripts Repository](https://github.com/sdeweese/sztp)
 - [SZTP Scripts README](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/README.md)
+- [MASA OV generation script (bulk)](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/run_bulk_vouchers.sh)
+- [MASA OV download script (single serial)](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/masa_get_voucher.py)
+
+## Cisco Live On-Demand Sessions (Relevant)
+
+Use the Cisco Live Session Catalog and search by session ID/title (availability varies by event and release timing):
+
+- Cisco Live Session Catalog: https://www.ciscolive.com/global/learn/session-catalog.html
+- LTRENS-1680: Unlock the Foundation, Explore the Future (includes Day 0 SZTP onboarding)
+- DEVNET-1232: Swagger Into RESTCONF: Navigating the IOS XE API and DevNet Sandboxes
+- BRKOPS-2594: Navigating the SNMP-Free Journey with Model-Driven Telemetry
+- DEVWKS-2810: The Atomic Shift (NETCONF/YANG and ACR workflow)
+
+For the full curated IOS XE session list used by this lab, see: [Cisco Live IOS XE sessions](../../CLUS26-IOS-XE-Sessions.md)
 
 ---
 
