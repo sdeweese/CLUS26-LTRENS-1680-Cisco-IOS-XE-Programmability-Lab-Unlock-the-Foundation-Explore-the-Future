@@ -1,58 +1,160 @@
-# Welcome to the Cisco Live 26 IOS XE Programmablity Lab - Unlock the Foundation, Explore the Future
+# Welcome to the Cisco Live 26 IOS XE Programmability Lab
 
-## Cisco IOS XE Version 26.1
+## Unlock the Foundation, Explore the Future
 
-### This lab guide serves as the Cisco Live US (Las Vegas) Programmability and Automation Lab with Catalyst IOS XE Platforms session LTRENS-1680
+### Cisco IOS XE Version 26.1
 
-# Lab Introduction
-To access the lab, you will need to SSH to the VM specific host. From the VM host you will have access to the switch and the remaining software dependencies for the lab. Please find below the actual lab environment and instructions.
+This lab guide serves as the comprehensive resource for the Cisco Live US (Las Vegas) **Programmability and Automation Lab with Catalyst IOS XE Platforms** - Session **LTRENS-1680**.
 
+---
 
-# Lab environment
-See lab environment access information provided by instrcutors. 
+## Lab Introduction
 
+Welcome to the IOS XE Programmability Lab! This hands-on lab takes you through the complete lifecycle of modern network device management, from initial onboarding through ongoing operations and optimization.
 
-# Accessing the lab environment 
+### Lab Access
 
-1. Identify your pod#.
- 
-2. Open two terminal windows and SSH to both. One window will be used to configure the VM. The second window is for telnet access into the C9350.
+To access the lab, you will need to SSH to your assigned VM host. From the VM, you will have access to the switch and all required software dependencies.
 
-3. To SSH into the VM, copy/paste the below line into **the first** terminal sessions. Replace the ## symbol on the SSH command with your pod number. Use the password given to you by the facilitator.
+**See lab environment access information provided by instructors.**
 
-```ssh -p 3389 -L 18480:localhost:8480 -L 13000:localhost:3000 auto@pod##-xelab.cisco.com```
+---
 
-Once you logged into the VM, the first time you login, you'll see this question:
+## Lab Environment & Access
 
-`Are you sure you want to continue connecting (yes/no/[fingerprint])?` 
+### Accessing Your Lab Pod
 
-Type, `yes` to continue 
+1. **Identify your pod number** (provided by instructors)
 
-4. Similarly, in the second terminal window, run the following command. Replace the ## symbol on the SSH command with your pod number. Use the password is the same one that was given to you by the facilitator in the previous step.
+2. **Open two terminal windows** for SSH connections:
+   - **Terminal 1**: VM configuration and automation
+   - **Terminal 2**: Direct switch access via telnet
 
-```auto@pod##-xelab.cisco.com```
+3. **SSH to the VM** (Terminal 1):
+   ```bash
+   ssh -p 3389 -L 18480:localhost:8480 -L 13000:localhost:3000 auto@pod##-xelab.cisco.com
+   ```
+   Replace `##` with your pod number. Use the password provided by the facilitator.
+   
+   First-time login will prompt:
+   ```
+   Are you sure you want to continue connecting (yes/no/[fingerprint])?
+   ```
+   Type `yes` to continue.
 
-Next, telnet into the Catalyst 9350 in the same window. 
+4. **SSH to the VM** (Terminal 2):
+   ```bash
+   ssh auto@pod##-xelab.cisco.com
+   ```
+   Use the same credentials.
+   
+   Then telnet to the Catalyst 9350:
+   ```bash
+   telnet 10.1.1.15
+   ```
+   Credentials: `admin` / `Cisco123`
 
-```telnet 10.1.1.15```
+5. **You're ready!** Once connected via SSH and telnet, you can proceed with the lab modules.
 
-Use the following credentials: admin / Cisco123
+---
 
-5. Once you finished accesing via SSH and telnet into the VM and the switch respectively, you should be ready to proceed with the lab modules.
+## Learning Path
 
-# Lab Modules
+This lab follows a structured "Day 0 to Day N" approach, mirroring real-world network device lifecycle management:
 
-Lab modules can be completed in any order. Mark the lab completed in the [SmartSheet](https://app.smartsheet.com/b/form/134240eac2d84a57acd4efc24fd8f3d0) form once you have successfully completed each module. 
+### [Introduction](intro/index.md)
+- YANG Model Innovations in IOS XE 26.1
 
-## Day 0 Device Onboarding with Secure Zero Touch Provisioning
-[Module content to be added]
+### [Day 0 - Device Onboarding](day-0/index.md)
+**Secure Zero Touch Provisioning (SZTP)**
+- Automated device onboarding
+- Ownership voucher generation
+- Bootstrap configuration
+- Certificate-based authentication
 
+### [Day 1 - Device Configuration](day-1/index.md)
+**Configuration Management & Automation**
+- Atomic Config Replace (NETCONF)
+- Terraform + NETCONF (Infrastructure as Code)
+- Ansible + gNMI (Configuration Automation)
+- PyATS (Automated Testing)
 
-## Day 1 Device Config with Atomic Config Replace
+### [Day 2 - Device Monitoring](day-2/index.md)
+**Observability & Telemetry**
+- OpenTelemetry + Splunk Integration
+- gNXI Innovations (POLL/ONCE, ACL & VRF)
+- Model-Driven Telemetry
 
-### Introduction to Atomic Config Replace (ACR)
+### [Day N - Device Optimization](day-n/index.md)
+**Advanced Features**
+- Application Hosting with Smart Switches
+- Edge computing on network devices
 
-Atomic Config Replace (ACR) is a powerful NETCONF operation that allows network operators to fully replace the entire running configuration on a Cisco IOS XE device in a single atomic transaction. Unlike traditional configuration methods that apply changes line-by-line, ACR provides:
+### [Resources](resources/index.md)
+**Additional Tools & References**
+- YANG Suite Labs
+- DevNet Sandboxes
+- Swagger API Documentation
+
+---
+
+## Lab Modules
+
+Lab modules can be completed in **any order**. Feel free to jump to topics that interest you most!
+
+---
+
+## Getting Started
+
+### Recommended Learning Path
+
+For the best learning experience, follow this sequence:
+
+1. **[Introduction: YANG Model Innovations](intro/index.md)** (~15 min)
+2. **[Day 0: SZTP Onboarding](day-0/index.md)** (~60 min)
+3. **[Day 1: Atomic Config Replace](day-1/atomic-operations.md)** (~60 min)
+4. **[Day 2: OpenTelemetry + Splunk](day-2/opentelemetry-splunk.md)** (~90 min)
+
+### Choose Your Own Adventure
+
+Prefer to explore specific topics? Jump directly to:
+
+- **Configuration Management**: [Terraform](day-1/terraform-netconf.md) or [Ansible](day-1/ansible-gnmi.md)
+- **Testing**: [PyATS](day-1/pyats-testing.md)
+- **Advanced Monitoring**: [gNXI Innovations](day-2/gnxi-innovations.md)
+- **Edge Computing**: [Application Hosting](day-n/app-hosting.md)
+
+---
+
+## Technical Support
+
+If you encounter issues during the lab:
+
+1. Check the **Troubleshooting** sections in each module
+2. Ask lab proctors for assistance
+3. Visit the DevNet Zone for additional support
+
+---
+
+## Additional Resources
+
+- [Cisco DevNet](https://developer.cisco.com)
+- [IOS XE Programmability Documentation](https://developer.cisco.com/docs/ios-xe/)
+- [YANG Models GitHub](https://github.com/YangModels/yang/tree/master/vendor/cisco/xe)
+- [DevNet Sandboxes](https://developer.cisco.com/site/sandbox/)
+
+---
+
+**Ready to begin?**
+
+➡️ **[Start with the Introduction](intro/index.md)**
+
+Or jump to a specific day:
+
+- [Day 0: Device Onboarding](day-0/index.md)
+- [Day 1: Device Configuration](day-1/index.md)
+- [Day 2: Device Monitoring](day-2/index.md)
+- [Day N: Device Optimization](day-n/index.md)
 
 - **Atomic operations**: All changes are applied together or rolled back completely
 - **Syntax validation**: Pre-checks configuration syntax before applying
@@ -1487,7 +1589,4 @@ In this module, you learned how to:
 
 Terraform provides a powerful, version-controlled approach to network configuration management that integrates seamlessly with modern DevOps workflows.
 
----
 
-# Feedback
-Mark the lab completed and provide any feedback and comments in the [SmartSheet](https://app.smartsheet.com/b/form/3c15e982ec7c40a089ccfdeb375776e0) form once you have successfully completed the modules above.

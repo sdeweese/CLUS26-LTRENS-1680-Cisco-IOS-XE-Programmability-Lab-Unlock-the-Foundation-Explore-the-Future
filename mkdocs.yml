@@ -1,1 +1,122 @@
-site_name: My Docs
+site_name: CLUS26 IOS XE Programmability Lab
+site_description: Unlock the Foundation, Explore the Future - Cisco Live Las Vegas 2026
+site_author: Cisco DevNet
+site_url: https://sdeweese.github.io/CLUS26-LTRENS-1680/
+
+repo_name: GitHub Repository
+repo_url: https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future
+
+theme:
+  name: material
+  palette:
+    # Cisco color scheme
+    - scheme: default
+      primary: blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+    - toc.integrate
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Introduction:
+      - YANG Model Innovations: intro/index.md
+  - Day 0 - Device Onboarding:
+      - Day 0 Overview: day-0/index.md
+      - SZTP Onboarding: day-0/sztp-onboarding.md
+  - Day 1 - Device Config:
+      - Day 1 Overview: day-1/index.md
+      - Atomic Config Replace: day-1/atomic-operations.md
+      - Terraform + NETCONF: day-1/terraform-netconf.md
+      - Ansible + gNMI: day-1/ansible-gnmi.md
+      - PyATS Testing: day-1/pyats-testing.md
+  - Day 2 - Device Monitoring:
+      - Day 2 Overview: day-2/index.md
+      - OpenTelemetry + Splunk: day-2/opentelemetry-splunk.md
+      - gNXI Innovations: day-2/gnxi-innovations.md
+  - Day N - Device Optimization:
+      - Day N Overview: day-n/index.md
+      - App Hosting: day-n/app-hosting.md
+  - Resources:
+      - Resources Overview: resources/index.md
+      - YANG Suite Labs: resources/yang-suite.md
+      - DevNet Sandboxes: resources/sandboxes.md
+      - Swagger API: resources/swagger-api.md
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future
+    - icon: fontawesome/solid/globe
+      link: https://developer.cisco.com
+  generator: false
+
+copyright: Copyright &copy; 2026 Cisco Systems, Inc. All rights reserved.
