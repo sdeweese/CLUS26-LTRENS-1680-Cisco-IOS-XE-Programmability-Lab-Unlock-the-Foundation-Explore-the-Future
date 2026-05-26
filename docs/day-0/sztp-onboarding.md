@@ -379,7 +379,7 @@ Use the Cisco Live Session Catalog and search by session ID/title (availability 
 - BRKOPS-2594: Navigating the SNMP-Free Journey with Model-Driven Telemetry
 - DEVWKS-2810: The Atomic Shift (NETCONF/YANG and ACR workflow)
 
-For the full curated IOS XE session list used by this lab, see: [Cisco Live IOS XE sessions](../../CLUS26-IOS-XE-Sessions.md)
+For the full curated IOS XE session list used by this lab, see: [Cisco Live IOS XE sessions](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/CLUS26-IOS-XE-Sessions.md)
 
 ---
 
