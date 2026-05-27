@@ -225,43 +225,27 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
     docker ps --format 'table {{.Names}}\t{{.Status}}'
     ```
 
-    Pre-demo check: inspect mounted SZTP files in the bootstrap container
+    Pre-demo check: inspect onboarding artifacts directly in the running bootstrap container
 
-    1. Confirm mount points from host VM into bootstrap container:
+    1. Open a shell in the container:
 
-    ```sh
-    docker inspect sztp-bootstrap-1 --format '{{range .Mounts}}{{println .Source " -> " .Destination}}{{end}}'
-    ```
+        ```sh
+        docker exec -it sztp-bootstrap-1 sh
+        ```
 
-    2. Inspect the expected artifact folder inside the container:
+    2. Read each onboarding text artifact one line at a time (`/mnt`) and confirm intent:
 
-    ```sh
-    docker exec -it sztp-bootstrap-1 sh -lc 'ls -lah /local_files'
-    ```
+        - `sed -n '1,200p' /mnt/first-pre-configuration-script.sh`: Runs before first configuration is applied. Prepares the initial device state (for example baseline interface/system prerequisites and environment setup) so first-stage onboarding can execute cleanly.
+        - `sed -n '1,200p' /mnt/first-configuration.xml`: First-stage structured configuration payload. Baseline config delivered during initial onboarding.
+        - `sed -n '1,200p' /mnt/first-post-configuration-script.sh`: Runs after first configuration is applied. Verifies first-stage outcomes and performs cleanup/finalization actions (for example checks expected config state and records success markers).
 
-    3. Verify voucher and owner cert files are present:
+        - `sed -n '1,200p' /mnt/second-pre-configuration-script.sh`: Runs before second-stage configuration. Prepares dependencies for stage two (for example enabling required features, setting variables, or ensuring services/state from stage one are ready).
+        - `sed -n '1,200p' /mnt/second-configuration.xml`: Second-stage structured configuration payload. Extends/refines first-stage onboarding config.
+        - `sed -n '1,200p' /mnt/second-post-configuration-script.sh`: Runs after second-stage configuration is applied. Validates stage-two applied state and performs post-change tasks (for example consistency checks and transition prep for stage three).
 
-    ```sh
-    docker exec -it sztp-bootstrap-1 sh -lc 'ls -lah /local_files/*.vcj /local_files/*owner* 2>/dev/null'
-    ```
-
-    4. Locate pre and post configuration payload files:
-
-    ```sh
-    docker exec -it sztp-bootstrap-1 sh -lc 'find / -type f \( -name "*pre*config*" -o -name "*post*config*" -o -name "*onboarding*" -o -name "*.xml" -o -name "*.sh" \) 2>/dev/null | sort'
-    ```
-
-    5. Confirm runtime SZTP environment paths the container is using:
-
-    ```sh
-    docker exec -it sztp-bootstrap-1 sh -lc 'env | grep "^SZTP_" | sort'
-    ```
-
-    What to confirm before continuing:
-
-    - `SZTP_VOUCHER_FILE` and `SZTP_OWNER_CERT_FILE` point to valid files visible in container.
-    - `first-pre-configuration-script.sh` and any post/script payloads are present.
-    - Host-to-container mount mapping includes your expected artifact directory.
+        - `sed -n '1,200p' /mnt/third-pre-configuration-script.sh`: Runs before third-stage configuration. Performs final prerequisite checks/adjustments so the last onboarding payload can apply without rollback.
+        - `sed -n '1,200p' /mnt/third-configuration.xml`: Third-stage structured configuration payload. Typically completes Day 0 target state.
+        - `sed -n '1,200p' /mnt/third-post-configuration-script.sh`: Runs after third-stage configuration is applied. Executes final validation and handoff actions (for example verify intended end state, cleanup temporary artifacts, and mark onboarding complete).
 
 7. Run preflight checks
 

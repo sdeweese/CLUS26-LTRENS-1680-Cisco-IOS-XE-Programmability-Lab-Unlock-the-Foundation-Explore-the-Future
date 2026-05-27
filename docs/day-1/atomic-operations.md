@@ -38,6 +38,8 @@ Quick decision rule:
 - If you want to edit a CLI file like `configs/desired/<hostname>.cfg`, use the **CLI-RPC** path.
 - If you want to work with model-native XML payloads, use the **YANG/XML** path.
 
+In this lab, we will focus on full config replace operations using the CLI-RPC workflow.
+
 ---
 
 > **📦 Lab Framework Source**
@@ -117,7 +119,7 @@ Quick decision rule:
 | Atomic config | Feature flag enabled |
 | Credentials | Local user with privilege 15 |
 
-**Enable on the lab switch:**
+**Enable on the lab switch (`c9300x-lab`, `10.1.1.5`):**
 
 ```cisco
 conf t
@@ -395,7 +397,7 @@ Expected output: `Desired matches running (no diff)`
 You can also verify from the device CLI:
 
 ```bash
-# SSH to the switch
+# SSH to the C9300X lab switch (10.1.1.5)
 ssh admin@10.1.1.5
 
 # Check the changes
@@ -569,6 +571,10 @@ Intentionally create an invalid configuration (e.g., reference a non-existent VL
 If you prefer Python-based workflows, see the older Python ACR examples preserved in this repository:
 
 - [atomic-operations/old-python-based-content/](../../atomic-operations/old-python-based-content/)
+
+### PyATS Resources
+
+- [PyATS Hands-On Learning](https://developer.cisco.com/docs/pyats/hands-on-learning/)
 
 ---
 
