@@ -1,0 +1,15 @@
+testbed:
+  name: iosxe-lab
+
+devices:
+  c9300x-lab:
+    os: iosxe
+    type: switch
+    connections:
+      cli:
+        protocol: ssh
+        ip: 10.1.1.5
+    credentials:
+      default:
+        username: admin
+        password: Cisco123
