@@ -4,6 +4,14 @@
 
 YANG (Yet Another Next Generation) is a data modeling language used to model configuration and state data manipulated by network management protocols like NETCONF, RESTCONF, and gNMI.
 
+### Cisco Live Slide Deck (Companion)
+
+This lab aligns with a recent Cisco Live lecture-style presentation that explains the detailed background for the same topics you will perform hands-on in the Day 0-Day N sections.
+
+These slides are available for reference while completing this lab:
+
+<a href="../resources/slides/TECOPS-2314-Programmability-and-Automation-with-Cisco-IOS-XE.pdf" target="_blank" rel="noopener">TECOPS-2314: Programmability and Automation with Cisco IOS XE (PDF)</a>
+
 ### What's New in IOS XE 26.1
 
 - Enhanced YANG models for better programmability

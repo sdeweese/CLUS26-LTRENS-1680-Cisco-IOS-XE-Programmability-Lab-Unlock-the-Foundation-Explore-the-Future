@@ -24,6 +24,20 @@ This framework supports two approaches (both over NETCONF):
 
 Both workflows use the **candidate datastore** and **atomic commit** for safe, all-or-nothing configuration replacement.
 
+### Start Here: Pick One Workflow
+
+Use **one** workflow path for a given run. Do not mix CLI and XML playbooks in the same change cycle.
+
+| Workflow | Primary Config Format | Core Playbooks | Best For |
+|----------|------------------------|----------------|----------|
+| CLI-RPC | CLI text files (`.cfg`) | `01 -> 05 -> 07 -> 06` | Fast operator-friendly changes using familiar IOS CLI syntax |
+| YANG/XML | XML/YANG payloads | `01 -> 02 -> 04 -> 03` | Model-driven workflows and strict data-model alignment |
+
+Quick decision rule:
+
+- If you want to edit a CLI file like `configs/desired/<hostname>.cfg`, use the **CLI-RPC** path.
+- If you want to work with model-native XML payloads, use the **YANG/XML** path.
+
 ---
 
 > **📦 Lab Framework Source**
@@ -145,8 +159,7 @@ These values are already set in the inventory files—no changes needed.
 From your SSH session on the lab pod VM:
 
 ```bash
-cd ~
-cd iosxe-atomic-netconf-ansible/atomic-netconf-ansible
+cd ~/iosxe-atomic-netconf-ansible/atomic-netconf-ansible
 ```
 
 ### Step 2: Verify Ansible
@@ -224,6 +237,22 @@ atomic-netconf-ansible/
 
 All commands are run from inside the `atomic-netconf-ansible/` directory.
 
+### Step 0: Review Inventory and Precheck Files
+
+Before running any playbook, inspect the target inventory:
+
+```bash
+cat inventory/hosts.yml
+```
+
+Next, review the precheck tasks:
+
+```bash
+cat playbooks/01_precheck.yml
+```
+
+Confirm the device host/IP and connection variables are correct for your lab pod.
+
 ### Step 1: Verify Device Readiness
 
 Run the precheck playbook to verify NETCONF connectivity, candidate datastore support, and atomic config capability:
@@ -233,6 +262,7 @@ ansible-playbook -i inventory/hosts.yml playbooks/01_precheck.yml
 ```
 
 **What it checks:**
+
 - NETCONF connectivity on port 830
 - Candidate datastore enabled
 - Atomic config feature enabled
@@ -249,6 +279,7 @@ ansible-playbook -i inventory/hosts.yml playbooks/05_baseline_capture_cli.yml
 ```
 
 **What it creates:**
+
 - `configs/baseline/c9300x-lab/baseline.cfg` — Reference copy (don't edit)
 - `configs/desired/c9300x-lab.cfg` — Your working copy (edit this)
 
@@ -256,11 +287,7 @@ Both files contain the complete device configuration in IOS CLI format.
 
 ### Step 3: Edit Desired Configuration
 
-Open the desired configuration file and make your changes:
-
-```bash
-nano configs/desired/c9300x-lab.cfg
-```
+Open the desired configuration file and make your changes: configs/desired/c9300x-lab.cfg
 
 **Example changes:**
 
@@ -281,7 +308,7 @@ nano configs/desired/c9300x-lab.cfg
 
 > **Important**: This file contains the **complete** device configuration. Atomic config replace performs a full replace — anything you remove from this file will be removed from the device. Keep all physical interfaces defined.
 
-Save and exit (Ctrl+X, Y, Enter).
+Save file.
 
 ### Step 4: Preview Changes (Safe Dry Run)
 
@@ -310,6 +337,7 @@ Lines removed: 1
 ```
 
 **Diff symbols:**
+
 - `+` = Lines being added
 - `-` = Lines being removed
 - ` ` = Unchanged context
@@ -325,6 +353,7 @@ ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml
 ```
 
 **What happens:**
+
 1. Captures current running config (pre-backup)
 2. Stages desired config to candidate datastore
 3. Shows diff (same as Step 4)
@@ -342,6 +371,7 @@ ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_
 ```
 
 **What happens:**
+
 1. Captures BEFORE snapshot
 2. Stages config to candidate
 3. Shows diff

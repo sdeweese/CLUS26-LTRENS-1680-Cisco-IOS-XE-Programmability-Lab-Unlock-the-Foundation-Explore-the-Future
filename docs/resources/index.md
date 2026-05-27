@@ -9,6 +9,9 @@ Additional resources to support your IOS XE programmability journey, including l
 1. **YANG Suite Labs (YS LL)**: Interactive labs for YANG model exploration
 2. **DevNet Sandboxes**: Always-on lab environments for testing
 3. **Swagger API**: Interactive API documentation and testing
+4. **Cisco Live Slide Deck (PDF)**: Lecture-style companion for this lab
+
+<a href="slides/TECOPS-2314-Programmability-and-Automation-with-Cisco-IOS-XE.pdf" target="_blank" rel="noopener">Open TECOPS-2314 Slides (PDF)</a>
 
 ---
 

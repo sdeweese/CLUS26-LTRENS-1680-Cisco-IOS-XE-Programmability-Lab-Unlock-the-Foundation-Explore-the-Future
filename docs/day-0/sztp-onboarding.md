@@ -26,17 +26,17 @@ Cisco's MASA service (https://masa.cisco.com) validates device ownership and gen
 
 The MASA service then generates a signed ownership voucher that your bootstrap server presents to the device during the SZTP process. This ensures that only devices you own can successfully onboard to your network.
 
-**📚 For complete instructions on obtaining a MASA API token and generating ownership vouchers, see the [SZTP Scripts README](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/README.md) in this repository.**
+**📚 For complete instructions on obtaining a MASA API token and generating ownership vouchers, see the [SZTP Scripts README](../resources/sztp/README.md) in this repository.**
 
 ### Prerequisites
 
-- Cisco MASA account and API token (see [sztp/README.md](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/README.md) for details)
+- Cisco MASA account and API token (see [SZTP README](../resources/sztp/README.md) for details)
 - Device serial numbers
 - Domain certificate for authentication
 
 ### Quick Start
 
-For detailed instructions on generating ownership vouchers, see the [SZTP Scripts Documentation](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/README.md).
+For detailed instructions on generating ownership vouchers, see the [SZTP Scripts Documentation](../resources/sztp/README.md).
 
 **Basic steps:**
 
@@ -54,7 +54,7 @@ For detailed instructions on generating ownership vouchers, see the [SZTP Script
 
 3. **Generate vouchers**:
    ```bash
-   cd sztp/
+    cd docs/resources/sztp/
    ./run_bulk_vouchers.sh --serial-source pod-devices-table.md
    ```
 
@@ -66,7 +66,7 @@ The repository includes comprehensive scripts for voucher generation:
 - **masa_get_voucher.py**: Download existing vouchers
 - **run_bulk_vouchers.sh**: Bulk voucher generation
 
-📚 **Full documentation**: [SZTP README](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/README.md)
+📚 **Full documentation**: [SZTP README](../resources/sztp/README.md)
 
 ## Bootstrap Server Setup
 
@@ -135,15 +135,55 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
     - first-pre-configuration-script.sh (actual day-0 switch config logic)
     - Optional post script and image artifacts
 
-### B) One-switch runbook (recommended sequence) {#hands-on-runbook}
+<a id="hands-on-runbook"></a>
+### B) One-switch runbook (recommended sequence)
 
-1. Console to the C9300 switch
+Target switch in this lab: **C9350 at `10.1.1.15`**.
+
+1. Review DHCP behavior on the VM first
+
+    Before touching the switch, confirm how DHCP advertises Day 0 options:
+
+    ```sh
+    cat /etc/dhcp/dhcpd.conf
+    ```
+
+    ![DHCP.d file contents](../images/day0/screenshots/day0-dhcpd.png)
+
+    Optional quick filter:
+
+    ```sh
+    grep -nE '143|67|bootfile|filename|sztp|autoinstall' /etc/dhcp/dhcpd.conf
+    ```
+
+    What to look for:
+
+    - **Secure SZTP option 143** (bootstrap server-list/URL for SZTP redirect/bootstrap).
+    - **Classic ZTP option 67** (bootfile/script path used by legacy ZTP flows).
+
+    Selection order in this lab follows secure-first onboarding from the workflow:
+
+    1. SZTP (option 143)
+    2. Classic ZTP (option 67)
+    3. Autoinstall (fallback)
+
+    ![DHCP option 143 received for SZTP redirecter](../images/day0/screenshots/day0-onboarding-workflow.png)
+
+    *DHCP on the VM advertises secure SZTP first, then classic ZTP, then autoinstall fallback.*
+
+2. Console to the C9350 switch (`10.1.1.15`)
 
     ```sh
     console-helper
     ```
 
-2. Set your lab values in env file
+    Optional direct access:
+
+    ```sh
+    ssh admin@10.1.1.15
+    ```
+
+3. Set your lab values in env file
 
     Edit config/catalyst/c9300.env:
 
@@ -154,13 +194,13 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
     SZTP_OWNER_CERT_FILE=/local_files/owner_cert_chain.cms
     ```
 
-3. Validate ownership artifacts before bringing up containers
+4. Validate ownership artifacts before bringing up containers
 
     ```sh
     scripts/validate-sztp-artifacts.sh
     ```
 
-4. Choose DHCP mode
+5. Choose DHCP mode
 
     - Option A: Use container DHCP
 
@@ -170,7 +210,7 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
 
     - Option B: Use existing upstream DHCP (as used in this lab). Ensure option 143 is correctly encoded and points to 10.1.1.3:8080.
 
-5. Confirm containers are up
+6. Confirm containers are up
 
     ```sh
     docker ps --format 'table {{.Names}}\t{{.Status}}'
@@ -223,13 +263,13 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
     - `first-pre-configuration-script.sh` and any post/script payloads are present.
     - Host-to-container mount mapping includes your expected artifact directory.
 
-6. Run preflight checks
+7. Run preflight checks
 
     ```sh
     scripts/sztp-preflight.sh --env-file config/catalyst/c9300.env
     ```
 
-7. Verify bootstrap patches/log markers and SBI behavior
+8. Verify bootstrap patches/log markers and SBI behavior
 
     ```sh
     docker logs sztp-bootstrap-1 2>&1 | grep -E 'sitecustomize:' | sort -u
@@ -238,7 +278,7 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
 
     Expected verify result: 401 access-denied (this is good and confirms mTLS endpoint behavior).
 
-8. Reset and reload the switch so SZTP re-triggers
+9. Reset and reload the switch (`10.1.1.15`) so SZTP re-triggers
 
     ```text
     enable
@@ -250,11 +290,11 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
     ```
     Example:
 
-    ![Trigger SZTP by reset and reload](../images/day0/day0-trigger-sztp.png)
+    ![Trigger SZTP by reset and reload](../images/day0/screenshots/day0-trigger-sztp.png)
 
     *Steps to trigger SZTP process to begin*
 
-9. Watch onboarding from host and switch
+10. Watch onboarding from host and switch (`10.1.1.15`)
 
     On host:
 
@@ -270,31 +310,28 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
 
     Examples (captured in sequence). There are log snips omitted between each screenshot.
 
-    ![Switch SZTP internal logs - part 1](../images/day0/day0-show-logging-1.png)
+    ![Switch SZTP internal logs - part 1](../images/day0/screenshots/day0-show-logging-1.png)
 
     *Important in image 1: confirm option 143/bootstrap-server-list discovery and redirect start (8080 path).* 
 
-    ![Switch SZTP internal logs - part 2](../images/day0/day0-show-logging-2.png)
+    ![Switch SZTP internal logs - part 2](../images/day0/screenshots/day0-show-logging-2.png)
 
     *Important in image 2: confirm voucher and owner certificate chain verification success (no reject/fail markers).* 
 
-    ![Switch SZTP internal logs - part 3](../images/day0/day0-show-logging-3.png)
+    ![Switch SZTP internal logs - part 3](../images/day0/screenshots/day0-show-logging-3.png)
 
     *Important in image 3: confirm conveyed/signed onboarding information accepted and transition toward successful completion.*
 
     Reference example: [Full SZTP internal logs example](sztp-internal-logs-example.md)
 
-10. Confirm successful end state
+11. Confirm successful end state
 
-    - Switch sees bootstrap-server-list from option 143.
-      ![DHCP option 143 received for SZTP redirecter](../images/day0/day0-dhcp-received.png)
-
-      *DHCP provides SZTP bootstrap-server-list via option 143*
+        - Switch sees bootstrap-server-list from option 143.
     - Voucher signature and owner certificate chain verification pass.
     - Conveyed information is signed and accepted.
     - Day-0 configurations from first-pre-configuration-script.sh are applied.
 
-      ![SZTP validation and expected verify outcome](../images/day0/day0-sztp-validation.png)
+    ![SZTP validation and expected verify outcome](../images/day0/screenshots/day0-sztp-validation.png)
 
       *Validation checks and expected 401 access-denied indicate correct mTLS endpoint behavior*
 
@@ -341,7 +378,7 @@ show ip dhcp binding
 
 **Verify bootstrap server reachability**:
 ```bash
-# From device
+# From device (10.1.1.15)
 ping bootstrap.example.com
 ```
 
@@ -365,9 +402,9 @@ ping bootstrap.example.com
 - [Cisco blog - Secure ZTP overview](https://blogs.cisco.com/developer/secureztp01)
 - [Cisco SZTP Documentation](https://www.cisco.com/c/en/us/support/docs/switches/catalyst-9000/sztp-guide.html)
 - [SZTP Scripts Repository](https://github.com/sdeweese/sztp)
-- [SZTP Scripts README](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/README.md)
-- [MASA OV generation script (bulk)](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/run_bulk_vouchers.sh)
-- [MASA OV download script (single serial)](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/sztp/masa_get_voucher.py)
+- [SZTP Scripts README](../resources/sztp/README.md)
+- [MASA OV generation script (bulk)](../resources/sztp/run_bulk_vouchers.sh)
+- [MASA OV download script (single serial)](../resources/sztp/masa_get_voucher.py)
 
 ## Cisco Live On-Demand Sessions (Relevant)
 

@@ -12,6 +12,14 @@ This lab guide serves as the comprehensive resource for the Cisco Live US (Las V
 
 Welcome to the IOS XE Programmability Lab! This hands-on lab takes you through the complete lifecycle of modern network device management, from initial onboarding through ongoing operations and optimization.
 
+### Cisco Live Lecture Companion Slides
+
+These slides were presented recently at Cisco Live in a lecture-style format and walk through the detailed concepts behind the same topics you will practice hands-on in this lab.
+
+Open in a new tab and keep it side-by-side as you work through each module:
+
+<a href="resources/slides/TECOPS-2314-Programmability-and-Automation-with-Cisco-IOS-XE.pdf" target="_blank" rel="noopener">TECOPS-2314: Programmability and Automation with Cisco IOS XE (PDF)</a>
+
 ### Lab Access
 
 To access the lab, you will need to SSH to your assigned VM host. From the VM, you will have access to the switch and all required software dependencies.
