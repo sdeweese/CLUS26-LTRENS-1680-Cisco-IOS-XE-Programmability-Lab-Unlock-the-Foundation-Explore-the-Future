@@ -682,6 +682,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#sztp-with-enterprise-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SZTP with Enterprise Networking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sztp-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SZTP Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#day-0-sztp-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 0 &amp; SZTP References
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1036,34 +1069,6 @@
     
   
     OpenTelemetry + Splunk
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../day-2/gnxi-innovations/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    gNXI Innovations
   
 
     
@@ -1455,6 +1460,68 @@
 <li><strong>Bootstrap Configuration</strong>: Automating initial device setup</li>
 <li><strong>Security Best Practices</strong>: Certificate management and secure onboarding</li>
 </ol>
+<h3 id="sztp-with-enterprise-networking">SZTP with Enterprise Networking<a class="headerlink" href="#sztp-with-enterprise-networking" title="Permanent link">&para;</a></h3>
+<p><img alt="Slide 53 - Device Onboarding" src="../images/day0/slides/day0-sztp-slide-053.png" /></p>
+<h3 id="sztp-workflow">SZTP Workflow<a class="headerlink" href="#sztp-workflow" title="Permanent link">&para;</a></h3>
+<p><img alt="How Secure ZTP works (MASA/bootstrap exchange)" src="../images/day0/slides/day0-sztp-slide-056.png" /></p>
+<ol>
+<li>
+<p>Device powers on and starts secure onboarding discovery.</p>
+</li>
+<li>
+<p>Device establishes initial trust signaling using device identity (SUDI) and TLS context.</p>
+</li>
+</ol>
+<p><strong>How the SUDI Certificate Is Used</strong></p>
+<p>SUDI (Secure Unique Device Identifier) is the device identity certificate installed by the manufacturer.</p>
+<ul>
+<li>The switch presents SUDI during the secure handshake to prove hardware identity.</li>
+<li>The onboarding services use SUDI identity attributes (for example serial-linked identity) to correlate requests with ownership records.</li>
+<li>SUDI-based identity is a key input to trust decisions before voucher/onboarding artifacts are accepted.</li>
+</ul>
+<p>In short: SUDI proves who the device is, while MASA and signed artifacts prove what the device is allowed to do.</p>
+<ol>
+<li>Device requests bootstrapping data from MASA and/or bootstrap infrastructure.</li>
+</ol>
+<p><strong>What Is MASA?</strong></p>
+<p>MASA (Manufacturer Authorized Signing Authority) is a manufacturer-trusted service that helps prove device ownership during onboarding.</p>
+<ul>
+<li>MASA validates ownership context for a device serial number.</li>
+<li>MASA provides signed ownership-voucher material used in the SZTP trust flow.</li>
+<li>The switch uses that signed proof to decide whether to trust the onboarding authority and continue Day 0 provisioning.</li>
+</ul>
+<p>In short: MASA is the trust anchor service that prevents unauthorized devices or untrusted onboarding paths from being accepted.</p>
+<ol>
+<li>Bootstrap artifacts are returned and validated:</li>
+<li><strong>Ownership Voucher (OV)</strong>: A MASA-signed artifact that proves the device serial is authorized for your organization/domain.</li>
+<li><strong>Owner certificate chain</strong>: The certificate chain the device uses to validate the owner/bootstrap trust anchor before accepting onboarding data.</li>
+<li><strong>Signed onboarding information</strong>: Cryptographically signed bootstrap payload (redirect/onboarding data) that the device verifies before applying Day 0 instructions.</li>
+<li>
+<p><strong>Where scripts fit</strong>: Python and helper scripts are primarily used on the automation/bootstrap side to generate vouchers/artifacts and prepare onboarding content. The resulting signed artifacts are what the device consumes in this step.</p>
+</li>
+<li>
+<p>Device applies onboarding instructions and transitions to production-ready state.</p>
+</li>
+<li>
+<p>The validated onboarding payload can reference executable Day 0 actions (for example pre/post configuration scripts) delivered by the bootstrap artifacts.</p>
+</li>
+<li>In this lab, the scripts are already created and placed within the bootstrapping server. We will onboard the device and observe the Day 0 actions.</li>
+</ol>
+<p>For full hands-on implementation details, continue to <a href="sztp-onboarding/">SZTP Onboarding Details</a>.</p>
+<h3 id="day-0-sztp-references">Day 0 &amp; SZTP References<a class="headerlink" href="#day-0-sztp-references" title="Permanent link">&para;</a></h3>
+<p>Refer to these onboarding references for more information:</p>
+<p>Secure-first onboarding approach order: If more than one onboarding method is used, always prefer SZTP over classic ZTP over manual provisioning.</p>
+<ol>
+<li><strong>SZTP first (most secure)</strong>: device identity (SUDI), TLS, MASA ownership validation, and signed onboarding artifacts.</li>
+<li><strong>Classic ZTP second</strong>: automation benefits, but with reduced built-in ownership verification compared to SZTP.</li>
+<li><strong>Autoinstall third</strong>: Classic onboarding procedure</li>
+<li><strong>Manual provisioning last</strong>: least scalable and highest operational/security risk.</li>
+</ol>
+<p><img alt="Day 0 onboarding workflow" src="../images/day0/screenshots/day0-onboarding-workflow.png" /></p>
+<p>Quick comparison of operational tradeoffs, showing where SZTP adds security, auditability, and scale benefits over manual provisioning and basic ZTP.</p>
+<p><img alt="Manual vs ZTP vs SZTP comparison" src="../images/day0/slides/day0-sztp-slide-057.png" /></p>
+<p>Curated follow-on resources for deeper study, including Cisco guidance and hands-on repositories for extending your Day 0 implementation.
+<img alt="Further references and next steps" src="../images/day0/slides/day0-sztp-slide-058.png" /></p>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>✅ Completed: Day 0 Overview</p>

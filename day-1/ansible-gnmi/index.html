@@ -797,24 +797,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ansible + gNMI
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -831,47 +813,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-management-with-ansible" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Management with Ansible
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -1008,34 +949,6 @@
     
   
     OpenTelemetry + Splunk
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../day-2/gnxi-innovations/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    gNXI Innovations
   
 
     
@@ -1411,9 +1324,184 @@
 
 
 <h1 id="ansible-gnmi">Ansible + gNMI<a class="headerlink" href="#ansible-gnmi" title="Permanent link">&para;</a></h1>
-<h2 id="configuration-management-with-ansible">Configuration Management with Ansible<a class="headerlink" href="#configuration-management-with-ansible" title="Permanent link">&para;</a></h2>
-<p>Coming soon...</p>
+<h1 id="tooling-module">Tooling Module<a class="headerlink" href="#tooling-module" title="Permanent link">&para;</a></h1>
+<h2 id="configuration-management-with-ansible-and-gnmi">Configuration Management with Ansible and gNMI<a class="headerlink" href="#configuration-management-with-ansible-and-gnmi" title="Permanent link">&para;</a></h2>
+<p>This module uses the CiscoDevNet <code>ansible-gnmi</code> examples to demonstrate model-driven read and write workflows on IOS XE.</p>
+<p>This in-lab section is intentionally concise. For deep feature exploration, use the optional references at the end.</p>
+<p>Repository reference:</p>
+<ul>
+<li><a href="https://github.com/CiscoDevNet/ansible-gnmi">CiscoDevNet/ansible-gnmi</a></li>
+</ul>
+<h2 id="why-ansible-gnmi">Why Ansible + gNMI?<a class="headerlink" href="#why-ansible-gnmi" title="Permanent link">&para;</a></h2>
+<p>Ansible + gNMI gives you a structured, model-driven path for both state retrieval and configuration updates.</p>
+<ul>
+<li><strong>Model-driven operations</strong>: Read and write data using YANG paths instead of CLI scraping</li>
+<li><strong>Automatable workflows</strong>: Repeatable execution with inventory, vars, and playbooks</li>
+<li><strong>Validation-first approach</strong>: Query first, change second, then verify</li>
+<li><strong>Scales to many devices</strong>: Standard Ansible inventory and host/group vars</li>
+</ul>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Access to the same lab switch used in Day 1 (<code>c9300x-lab</code>, <code>10.1.1.15</code>).</li>
+<li>gNMI enabled and reachable on the target device.</li>
+<li>Valid credentials (lab defaults: <code>admin</code> / <code>Cisco123</code>).</li>
+<li>The <code>ansible-gnmi</code> repository already present on the lab VM.</li>
+</ol>
+<blockquote>
+<p><strong>Lab note</strong>: Do not run <code>git clone</code> in this module. The repository is expected to be pre-staged before students start.</p>
+</blockquote>
+<h2 id="lab-setup">Lab Setup<a class="headerlink" href="#lab-setup" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-change-to-the-pre-staged-repository-directory">Step 1: Change to the pre-staged repository directory<a class="headerlink" href="#step-1-change-to-the-pre-staged-repository-directory" title="Permanent link">&para;</a></h3>
+<p>Use the repository path your lab prep provided. Common locations:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>~/ansible-gnmi
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># or</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">cd</span><span class="w"> </span>~/CiscoDevNet/ansible-gnmi
+</span></code></pre></div>
+<p>If needed, locate it:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>find<span class="w"> </span>~<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">4</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-name<span class="w"> </span>ansible-gnmi
+</span></code></pre></div>
+<h3 id="step-2-install-dependencies">Step 2: Install dependencies<a class="headerlink" href="#step-2-install-dependencies" title="Permanent link">&para;</a></h3>
+<p>From inside the repository:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
+</span></code></pre></div>
+<h3 id="step-3-review-inventory-and-variables">Step 3: Review inventory and variables<a class="headerlink" href="#step-3-review-inventory-and-variables" title="Permanent link">&para;</a></h3>
+<p>The repo examples include inventory and variable patterns under <code>examples/</code>, including:</p>
+<ul>
+<li><code>examples/group_vars/iosxe_devices.yml</code></li>
+<li><code>examples/host_vars/router1.yml</code></li>
+</ul>
+<p>Update host, username, and password values for your pod before running playbooks.</p>
+<h2 id="quick-lab-path">Quick Lab Path<a class="headerlink" href="#quick-lab-path" title="Permanent link">&para;</a></h2>
+<p>Use this sequence for class/lab execution:</p>
+<ol>
+<li>Review inventory and variables in <code>examples/</code>.</li>
+<li>Run GET example to confirm connectivity and baseline state.</li>
+<li>Run SET example for one controlled change.</li>
+<li>Re-run GET (or CLI) to verify expected state.</li>
+<li>Optionally run SUBSCRIBE example to observe streaming updates.</li>
+</ol>
+<h2 id="demo-1-read-device-state-with-gnmi-get">Demo 1: Read Device State with gNMI GET<a class="headerlink" href="#demo-1-read-device-state-with-gnmi-get" title="Permanent link">&para;</a></h2>
+<p>This demo parallels Terraform <code>validate/plan</code> behavior: read current state first and confirm target data before any change.</p>
+<h3 id="objective">Objective<a class="headerlink" href="#objective" title="Permanent link">&para;</a></h3>
+<p>Use the repo GET examples to retrieve model-driven operational/configuration data from IOS XE.</p>
+<h3 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Review the GET example playbook:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>examples/get_operations.yml
+</span></code></pre></div>
+<ol>
+<li>Run the GET example:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>examples/inventory.ini<span class="w"> </span>examples/get_operations.yml
+</span></code></pre></div>
+<ol>
+<li>If your pod uses certificate-based inventory, run with the cert inventory example:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>examples/inventory_with_certs.ini<span class="w"> </span>examples/playbook_with_inventory_vars.yml
+</span></code></pre></div>
+<h3 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h3>
+<p>Confirm the play output returns expected YANG-path data (interfaces, system values, or other model content requested in the playbook) and that tasks complete with <code>ok</code>/<code>changed</code> as expected.</p>
+<h3 id="key-takeaway">Key Takeaway<a class="headerlink" href="#key-takeaway" title="Permanent link">&para;</a></h3>
+<p>GET operations are your pre-change safety step, similar to reviewing Terraform plan output before apply.</p>
 <hr />
+<h2 id="demo-2-push-a-controlled-change-with-gnmi-set">Demo 2: Push a Controlled Change with gNMI SET<a class="headerlink" href="#demo-2-push-a-controlled-change-with-gnmi-set" title="Permanent link">&para;</a></h2>
+<p>This demo parallels Terraform <code>apply</code>: make one explicit change, then immediately verify resulting state.</p>
+<h3 id="objective_1">Objective<a class="headerlink" href="#objective_1" title="Permanent link">&para;</a></h3>
+<p>Use repo SET examples to push a small configuration update via gNMI.</p>
+<h3 id="steps_1">Steps<a class="headerlink" href="#steps_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Review the SET example playbook:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cat<span class="w"> </span>examples/set_operations.yml
+</span></code></pre></div>
+<ol>
+<li>Run the SET example:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>examples/inventory.ini<span class="w"> </span>examples/set_operations.yml
+</span></code></pre></div>
+<ol>
+<li>For focused hostname-style testing, use the sample playbook under <code>examples/playbooks/</code>:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>examples/inventory.ini<span class="w"> </span>examples/playbooks/test_set_hostname.yml
+</span></code></pre></div>
+<h3 id="verify_1">Verify<a class="headerlink" href="#verify_1" title="Permanent link">&para;</a></h3>
+<p>Run a GET readback (Demo 1) or device CLI checks to confirm the intended value is present and only expected fields changed.</p>
+<p>Suggested CLI validation on the switch:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ssh<span class="w"> </span>admin@10.1.1.15
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>hostname
+</span></code></pre></div>
+<h3 id="key-takeaway_1">Key Takeaway<a class="headerlink" href="#key-takeaway_1" title="Permanent link">&para;</a></h3>
+<p>SET + GET verification gives you an apply-and-confirm loop similar to Terraform state convergence checks.</p>
+<hr />
+<h2 id="demo-3-telemetry-stream-with-subscribe">Demo 3: Telemetry Stream with SUBSCRIBE<a class="headerlink" href="#demo-3-telemetry-stream-with-subscribe" title="Permanent link">&para;</a></h2>
+<h3 id="objective_2">Objective<a class="headerlink" href="#objective_2" title="Permanent link">&para;</a></h3>
+<p>Run the repository subscribe example to observe streaming data updates.</p>
+<h3 id="steps_2">Steps<a class="headerlink" href="#steps_2" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Review the subscribe example:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>cat<span class="w"> </span>examples/subscribe_operations.yml
+</span></code></pre></div>
+<ol>
+<li>Run the subscribe playbook:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>examples/inventory.ini<span class="w"> </span>examples/subscribe_operations.yml
+</span></code></pre></div>
+<h3 id="verify_2">Verify<a class="headerlink" href="#verify_2" title="Permanent link">&para;</a></h3>
+<p>Confirm periodic telemetry/event updates are received for the subscribed paths and that the playbook exits cleanly (or as designed for streaming duration).</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>What to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gNMI connection fails</td>
+<td>Device gNMI service enabled, correct port/reachability, credentials valid</td>
+</tr>
+<tr>
+<td>TLS or cert errors</td>
+<td>Inventory cert paths in <code>examples/inventory_with_certs.ini</code> and related vars</td>
+</tr>
+<tr>
+<td>Playbook cannot find vars</td>
+<td>Host/group naming alignment between inventory, <code>group_vars</code>, and <code>host_vars</code></td>
+</tr>
+<tr>
+<td>Module import/dependency errors</td>
+<td>Re-run <code>pip install -r requirements.txt</code> and collection install</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lab-mapping-to-terraform-module">Lab Mapping to Terraform Module<a class="headerlink" href="#lab-mapping-to-terraform-module" title="Permanent link">&para;</a></h2>
+<p>To keep student flow consistent with Terraform + NETCONF:</p>
+<ol>
+<li><strong>Inspect inputs first</strong>: inventory/vars (like Terraform provider and variables).</li>
+<li><strong>Read current state</strong>: gNMI GET (like Terraform plan-style visibility).</li>
+<li><strong>Apply one change</strong>: gNMI SET (like Terraform apply).</li>
+<li><strong>Read back and verify</strong>: GET/CLI confirmation of final state.</li>
+</ol>
+<p>This keeps workflow sequencing familiar across both Day 1 modules.</p>
+<h2 id="optional-deep-dive">Optional Deep Dive<a class="headerlink" href="#optional-deep-dive" title="Permanent link">&para;</a></h2>
+<p>If you want to explore gNMI beyond this lab path:</p>
+<ol>
+<li>Review additional playbooks under <code>examples/playbooks/</code> in the repo.</li>
+<li>Explore certificate-based inventory patterns in <code>examples/inventory_with_certs.ini</code>.</li>
+<li>Compare OpenConfig versus native model payloads in the included examples.</li>
+</ol>
+<hr />
+<h2 id="lab-transition">Lab Transition<a class="headerlink" href="#lab-transition" title="Permanent link">&para;</a></h2>
+<p>Before moving to PyATS or Day 2:</p>
+<ol>
+<li>Exit any active SSH session and return to the lab VM terminal.</li>
+<li>Keep the repo path noted for future replay of examples.</li>
+<li>Stop or detach any long-running subscribe command output.</li>
+</ol>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>✅ Completed: Day 1 - Ansible + gNMI</p>
 <p><strong>Continue with Day 1:</strong></p>

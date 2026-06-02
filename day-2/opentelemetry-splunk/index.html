@@ -18,7 +18,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../gnxi-innovations/">
+        <link rel="next" href="../../day-n/">
       
       
         
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#opentelemetry-splunk" class="md-skip">
+        <a href="#opentelemetry-splunk-otel-only-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -991,22 +991,143 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#day-2-device-monitoring-with-opentelemetry-splunk" class="md-nav__link">
+  <a href="#day-2-device-monitoring-with-opentelemetry-and-splunk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Day 2 Device Monitoring with OpenTelemetry &amp; Splunk
+        Day 2 Device Monitoring with OpenTelemetry and Splunk
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Day 2 Device Monitoring with OpenTelemetry &amp; Splunk">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-2-feature-context-short-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 2 Feature Context (Short History)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splunk-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splunk Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#feedback-aligned-focus-for-this-lab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feedback-Aligned Focus for This Lab
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-values-used-in-this-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Values Used in This Guide
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ta-quick-path-what-to-show-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TA Quick Path (What to Show First)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-will-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Will Build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upstream-reference-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upstream Reference Implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-change-to-the-otel-lab-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Change to the OTel Lab Directory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-start-splunk-otel-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Start Splunk + OTel Collector
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Start Splunk + OTel Collector">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#introduction-to-model-driven-telemetry" class="md-nav__link">
+  <a href="#option-a-helper-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Introduction to Model-Driven Telemetry
+        Option A (helper scripts)
       
     </span>
   </a>
@@ -1014,10 +1135,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#configuring-telemetry-subscriptions-on-the-catalyst-9300" class="md-nav__link">
+  <a href="#option-b-compose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuring Telemetry Subscriptions on the Catalyst 9300
+        Option B (Compose)
       
     </span>
   </a>
@@ -1025,109 +1146,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#visualizing-telemetry-data-with-grafana" class="md-nav__link">
+  <a href="#port-forwarding-note-for-remote-lab-environments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Visualizing Telemetry Data with Grafana
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#production-ready-opentelemetry-collector-for-cisco-ios-xe" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Production-Ready OpenTelemetry Collector for Cisco IOS XE
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#introduction-to-opentelemetry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Introduction to OpenTelemetry
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#integrating-network-telemetry-with-opentelemetry-and-splunk" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integrating Network Telemetry with OpenTelemetry and Splunk
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#creating-splunk-dashboards-for-network-telemetry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating Splunk Dashboards for Network Telemetry
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#advanced-use-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Advanced Use Cases
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-takeaways" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Takeaways
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#additional-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Additional Resources
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Port-forwarding note for remote lab environments
       
     </span>
   </a>
@@ -1140,10 +1162,259 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps_1" class="md-nav__link">
+  <a href="#step-2a-verify-containers-with-docker-ps" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Next Steps
+        Step 2a: Verify Containers with docker ps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2a: Verify Containers with docker ps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#access-splunk-web-on-port-8000" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Splunk Web on Port 8000
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-optional-but-recommended-pull-ios-xe-yang-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: (Optional but Recommended) Pull IOS XE YANG Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-configure-ios-xe-telemetry-to-otel-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Configure IOS XE Telemetry to OTel Collector
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Configure IOS XE Telemetry to OTel Collector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-example-subscription" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal example subscription
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-subscription-set-already-enabled-for-students" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full subscription set (already enabled for students)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-verify-data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-the-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On the switch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-the-collector-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On the collector host
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#against-splunk-search-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Against Splunk search API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-use-splunk-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Use Splunk Dashboards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#telemetry-subscription-to-dashboard-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Telemetry Subscription to Dashboard Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-coverage-notes-for-dashboard-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Coverage Notes (for Dashboard Value)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-otel-splunk-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting (OTel + Splunk Only)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting (OTel + Splunk Only)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-telemetry-reaching-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No telemetry reaching collector
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collector-sees-traffic-but-splunk-is-empty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collector sees traffic but Splunk is empty
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboard-panels-show-sparse-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard panels show sparse dimensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlsmtls-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS/mTLS issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-operational-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Operational Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lab-transition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lab Transition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Step
       
     </span>
   </a>
@@ -1154,34 +1425,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../gnxi-innovations/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    gNXI Innovations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1548,497 +1791,340 @@
   
 
 
-<h1 id="opentelemetry-splunk">OpenTelemetry + Splunk<a class="headerlink" href="#opentelemetry-splunk" title="Permanent link">&para;</a></h1>
-<h2 id="day-2-device-monitoring-with-opentelemetry-splunk">Day 2 Device Monitoring with OpenTelemetry &amp; Splunk<a class="headerlink" href="#day-2-device-monitoring-with-opentelemetry-splunk" title="Permanent link">&para;</a></h2>
-<h3 id="introduction-to-model-driven-telemetry">Introduction to Model-Driven Telemetry<a class="headerlink" href="#introduction-to-model-driven-telemetry" title="Permanent link">&para;</a></h3>
-<p>Model-Driven Telemetry (MDT) is a modern approach to monitoring network devices that provides real-time, high-frequency operational data streaming. Unlike traditional polling methods (SNMP), MDT uses a push model where the device streams data to collectors at defined intervals.</p>
-<p><strong>Benefits of Model-Driven Telemetry:</strong>
-- <strong>Real-time monitoring</strong>: Sub-second visibility into device operations
-- <strong>High-frequency data</strong>: Stream data at intervals as low as 100ms
-- <strong>Structured data</strong>: Uses YANG models for consistent data format
-- <strong>Reduced overhead</strong>: Push model reduces network traffic vs polling
-- <strong>Scalable</strong>: Efficiently monitor thousands of data points</p>
-<p><strong>MDT Architecture Components:</strong></p>
+<h1 id="opentelemetry-splunk-otel-only-guide">OpenTelemetry + Splunk (OTel-Only Guide)<a class="headerlink" href="#opentelemetry-splunk-otel-only-guide" title="Permanent link">&para;</a></h1>
+<h2 id="day-2-device-monitoring-with-opentelemetry-and-splunk">Day 2 Device Monitoring with OpenTelemetry and Splunk<a class="headerlink" href="#day-2-device-monitoring-with-opentelemetry-and-splunk" title="Permanent link">&para;</a></h2>
+<p>This guide is intentionally focused on one pipeline:</p>
+<p>Cisco IOS XE -&gt; OpenTelemetry Collector (<code>cisco_telemetry</code> receiver) -&gt; Splunk HEC -&gt; Splunk dashboards</p>
+<p>It does not cover alternate collectors or time-series stacks.</p>
+<h2 id="day-2-feature-context-short-history">Day 2 Feature Context (Short History)<a class="headerlink" href="#day-2-feature-context-short-history" title="Permanent link">&para;</a></h2>
+<p>This lab sits on the progression of IOS XE model-driven telemetry:</p>
 <ol>
-<li><strong>Publisher (Network Device)</strong>: Cisco IOS XE device that streams telemetry data</li>
-<li><strong>Collector</strong>: Receives and processes telemetry streams (e.g., Telegraf, Pipeline)</li>
-<li><strong>Time-Series Database</strong>: Stores telemetry data (e.g., InfluxDB, Prometheus)</li>
-<li><strong>Visualization</strong>: Displays data in dashboards (e.g., Grafana, Splunk)</li>
+<li>Device exports model-based telemetry streams over gRPC.</li>
+<li>OpenTelemetry collector normalizes and forwards data.</li>
+<li>Splunk ingests the stream through HEC.</li>
+<li>Splunk TA dashboards provide the operational view used in this session.</li>
 </ol>
-<h3 id="configuring-telemetry-subscriptions-on-the-catalyst-9300">Configuring Telemetry Subscriptions on the Catalyst 9300<a class="headerlink" href="#configuring-telemetry-subscriptions-on-the-catalyst-9300" title="Permanent link">&para;</a></h3>
-<p>This section focuses on configuring Model-Driven Telemetry subscriptions on the Catalyst 9300 switch to monitor key operational metrics.</p>
-<h4 id="understanding-telemetry-subscriptions">Understanding Telemetry Subscriptions<a class="headerlink" href="#understanding-telemetry-subscriptions" title="Permanent link">&para;</a></h4>
-<p>Every process or metric you want to monitor requires a subscription. A subscription defines:</p>
-<ul>
-<li><strong>What to monitor</strong>: XPath filter specifying YANG data path</li>
-<li><strong>Encoding</strong>: Data format (encode-kvgpb, encode-json, encode-xml)</li>
-<li><strong>Stream type</strong>: yang-push (for operational data)</li>
-<li><strong>Update policy</strong>: How often to send data (periodic or on-change)</li>
-<li><strong>Receiver</strong>: Where to send the telemetry data (IP, port, protocol)</li>
-</ul>
-<h4 id="lab-scenario">Lab Scenario<a class="headerlink" href="#lab-scenario" title="Permanent link">&para;</a></h4>
-<p>We'll create four telemetry subscriptions to monitor:</p>
+<p>In short: Day 2 takes model-driven telemetry and turns it into dashboard-ready operational visibility.</p>
+<h2 id="splunk-components">Splunk Components<a class="headerlink" href="#splunk-components" title="Permanent link">&para;</a></h2>
+<p>These three terms are different parts of the same solution:</p>
 <ol>
-<li><strong>CPU Utilization</strong> - Track processor usage</li>
-<li><strong>Power over Ethernet (PoE)</strong> - Monitor PoE operational data</li>
-<li><strong>Memory Statistics</strong> - Track memory consumption</li>
-<li><strong>Temperature</strong> - Monitor device temperature sensors</li>
-</ol>
-<h4 id="configuration-details">Configuration Details<a class="headerlink" href="#configuration-details" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>Encoding</strong>: <code>encode-kvgpb</code> (Key-Value Google Protocol Buffers)</li>
-<li><strong>Stream</strong>: <code>yang-push</code> (for operational datastore monitoring)</li>
-<li><strong>Update interval</strong>: <code>6000</code> milliseconds (6 seconds)</li>
-<li><strong>Source address</strong>: Switch IP <code>10.1.1.15</code></li>
-<li><strong>Receiver</strong>: Collector at <code>10.1.1.3</code> port <code>57500</code> using <code>grpc-tcp</code></li>
-</ul>
-<h4 id="step-by-step-configuration">Step-by-Step Configuration<a class="headerlink" href="#step-by-step-configuration" title="Permanent link">&para;</a></h4>
-<p><strong>Step 1: Access the switch</strong></p>
-<p>From your telnet session to the Catalyst 9300:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>telnet 10.1.1.15
-</span></code></pre></div>
-<p>Login with credentials: admin / Cisco123</p>
-<p><strong>Step 2: Configure CPU Utilization Subscription</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>configure terminal
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>telemetry ietf subscription 1010
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> encoding encode-kvgpb
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a> filter xpath /process-cpu-ios-xe-oper:cpu-usage/cpu-utilization/five-seconds
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> source-address 10.1.1.15
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> stream yang-push
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a> update-policy periodic 6000
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> receiver ip address 10.1.1.3 57500 protocol grpc-tcp
-</span></code></pre></div>
-<p><strong>Explanation:</strong>
-- <code>subscription 1010</code>: Unique subscription ID
-- <code>filter xpath</code>: Points to CPU utilization data in the YANG model
-- <code>five-seconds</code>: Monitors 5-second CPU average
-- <code>periodic 6000</code>: Sends updates every 6 seconds</p>
-<p><strong>Step 3: Configure PoE Subscription</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>telemetry ietf subscription 1020
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a> encoding encode-kvgpb 
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a> filter xpath /poe-ios-xe-oper:poe-oper-data
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a> source-address 10.1.1.15
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a> stream yang-push
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a> update-policy periodic 6000
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a> receiver ip address 10.1.1.3 57500 protocol grpc-tcp
-</span></code></pre></div>
-<p><strong>Explanation:</strong>
-- Monitors Power over Ethernet operational data
-- Tracks power consumption and PoE port status</p>
-<p><strong>Step 3: Configure Memory Statistics Subscription</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>telemetry ietf subscription 1030
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> encoding encode-kvgpb
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a> filter xpath /memory-ios-xe-oper:memory-statistics/memory-statistic
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a> source-address 10.1.1.15
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a> stream yang-push
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a> update-policy periodic 6000
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a> receiver ip address 10.1.1.3 57500 protocol grpc-tcp
-</span></code></pre></div>
-<p><strong>Explanation:</strong>
-- Monitors memory usage statistics
-- Tracks used, free, and total memory</p>
-<p><strong>Step 4: Configure Temperature Subscription</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>telemetry ietf subscription 1040
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a> encoding encode-kvgpb
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a> filter xpath /oc-platform:components/component/state/temperature
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a> source-address 10.1.1.15
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a> stream yang-push
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a> update-policy periodic 6000
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a> receiver ip address 10.1.1.3 57500 protocol grpc-tcp
-</span></code></pre></div>
-<p><strong>Explanation:</strong>
-- Uses OpenConfig YANG model for platform data
-- Monitors temperature sensors across device components</p>
-<p><strong>Step 5: Exit and save configuration</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>end
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>write memory
-</span></code></pre></div>
-<p><strong>Step 6: Verify subscriptions</strong></p>
-<p>Check that subscriptions are active:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>show telemetry ietf subscription all
-</span></code></pre></div>
-<p>You should see all four subscriptions (1010, 1020, 1030, 1040) listed with their status.</p>
-<p>Check subscription details:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>show telemetry ietf subscription 1010 detail
-</span></code></pre></div>
-<hr />
-<h3 id="visualizing-telemetry-data-with-grafana">Visualizing Telemetry Data with Grafana<a class="headerlink" href="#visualizing-telemetry-data-with-grafana" title="Permanent link">&para;</a></h3>
-<p>Grafana is an open-source analytics and visualization platform that connects to time-series databases to create real-time dashboards.</p>
-<p><strong>Grafana Benefits:</strong>
-- <strong>Multi-datasource support</strong>: Connects to InfluxDB, Prometheus, Elasticsearch, etc.
-- <strong>Customizable dashboards</strong>: Create tailored views for your metrics
-- <strong>Alerting</strong>: Set thresholds and receive notifications
-- <strong>Plugin ecosystem</strong>: Extend functionality with community plugins</p>
-<h4 id="data-flow-architecture">Data Flow Architecture<a class="headerlink" href="#data-flow-architecture" title="Permanent link">&para;</a></h4>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Catalyst 9300 → gRPC/TCP → Telegraf Collector → InfluxDB → Grafana Dashboard
-</span></code></pre></div>
-<ol>
-<li><strong>Switch</strong>: Streams telemetry data via gRPC</li>
-<li><strong>Telegraf</strong>: Collects and processes telemetry streams</li>
-<li><strong>InfluxDB</strong>: Stores time-series data</li>
-<li><strong>Grafana</strong>: Queries InfluxDB and displays dashboards</li>
-</ol>
-<h4 id="accessing-the-grafana-dashboard">Accessing the Grafana Dashboard<a class="headerlink" href="#accessing-the-grafana-dashboard" title="Permanent link">&para;</a></h4>
-<p><strong>Step 1: Open Grafana in your browser</strong></p>
-<p>The SSH tunnel you created earlier forwards Grafana to your local machine:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>http://localhost:13000/
-</span></code></pre></div>
-<p><strong>Step 2: Login to Grafana</strong></p>
-<ul>
-<li><strong>Username</strong>: admin</li>
-<li><strong>Password</strong>: Cisco123</li>
-</ul>
-<p><strong>Step 3: Navigate to the IOS XE Telemetry Dashboard</strong></p>
-<p>Once logged in, you should see a pre-configured dashboard with panels for:</p>
-<ul>
-<li><strong>CPU Utilization</strong>: 5-second CPU usage trends</li>
-<li><strong>Memory Consumption</strong>: Current and average memory usage</li>
-<li><strong>Temperature Readings</strong>: Max, min, and average temperatures</li>
-<li><strong>Power Statistics</strong>: PoE consumption and status</li>
-</ul>
-<p><strong>Step 4: Adjust time range (if needed)</strong></p>
-<p>If data isn't displaying, adjust the time range in the top-right corner:</p>
-<ul>
-<li>Click the time range selector</li>
-<li>Select "Last 5 minutes" or "Last 15 minutes"</li>
-<li>Enable auto-refresh (5s or 10s intervals)</li>
-</ul>
-<h4 id="understanding-the-dashboard-panels">Understanding the Dashboard Panels<a class="headerlink" href="#understanding-the-dashboard-panels" title="Permanent link">&para;</a></h4>
-<p><strong>CPU Utilization Panel:</strong>
-- Shows real-time CPU usage from subscription 1010
-- Displays 5-second average CPU percentage
-- Useful for identifying performance issues</p>
-<p><strong>Memory Statistics Panel:</strong>
-- Tracks memory consumption patterns
-- Shows used vs. free memory
-- Helps identify memory leaks or capacity issues</p>
-<p><strong>Temperature Panel:</strong>
-- Displays temperature sensors from subscription 1040
-- Shows min, max, and average temperatures
-- Critical for thermal monitoring</p>
-<p><strong>PoE Power Panel:</strong>
-- Shows PoE operational data from subscription 1020
-- Tracks power consumption per port
-- Monitors PoE budget utilization</p>
-<h4 id="exploring-grafana-features">Exploring Grafana Features<a class="headerlink" href="#exploring-grafana-features" title="Permanent link">&para;</a></h4>
-<p><strong>Create Custom Panels:</strong></p>
-<ol>
-<li>Click "Add panel" on the dashboard</li>
-<li>Select your data source (InfluxDB)</li>
-<li>Build queries to visualize specific metrics</li>
-<li>Customize visualization type (graph, gauge, table)</li>
-</ol>
-<p><strong>Set Up Alerts:</strong></p>
-<ol>
-<li>Edit a panel</li>
-<li>Navigate to the "Alert" tab</li>
-<li>Configure alert conditions (e.g., CPU &gt; 80%)</li>
-<li>Add notification channels (email, Slack, etc.)</li>
-</ol>
-<p><strong>Export Dashboards:</strong></p>
-<ul>
-<li>Share dashboards with team members</li>
-<li>Export as JSON for version control</li>
-<li>Import community dashboards from Grafana.com</li>
-</ul>
-<hr />
-<h3 id="production-ready-opentelemetry-collector-for-cisco-ios-xe">Production-Ready OpenTelemetry Collector for Cisco IOS XE<a class="headerlink" href="#production-ready-opentelemetry-collector-for-cisco-ios-xe" title="Permanent link">&para;</a></h3>
-<div class="admonition info">
-<p class="admonition-title">Advanced Implementation Available</p>
-<p>This lab guide covers the fundamentals of Model-Driven Telemetry with Telegraf and OpenTelemetry concepts. For a <strong>production-ready implementation</strong>, see Jeremy Cohoe's comprehensive OpenTelemetry Collector with native Cisco IOS XE support:</p>
-<p>🔗 <strong><a href="https://github.com/jeremycohoe/otel-grpc-cisco-receiver">otel-grpc-cisco-receiver</a></strong></p>
-<p><strong>Key Features:</strong></p>
-<ul>
-<li><strong>Native Cisco MDT Receiver</strong>: Direct gRPC dial-out support with kvGPB decoding (no Telegraf intermediary)</li>
-<li><strong>YANG Model Processing</strong>: Automatic key propagation and type awareness for all IOS XE paths</li>
-<li><strong>7 Splunk Dashboards</strong>: Ready-to-import dashboards for infrastructure, network, routing, power, security</li>
-<li><strong>49 Pre-configured Subscriptions</strong>: Complete MDT subscription set for production monitoring</li>
-<li><strong>Production Features</strong>: TLS/mTLS, Docker Compose stack, automated deployment scripts</li>
-<li><strong>Performance</strong>: &gt;1,000 messages/sec with &lt;10ms p99 latency</li>
-</ul>
-<p>The repository includes complete setup guides, configuration examples, and Splunk integration ready for production deployment.</p>
-</div>
-<hr />
-<h3 id="introduction-to-opentelemetry">Introduction to OpenTelemetry<a class="headerlink" href="#introduction-to-opentelemetry" title="Permanent link">&para;</a></h3>
-<p>OpenTelemetry (OTel) is an open-source observability framework that provides a vendor-agnostic approach to collecting, processing, and exporting telemetry data (metrics, logs, and traces).</p>
-<p><strong>OpenTelemetry Benefits:</strong>
-- <strong>Vendor-neutral</strong>: Works with any observability backend (Splunk, Datadog, etc.)
-- <strong>Unified instrumentation</strong>: Single standard for metrics, logs, and traces
-- <strong>Language support</strong>: SDKs for Python, Go, Java, and more
-- <strong>Flexible architecture</strong>: Collectors can process and route data</p>
-<p><strong>OpenTelemetry Architecture:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Data Sources → OTel Collector → Processors → Exporters → Backends (Splunk, etc.)
-</span></code></pre></div>
-<h4 id="opentelemetry-components">OpenTelemetry Components<a class="headerlink" href="#opentelemetry-components" title="Permanent link">&para;</a></h4>
-<ol>
-<li><strong>Instrumentation</strong>: SDKs and libraries to generate telemetry</li>
-<li><strong>Collector</strong>: Receives, processes, and exports telemetry</li>
-<li><strong>Protocol (OTLP)</strong>: Standard protocol for telemetry data exchange</li>
-<li><strong>Exporters</strong>: Send data to observability platforms</li>
-</ol>
-<hr />
-<h3 id="integrating-network-telemetry-with-opentelemetry-and-splunk">Integrating Network Telemetry with OpenTelemetry and Splunk<a class="headerlink" href="#integrating-network-telemetry-with-opentelemetry-and-splunk" title="Permanent link">&para;</a></h3>
-<p>Splunk is a powerful platform for searching, monitoring, and analyzing machine-generated data. By integrating OpenTelemetry with Splunk, you can correlate network telemetry with application and infrastructure data.</p>
-<h4 id="architecture-ios-xe-opentelemetry-splunk">Architecture: IOS XE → OpenTelemetry → Splunk<a class="headerlink" href="#architecture-ios-xe-opentelemetry-splunk" title="Permanent link">&para;</a></h4>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Catalyst 9300 → Telegraf → OpenTelemetry Collector → Splunk HEC
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>                                                     ↓
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>                                               Splunk Enterprise
-</span></code></pre></div>
-<p><strong>Integration Benefits:</strong>
-- <strong>Centralized observability</strong>: Network + App + Infra in one platform
-- <strong>Advanced analytics</strong>: Use Splunk's search and correlation capabilities
-- <strong>Alerting and dashboards</strong>: Splunk's visualization and alerting
-- <strong>Compliance</strong>: Meet audit and compliance requirements</p>
-<h4 id="opentelemetry-collector-configuration">OpenTelemetry Collector Configuration<a class="headerlink" href="#opentelemetry-collector-configuration" title="Permanent link">&para;</a></h4>
-<p>The OpenTelemetry Collector receives telemetry data and exports it to Splunk using the HTTP Event Collector (HEC).</p>
-<p><strong>Example OTel Collector Configuration (otel-collector-config.yaml):</strong></p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nt">receivers</span><span class="p">:</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="c1"># Receive telemetry from Telegraf</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">otlp</span><span class="p">:</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nt">protocols</span><span class="p">:</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">      </span><span class="nt">grpc</span><span class="p">:</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">        </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0:4317</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">      </span><span class="nt">http</span><span class="p">:</span>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">        </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0:4318</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nt">processors</span><span class="p">:</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="c1"># Add resource attributes</span>
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="nt">resource</span><span class="p">:</span>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="nt">attributes</span><span class="p">:</span>
-</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
-</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deployment.environment</span>
-</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;production&quot;</span>
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">upsert</span>
-</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">device.type</span>
-</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;catalyst-9300&quot;</span>
-</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">        </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">upsert</span>
-</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
-</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">  </span><span class="c1"># Batch telemetry for efficiency</span>
-</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">  </span><span class="nt">batch</span><span class="p">:</span>
-</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
-</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">    </span><span class="nt">send_batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
-</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>
-</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="nt">exporters</span><span class="p">:</span>
-</span><span id="__span-12-28"><a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">  </span><span class="c1"># Export to Splunk HEC</span>
-</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">  </span><span class="nt">splunk_hec</span><span class="p">:</span>
-</span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;YOUR-SPLUNK-HEC-TOKEN&quot;</span>
-</span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">    </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://splunk.example.com:8088/services/collector&quot;</span>
-</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;iosxe:telemetry&quot;</span>
-</span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="w">    </span><span class="nt">sourcetype</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;iosxe:mdt&quot;</span>
-</span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="w">    </span><span class="nt">index</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;network_telemetry&quot;</span>
-</span><span id="__span-12-35"><a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="w">    </span><span class="nt">tls</span><span class="p">:</span>
-</span><span id="__span-12-36"><a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a><span class="w">      </span><span class="nt">insecure_skip_verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-</span><span id="__span-12-37"><a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>
-</span><span id="__span-12-38"><a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a><span class="w">  </span><span class="c1"># Also export to logging for debugging</span>
-</span><span id="__span-12-39"><a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a><span class="w">  </span><span class="nt">logging</span><span class="p">:</span>
-</span><span id="__span-12-40"><a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a><span class="w">    </span><span class="nt">loglevel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
-</span><span id="__span-12-41"><a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>
-</span><span id="__span-12-42"><a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a><span class="nt">service</span><span class="p">:</span>
-</span><span id="__span-12-43"><a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="w">  </span><span class="nt">pipelines</span><span class="p">:</span>
-</span><span id="__span-12-44"><a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
-</span><span id="__span-12-45"><a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a><span class="w">      </span><span class="nt">receivers</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">otlp</span><span class="p p-Indicator">]</span>
-</span><span id="__span-12-46"><a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a><span class="w">      </span><span class="nt">processors</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">resource</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">batch</span><span class="p p-Indicator">]</span>
-</span><span id="__span-12-47"><a id="__codelineno-12-47" name="__codelineno-12-47" href="#__codelineno-12-47"></a><span class="w">      </span><span class="nt">exporters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">splunk_hec</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">logging</span><span class="p p-Indicator">]</span>
-</span></code></pre></div>
-<h4 id="configuring-splunk-http-event-collector-hec">Configuring Splunk HTTP Event Collector (HEC)<a class="headerlink" href="#configuring-splunk-http-event-collector-hec" title="Permanent link">&para;</a></h4>
-<p><strong>Step 1: Enable HEC in Splunk</strong></p>
-<ol>
-<li>Log into Splunk Web</li>
-<li>Navigate to <strong>Settings → Data Inputs</strong></li>
-<li>Click <strong>HTTP Event Collector</strong></li>
-<li>Click <strong>Global Settings</strong></li>
-<li>Enable "All Tokens"</li>
-<li>Set HTTP Port (default: 8088)</li>
-</ol>
-<p><strong>Step 2: Create HEC Token</strong></p>
-<ol>
-<li>Click <strong>New Token</strong></li>
-<li>Name: "iosxe-telemetry"</li>
-<li>Source type: "iosxe:mdt"</li>
-<li>Index: "network_telemetry"</li>
-<li>Click <strong>Review → Submit</strong></li>
-<li>Copy the token value</li>
-</ol>
-<p><strong>Step 3: Configure OpenTelemetry Collector</strong></p>
-<p>Update the <code>otel-collector-config.yaml</code> with your Splunk details:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">exporters</span><span class="p">:</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">splunk_hec</span><span class="p">:</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;PASTE-YOUR-TOKEN-HERE&quot;</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://your-splunk-server:8088/services/collector&quot;</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;catalyst-9300&quot;</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="nt">sourcetype</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;iosxe:mdt&quot;</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="nt">index</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;network_telemetry&quot;</span>
-</span></code></pre></div>
-<p><strong>Step 4: Start OpenTelemetry Collector</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>~/otel-collector
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>./otelcol<span class="w"> </span>--config<span class="w"> </span>otel-collector-config.yaml
-</span></code></pre></div>
-<h4 id="configuring-telegraf-to-export-to-opentelemetry">Configuring Telegraf to Export to OpenTelemetry<a class="headerlink" href="#configuring-telegraf-to-export-to-opentelemetry" title="Permanent link">&para;</a></h4>
-<p>Modify the Telegraf configuration to forward to OTel Collector:</p>
-<p><strong>Edit telegraf.conf:</strong></p>
-<div class="language-toml highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Receive gRPC telemetry from IOS XE</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">[[inputs.cisco_telemetry_mdt]]</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="n">transport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;grpc&quot;</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="n">service_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;:57500&quot;</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Output to OpenTelemetry Collector</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="k">[[outputs.opentelemetry]]</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="n">service_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;localhost:4317&quot;</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="n">compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;gzip&quot;</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="k">[outputs.opentelemetry.attributes]</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;catalyst-9300&quot;</span>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="n">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;datacenter-1&quot;</span>
-</span></code></pre></div>
-<p><strong>Restart Telegraf:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>telegraf
-</span></code></pre></div>
-<hr />
-<h3 id="creating-splunk-dashboards-for-network-telemetry">Creating Splunk Dashboards for Network Telemetry<a class="headerlink" href="#creating-splunk-dashboards-for-network-telemetry" title="Permanent link">&para;</a></h3>
-<p>Once telemetry data flows into Splunk, you can create powerful dashboards and searches.</p>
-<h4 id="basic-splunk-searches-for-ios-xe-telemetry">Basic Splunk Searches for IOS XE Telemetry<a class="headerlink" href="#basic-splunk-searches-for-ios-xe-telemetry" title="Permanent link">&para;</a></h4>
-<p><strong>Search 1: View all telemetry data</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>index=network_telemetry sourcetype=iosxe:mdt
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>| table _time, source, metric_name, metric_value
-</span></code></pre></div>
-<p><strong>Search 2: CPU Utilization over time</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;cpu-utilization&quot;
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>| timechart avg(metric_value) as &quot;Average CPU %&quot;
-</span></code></pre></div>
-<p><strong>Search 3: Memory usage trends</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;memory-usage&quot;
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>| timechart avg(metric_value) as &quot;Memory Used (MB)&quot;
-</span></code></pre></div>
-<p><strong>Search 4: Temperature alerts</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;temperature&quot;
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>| where metric_value &gt; 75
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>| stats count by source, component
-</span></code></pre></div>
-<p><strong>Search 5: Correlate network and application metrics</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>index=network_telemetry OR index=application_logs
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>| stats avg(cpu_usage) as network_cpu, avg(app_response_time) as app_latency by _time span=5m
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>| eval correlation=if(network_cpu&gt;80 AND app_latency&gt;1000, &quot;High&quot;, &quot;Normal&quot;)
-</span></code></pre></div>
-<h4 id="creating-a-splunk-dashboard">Creating a Splunk Dashboard<a class="headerlink" href="#creating-a-splunk-dashboard" title="Permanent link">&para;</a></h4>
-<p><strong>Step 1: Save your searches</strong></p>
-<p>After running searches, click "Save As → Dashboard Panel"</p>
-<p><strong>Step 2: Build the dashboard</strong></p>
-<ol>
-<li>Navigate to <strong>Dashboards → Create New Dashboard</strong></li>
-<li>Name: "IOS XE Network Telemetry"</li>
+<li>Splunk (platform)</li>
+<li>The full Splunk service and web UI where you search data and view dashboards.</li>
 <li>
-<p>Add panels for each metric:</p>
+<p>In this lab, you access it from Splunk Web (typically port <code>8000</code>, or forwarded <code>8001</code> in remote pod environments).</p>
 </li>
 <li>
-<p>CPU Utilization (Line chart)</p>
+<p>Splunk HEC (HTTP Event Collector)</p>
 </li>
-<li>Memory Usage (Area chart)</li>
-<li>Temperature (Single value with trend)</li>
-<li>Interface Statistics (Table)</li>
+<li>The ingestion API endpoint used by the OTel collector exporter to send telemetry into Splunk.</li>
+<li>In this lab, HEC listens on port <code>8088</code> and uses a token (for example <code>cisco-mdt-token</code>).</li>
+<li>
+<p>HEC is for data ingest, not dashboard viewing.</p>
+</li>
+<li>
+<p>Splunk TA (Technology Add-on)</p>
+</li>
+<li>A Splunk app package that provides field mappings, saved searches, dashboards, and content for a specific data domain.</li>
+<li>In this lab, the Cisco MDT TA content is used to visualize telemetry once data is already indexed in Splunk.</li>
 </ol>
-<p><strong>Step 3: Set up real-time monitoring</strong></p>
+<p>How they work together in this lab:</p>
 <ul>
-<li>Enable real-time search on panels</li>
-<li>Set refresh intervals (30s, 1m, etc.)</li>
-<li>Configure drill-downs for detailed analysis</li>
+<li>OTel collector exports telemetry -&gt; Splunk HEC</li>
+<li>HEC writes data into Splunk index (<code>cisco_mdt</code>)</li>
+<li>Splunk TA dashboards read that indexed data for visualization</li>
 </ul>
-<p><strong>Step 4: Create alerts</strong></p>
+<h2 id="feedback-aligned-focus-for-this-lab">Feedback-Aligned Focus for This Lab<a class="headerlink" href="#feedback-aligned-focus-for-this-lab" title="Permanent link">&para;</a></h2>
+<p>This page is optimized for the exact demo flow requested:</p>
 <ol>
-<li>Click <strong>Settings → Searches, reports, and alerts</strong></li>
-<li>Create new alert</li>
-<li>Define search query</li>
-<li>Set trigger conditions</li>
-<li>Configure alert actions (email, webhook, etc.)</li>
+<li>Validate OTel collector and Splunk are running.</li>
+<li>Review the script that applies the full IOS XE subscription set (already run for students).</li>
+<li>Confirm data is flowing from switch -&gt; collector -&gt; Splunk.</li>
+<li>Show dashboards in Splunk.</li>
 </ol>
-<p><strong>Example Alert: High CPU</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;cpu-utilization&quot;
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>| stats avg(metric_value) as cpu_avg by source
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>| where cpu_avg &gt; 80
-</span></code></pre></div>
-<p>Trigger: When number of results &gt; 0
-Action: Send email to network-ops@company.com</p>
-<hr />
-<h3 id="advanced-use-cases">Advanced Use Cases<a class="headerlink" href="#advanced-use-cases" title="Permanent link">&para;</a></h3>
-<h4 id="use-case-1-predictive-analytics">Use Case 1: Predictive Analytics<a class="headerlink" href="#use-case-1-predictive-analytics" title="Permanent link">&para;</a></h4>
-<p>Use Splunk's Machine Learning Toolkit to predict issues:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>index=network_telemetry sourcetype=iosxe:mdt metric_name=&quot;cpu-utilization&quot;
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>| fit DensityFunction metric_value by source
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>| predict metric_value as predicted_cpu
-</span></code></pre></div>
-<h4 id="use-case-2-anomaly-detection">Use Case 2: Anomaly Detection<a class="headerlink" href="#use-case-2-anomaly-detection" title="Permanent link">&para;</a></h4>
-<p>Identify unusual patterns:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>index=network_telemetry sourcetype=iosxe:mdt
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>| anomalydetection metric_value by metric_name
-</span></code></pre></div>
-<h4 id="use-case-3-multi-device-correlation">Use Case 3: Multi-Device Correlation<a class="headerlink" href="#use-case-3-multi-device-correlation" title="Permanent link">&para;</a></h4>
-<p>Compare metrics across multiple switches:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>index=network_telemetry sourcetype=iosxe:mdt
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>| stats avg(metric_value) as avg_value by source, metric_name
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>| where metric_name=&quot;cpu-utilization&quot;
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>| sort -avg_value
-</span></code></pre></div>
-<hr />
-<h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
-<p><strong>Issue 1: No data in Grafana</strong></p>
+<p>Reference links used in this update:</p>
 <ul>
-<li>Verify subscriptions are active: <code>show telemetry ietf subscription all</code></li>
-<li>Check Telegraf is running: <code>sudo systemctl status telegraf</code></li>
-<li>Verify InfluxDB is storing data: <code>influx -execute 'SHOW DATABASES'</code></li>
-<li>Check time range in Grafana dashboard</li>
+<li>OTel contrib YANG gRPC receiver: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/yanggrpcreceiver</li>
+<li>Receiver config/README: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/yanggrpcreceiver/README.md</li>
+<li>Receiver implementation discussion: https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/44015</li>
+<li>Splunk TA (Cisco MDT): https://splunkbase.splunk.com/app/7125</li>
 </ul>
-<p><strong>Issue 2: OTel Collector not forwarding to Splunk</strong></p>
+<h2 id="lab-values-used-in-this-guide">Lab Values Used in This Guide<a class="headerlink" href="#lab-values-used-in-this-guide" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Verify HEC token is valid</li>
-<li>Check network connectivity to Splunk server</li>
-<li>Review OTel Collector logs: <code>journalctl -u otel-collector -f</code></li>
-<li>Test HEC endpoint with curl:</li>
+<li>IOS XE device IP: <code>10.1.1.15</code></li>
+<li>OTel collector host IP: <code>10.1.1.3</code></li>
+<li>Telemetry receiver port: <code>57500</code></li>
+<li>Splunk Web: <code>http://localhost:8000</code></li>
+<li>Splunk HEC: <code>https://localhost:8088</code></li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://splunk-server:8088/services/collector<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Splunk YOUR-TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;event&quot;: &quot;test&quot;}&#39;</span>
-</span></code></pre></div>
-<p><strong>Issue 3: Telegraf not receiving telemetry</strong></p>
-<ul>
-<li>Verify switch can reach receiver IP (10.1.1.3)</li>
-<li>Check firewall rules allow gRPC traffic (port 57500)</li>
-<li>Review Telegraf logs: <code>sudo journalctl -u telegraf -f</code></li>
-</ul>
-<hr />
-<h3 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h3>
+<h2 id="ta-quick-path-what-to-show-first">TA Quick Path (What to Show First)<a class="headerlink" href="#ta-quick-path-what-to-show-first" title="Permanent link">&para;</a></h2>
+<p>Use this sequence during demos to prove switch-to-Splunk telemetry quickly:</p>
 <ol>
-<li><strong>Model-Driven Telemetry provides real-time visibility</strong> into network device operations</li>
-<li><strong>Subscriptions are flexible</strong> - monitor any YANG data path with custom intervals</li>
-<li><strong>Grafana offers powerful visualization</strong> for time-series telemetry data</li>
-<li><strong>OpenTelemetry provides vendor-neutral observability</strong> with flexible routing</li>
-<li><strong>Splunk integration enables advanced analytics</strong> and correlation with other data sources</li>
-<li><strong>Combining MDT + OTel + Splunk</strong> creates a comprehensive observability platform</li>
+<li>Show the script used to enable all subscriptions and note it is already applied in this lab image.</li>
+<li>Validate OTel collector and Splunk are both running.</li>
+<li>Focus on Splunk TA dashboards as the source of truth for indexed metrics.</li>
+<li>Confirm end-to-end data flow from <code>10.1.1.15</code> to Splunk.</li>
+<li>Open Splunk dashboards and verify live updates.</li>
 </ol>
-<h3 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h3>
+<h2 id="what-you-will-build">What You Will Build<a class="headerlink" href="#what-you-will-build" title="Permanent link">&para;</a></h2>
+<p>By the end of this lab you will:</p>
+<ol>
+<li>Run Splunk and an OTel collector that can ingest Cisco IOS XE gRPC dial-out telemetry.</li>
+<li>Configure IOS XE telemetry subscriptions to send <code>encode-kvgpb</code> data to the collector.</li>
+<li>Validate end-to-end flow from switch to Splunk.</li>
+<li>Import and use prebuilt Splunk dashboards for telemetry analysis.</li>
+</ol>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+  A[Cisco IOS XE Switch\n10.1.1.15] --&gt;|gRPC dial-out\nencode-kvGPB :57500| B[OpenTelemetry Collector\ncisco_telemetry receiver\n10.1.1.3]
+  B --&gt;|splunk_hec exporter\nHEC token + index cisco_mdt\n:8088| C[Splunk HEC]
+  C --&gt; D[Splunk Index\ncisco_mdt]
+  D --&gt; E[Splunk Dashboards\nCisco MDT TA]</code></pre>
+<h2 id="upstream-reference-implementation">Upstream Reference Implementation<a class="headerlink" href="#upstream-reference-implementation" title="Permanent link">&para;</a></h2>
+<p>This Day 2 workflow aligns with Jeremy Cohoe's receiver project:</p>
 <ul>
-<li><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/179/b_179_programmability_cg/model_driven_telemetry.html">Cisco Model-Driven Telemetry Documentation</a></li>
-<li><a href="https://opentelemetry.io/docs/">OpenTelemetry Documentation</a></li>
-<li><a href="https://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector">Splunk HEC Documentation</a></li>
-<li><a href="https://grafana.com/docs/">Grafana Documentation</a></li>
-<li><a href="https://github.com/influxdata/telegraf/tree/master/plugins/inputs/cisco_telemetry_mdt">Telegraf Cisco MDT Input Plugin</a></li>
-<li><strong><a href="https://github.com/jeremycohoe/otel-grpc-cisco-receiver">Production OpenTelemetry Collector for Cisco IOS XE</a></strong> - Native receiver with 7 Splunk dashboards and 49 subscriptions</li>
+<li>https://github.com/jeremycohoe/otel-grpc-cisco-receiver</li>
 </ul>
-<h3 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h3>
-<p>You've now completed:</p>
+<p>Key files in that repo used by this guide:</p>
 <ul>
-<li><strong>Day 0</strong>: Secure device onboarding with SZTP</li>
-<li><strong>Day 1</strong>: Configuration management with Atomic Config Replace</li>
-<li><strong>Day 2</strong>: Monitoring and observability with MDT, OpenTelemetry, and Splunk</li>
+<li><code>docker-compose.yaml</code></li>
+<li><code>docker-collector-config.yaml</code></li>
+<li><code>collector-config.yaml</code></li>
+<li><code>start-splunk.sh</code></li>
+<li><code>start-otel.sh</code></li>
+<li><code>scripts/import-dashboards.sh</code></li>
+<li><code>c9300x-mdt-subscriptions.cfg</code></li>
+<li><code>configure-mdt.py</code></li>
+<li><code>scripts/fetch-yang-models.sh</code></li>
 </ul>
-<p>Continue exploring the <strong>Tooling Module</strong> to learn Infrastructure as Code with Terraform!</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Docker and Docker Compose available on the host.</li>
+<li>Reachability between IOS XE device and OTel collector host on telemetry port <code>57500</code>.</li>
+<li>IOS XE device with telemetry support (17.x+ recommended).</li>
+<li>Lab access to the switch console/CLI.</li>
+</ol>
+<h2 id="step-1-change-to-the-otel-lab-directory">Step 1: Change to the OTel Lab Directory<a class="headerlink" href="#step-1-change-to-the-otel-lab-directory" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>otel-grpc-cisco-receiver
+</span></code></pre></div>
+<h2 id="step-2-start-splunk-otel-collector">Step 2: Start Splunk + OTel Collector<a class="headerlink" href="#step-2-start-splunk-otel-collector" title="Permanent link">&para;</a></h2>
+<p>Use either helper scripts or Compose.</p>
+<h3 id="option-a-helper-scripts">Option A (helper scripts)<a class="headerlink" href="#option-a-helper-scripts" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./start-splunk.sh
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>./start-otel.sh
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>./scripts/import-dashboards.sh
+</span></code></pre></div>
+<h3 id="option-b-compose">Option B (Compose)<a class="headerlink" href="#option-b-compose" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<p>With the default Compose setup, you should have:</p>
+<ol>
+<li>OTel collector listening on <code>57500</code> for telemetry.</li>
+<li>OTel self-metrics endpoint on <code>8888</code>.</li>
+<li>Splunk Web on <code>8000</code>.</li>
+<li>Splunk HEC on <code>8088</code>.</li>
+</ol>
+<p>Default lab credentials and HEC values (as documented in the upstream repo):</p>
+<ul>
+<li>Splunk user: <code>admin</code></li>
+<li>Splunk password: <code>Cisco123</code></li>
+<li>HEC token: <code>cisco-mdt-token</code></li>
+<li>Metrics index: <code>cisco_mdt</code></li>
+</ul>
+<h3 id="port-forwarding-note-for-remote-lab-environments">Port-forwarding note for remote lab environments<a class="headerlink" href="#port-forwarding-note-for-remote-lab-environments" title="Permanent link">&para;</a></h3>
+<p>If you are running in a remote pod/VM workspace with forwarded ports:</p>
+<ol>
+<li>At the top of the terminal window, click the <code>PORTS</code> tab.</li>
+<li>Delete all existing forwarded ports.</li>
+<li>Click <code>Forward a Port</code>, enter <code>8000</code>, and press Enter.</li>
+<li>The environment will auto-generate a localhost URL (typically <code>localhost:8001</code>).</li>
+<li>Open that link in a browser (you may need <code>Cmd+Click</code>).</li>
+<li>Sign in to Splunk using lab credentials.</li>
+</ol>
+<p><img alt="Forward Splunk port from PORTS tab" src="../../images/day2/day2-add-splunk-port.png" /></p>
+<p>Use this when direct access to host port <code>8000</code> is not available from your laptop.</p>
+<h2 id="step-2a-verify-containers-with-docker-ps">Step 2a: Verify Containers with <code>docker ps</code><a class="headerlink" href="#step-2a-verify-containers-with-docker-ps" title="Permanent link">&para;</a></h2>
+<p>After startup, verify both Splunk and OTel containers are running:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>ps
+</span></code></pre></div>
+<p>Look for:</p>
+<ol>
+<li>A Splunk container in <code>Up</code> state.</li>
+<li>Port mapping that includes <code>8000-&gt;8000/tcp</code> (Splunk Web).</li>
+<li>Port mapping that includes <code>8088-&gt;8088/tcp</code> (Splunk HEC).</li>
+<li>OTel collector container in <code>Up</code> state.</li>
+</ol>
+<p><img alt="docker ps output showing Splunk and mapped ports" src="../../images/day2/day2-docker-ps.png" /></p>
+<h3 id="access-splunk-web-on-port-8000">Access Splunk Web on Port 8000<a class="headerlink" href="#access-splunk-web-on-port-8000" title="Permanent link">&para;</a></h3>
+<p>Once <code>docker ps</code> shows Splunk mapped to port <code>8000</code>, open Splunk Web:</p>
+<ul>
+<li>On the same host: <code>http://localhost:8000</code></li>
+<li>From another machine: <code>http://&lt;docker-host-ip&gt;:8000</code></li>
+</ul>
+<p>Login with the default lab credentials from above (<code>admin</code> / <code>Cisco123</code>), then proceed to dashboard validation.</p>
+<p>If your environment requires forwarded access, use the forwarded <code>8001</code> URL instead.</p>
+<h2 id="step-3-optional-but-recommended-pull-ios-xe-yang-models">Step 3: (Optional but Recommended) Pull IOS XE YANG Models<a class="headerlink" href="#step-3-optional-but-recommended-pull-ios-xe-yang-models" title="Permanent link">&para;</a></h2>
+<p>The receiver works without downloaded models, but model files improve metadata quality and key propagation for broader path coverage.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>./scripts/fetch-yang-models.sh
+</span></code></pre></div>
+<p>To target a specific IOS XE release, use the script argument shown in the upstream README.</p>
+<h2 id="step-4-configure-ios-xe-telemetry-to-otel-collector">Step 4: Configure IOS XE Telemetry to OTel Collector<a class="headerlink" href="#step-4-configure-ios-xe-telemetry-to-otel-collector" title="Permanent link">&para;</a></h2>
+<p>Set subscriptions to push to collector <code>10.1.1.3:57500</code> using <code>grpc-tcp</code> (or <code>grpc-tls</code> if TLS is enabled in collector config).</p>
+<h3 id="minimal-example-subscription">Minimal example subscription<a class="headerlink" href="#minimal-example-subscription" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>telemetry ietf subscription 101
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a> encoding encode-kvgpb
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a> filter xpath /interfaces-ios-xe-oper:interfaces/interface/statistics
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a> source-address 10.1.1.15
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a> stream yang-push
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a> update-policy periodic 30000
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a> receiver ip address 10.1.1.3 57500 protocol grpc-tcp
+</span></code></pre></div>
+<h3 id="full-subscription-set-already-enabled-for-students">Full subscription set (already enabled for students)<a class="headerlink" href="#full-subscription-set-already-enabled-for-students" title="Permanent link">&para;</a></h3>
+<p>For richer dashboards, this lab uses the predefined subscription bundle:</p>
+<ul>
+<li><code>c9300x-mdt-subscriptions.cfg</code></li>
+</ul>
+<p>The automation script used to apply that full set is:</p>
+<ul>
+<li><code>configure-mdt.py</code></li>
+</ul>
+<p>This step has already been completed for students before lab start.</p>
+<p>If you need to re-run it for troubleshooting, use:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>install<span class="w"> </span>netmiko
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>python3<span class="w"> </span>configure-mdt.py<span class="w"> </span>--host<span class="w"> </span><span class="m">10</span>.1.1.15<span class="w"> </span>--collector<span class="w"> </span><span class="m">10</span>.1.1.3
+</span></code></pre></div>
+<h2 id="step-5-verify-data-flow">Step 5: Verify Data Flow<a class="headerlink" href="#step-5-verify-data-flow" title="Permanent link">&para;</a></h2>
+<h2 id="on-the-switch">On the switch<a class="headerlink" href="#on-the-switch" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>show telemetry ietf subscription all
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show telemetry ietf subscription 101 detail
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>show telemetry ietf subscription 101 receiver
+</span></code></pre></div>
+<p>Confirm subscriptions are valid and receiver state is healthy.</p>
+<h2 id="on-the-collector-host">On the collector host<a class="headerlink" href="#on-the-collector-host" title="Permanent link">&para;</a></h2>
+<p>Check collector self-metrics for receiver activity:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8888/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>cisco_telemetry
+</span></code></pre></div>
+<p>You should see counters increasing (messages/bytes/connections).</p>
+<h2 id="against-splunk-search-api">Against Splunk search API<a class="headerlink" href="#against-splunk-search-api" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:Cisco123<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="s1">&#39;https://localhost:8089/services/search/jobs&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;search=| mcatalog values(metric_name) WHERE index=cisco_mdt | stats count&#39;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="nv">output_mode</span><span class="o">=</span>json<span class="w"> </span>-d<span class="w"> </span><span class="nv">exec_mode</span><span class="o">=</span>oneshot
+</span></code></pre></div>
+<p>A non-zero count indicates metrics are indexed.</p>
+<h2 id="step-6-use-splunk-dashboards">Step 6: Use Splunk Dashboards<a class="headerlink" href="#step-6-use-splunk-dashboards" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Open Splunk Web.</li>
+<li>Confirm dashboards are imported (or run <code>./scripts/import-dashboards.sh</code>).</li>
+<li>Confirm Splunk TA content is available (Cisco MDT app/context).</li>
+<li>Validate key dashboard categories:</li>
+<li>Overview</li>
+<li>Infrastructure</li>
+<li>Network</li>
+<li>Routing</li>
+<li>Power and PoE</li>
+<li>Security</li>
+<li>Telemetry Health</li>
+</ol>
+<h2 id="telemetry-subscription-to-dashboard-mapping">Telemetry Subscription to Dashboard Mapping<a class="headerlink" href="#telemetry-subscription-to-dashboard-mapping" title="Permanent link">&para;</a></h2>
+<p>Use this mapping to connect subscription intent to Splunk dashboard outcomes.</p>
+<table>
+<thead>
+<tr>
+<th>Subscription Source</th>
+<th>Example Path / Scope</th>
+<th>Expected Dashboard Area</th>
+<th>Quick Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>telemetry ietf subscription 101</code> (sample in this guide)</td>
+<td><code>/interfaces-ios-xe-oper:interfaces/interface/statistics</code></td>
+<td>Network, Infrastructure, Overview</td>
+<td><code>show telemetry ietf subscription 101 detail</code> + Splunk metric search count in <code>cisco_mdt</code></td>
+</tr>
+<tr>
+<td>Full bundle from <code>c9300x-mdt-subscriptions.cfg</code></td>
+<td>Multiple platform and interface paths</td>
+<td>Overview, Network, Routing, Power and PoE, Security, Telemetry Health</td>
+<td><code>show telemetry ietf subscription all</code> + dashboard panels populated across categories</td>
+</tr>
+<tr>
+<td>Script-applied full set via <code>configure-mdt.py</code></td>
+<td>Same as bundle above, programmatically applied</td>
+<td>Same as bundle above</td>
+<td>Re-run dashboard checks after script confirms apply success</td>
+</tr>
+</tbody>
+</table>
+<p>Interpretation guidance:</p>
+<ol>
+<li>If subscriptions are healthy on-device but dashboards are sparse, validate receiver/exporter counters and YANG model availability.</li>
+<li>If only interface charts populate, the full bundle may not be fully applied.</li>
+<li>Use this mapping during demos to explain why specific dashboard panels are populated.</li>
+</ol>
+<h2 id="model-coverage-notes-for-dashboard-value">Model Coverage Notes (for Dashboard Value)<a class="headerlink" href="#model-coverage-notes-for-dashboard-value" title="Permanent link">&para;</a></h2>
+<p>To highlight YANG model innovation and why dashboards populate correctly:</p>
+<ol>
+<li>Ensure full subscription coverage is enabled (not just a single sample path).</li>
+<li>Pull YANG models with <code>./scripts/fetch-yang-models.sh</code> when possible.</li>
+<li>Verify collector metrics include active receiver processing.</li>
+<li>Verify Splunk index <code>cisco_mdt</code> has current metric names and values.</li>
+</ol>
+<p>This is the practical link between model-driven telemetry and ready-to-use dashboards.</p>
+<h2 id="troubleshooting-otel-splunk-only">Troubleshooting (OTel + Splunk Only)<a class="headerlink" href="#troubleshooting-otel-splunk-only" title="Permanent link">&para;</a></h2>
+<h3 id="no-telemetry-reaching-collector">No telemetry reaching collector<a class="headerlink" href="#no-telemetry-reaching-collector" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Verify switch receiver IP/port/protocol in subscription config.</li>
+<li>Confirm collector is listening on <code>57500</code>.</li>
+<li>Validate routing/firewall between switch and collector host.</li>
+</ol>
+<h3 id="collector-sees-traffic-but-splunk-is-empty">Collector sees traffic but Splunk is empty<a class="headerlink" href="#collector-sees-traffic-but-splunk-is-empty" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Verify <code>splunk_hec</code> endpoint/token/index in collector config.</li>
+<li>Confirm Splunk HEC service is enabled.</li>
+<li>Check collector logs for exporter retry/drop messages.</li>
+</ol>
+<h3 id="dashboard-panels-show-sparse-dimensions">Dashboard panels show sparse dimensions<a class="headerlink" href="#dashboard-panels-show-sparse-dimensions" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Add/download YANG models and point <code>models_dir</code> appropriately.</li>
+<li>Re-check configured subscription paths versus dashboard expectations.</li>
+</ol>
+<h3 id="tlsmtls-issues">TLS/mTLS issues<a class="headerlink" href="#tlsmtls-issues" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Use <code>grpc-tls</code> on switch only when collector TLS is configured.</li>
+<li>Validate certificate chain/trustpoint setup.</li>
+<li>Align switch trust settings with collector <code>tls</code> server settings.</li>
+</ol>
+<h2 id="recommended-operational-checks">Recommended Operational Checks<a class="headerlink" href="#recommended-operational-checks" title="Permanent link">&para;</a></h2>
+<p>Run these checks each time you update subscriptions:</p>
+<ol>
+<li><code>show telemetry ietf subscription all</code> on switch.</li>
+<li><code>curl http://localhost:8888/metrics | grep cisco_telemetry</code> on collector.</li>
+<li>Splunk search proving metric name cardinality in <code>cisco_mdt</code> index.</li>
+<li>Dashboard panel refresh with current time range.</li>
+</ol>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>OTel Cisco telemetry receiver project:</li>
+<li>https://github.com/jeremycohoe/otel-grpc-cisco-receiver</li>
+<li>Splunk setup details in upstream repo:</li>
+<li>https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/SPLUNK-SETUP.md</li>
+<li>OTel collector config reference in upstream repo:</li>
+<li>https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/CONFIG.md</li>
+<li>Security and TLS reference in upstream repo:</li>
+<li>https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/SECURITY.md</li>
+</ul>
 <hr />
-<hr />
-<h2 id="next-steps_1">Next Steps<a class="headerlink" href="#next-steps_1" title="Permanent link">&para;</a></h2>
-<p>✅ Completed: Day 2 - OpenTelemetry + Splunk</p>
-<p><strong>Continue with Day 2:</strong></p>
-<p>➡️ <a href="../gnxi-innovations/">gNXI Innovations</a> - Explore advanced gNXI features</p>
-<p><strong>Or navigate to:</strong>
-- <a href="../">Day 2 Overview</a>
-- <a href="../../day-n/">Day N: Device Optimization</a></p>
+<h2 id="lab-transition">Lab Transition<a class="headerlink" href="#lab-transition" title="Permanent link">&para;</a></h2>
+<p>Wrapping up Day 2:</p>
+<ol>
+<li>Return to your lab VM terminal and keep Splunk/collector status noted.</li>
+<li>If port forwarding was enabled, close it when no longer needed.</li>
+<li>Confirm telemetry verification commands completed successfully before switching modules.</li>
+</ol>
+<h2 id="next-step">Next Step<a class="headerlink" href="#next-step" title="Permanent link">&para;</a></h2>
+<p>Continue to <a href="../../day-n/">Day N: Device Optimization</a>.</p>
 
 
 
@@ -2093,13 +2179,13 @@ Action: Send email to network-ops@company.com</p>
         
         
           
-          <a href="../gnxi-innovations/" class="md-footer__link md-footer__link--next" aria-label="Next: gNXI Innovations">
+          <a href="../../day-n/" class="md-footer__link md-footer__link--next" aria-label="Next: Day N Overview">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                gNXI Innovations
+                Day N Overview
               </div>
             </div>
             <div class="md-footer__button md-icon">
