@@ -1,0 +1,10 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/Users/sdeweese/github/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/.venv/bin/python": true,
+        "command": true,
+        "pdftotext": true,
+        "pdfinfo": true,
+        "seq": true,
+        "pdftoppm": true
+    }
+}

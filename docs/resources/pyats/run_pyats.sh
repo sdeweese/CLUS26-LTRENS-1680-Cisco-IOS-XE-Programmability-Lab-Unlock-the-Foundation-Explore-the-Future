@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="${SCRIPT_DIR}/.venv"
 
-DEVICE="c9300x-lab"
+DEVICE="c9300-lab"
 TESTBED="${SCRIPT_DIR}/testbed.yaml"
 WRITE_MEMORY="--write-memory"
 
@@ -15,7 +15,7 @@ Usage:
 
 Examples:
   ./run_pyats.sh
-  ./run_pyats.sh --device c9300x-lab
+  ./run_pyats.sh --device c9300-lab
   ./run_pyats.sh --testbed /home/auto/pyats/testbed.yaml --no-write-memory
 EOF
 }
@@ -73,4 +73,5 @@ if [[ -n "${WRITE_MEMORY}" ]]; then
 fi
 
 echo "Running: ${CMD[*]}"
+echo "INFO: Script auto-selects APPLY or UNCONFIGURE based on current device state."
 "${CMD[@]}"

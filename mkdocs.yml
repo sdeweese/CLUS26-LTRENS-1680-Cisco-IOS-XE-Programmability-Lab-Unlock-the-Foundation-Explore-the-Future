@@ -57,7 +57,6 @@ nav:
   - Day 2 - Device Monitoring:
       - Day 2 Overview: day-2/index.md
       - OpenTelemetry + Splunk: day-2/opentelemetry-splunk.md
-      - gNXI Innovations: day-2/gnxi-innovations.md
   - Day N - Device Optimization:
       - Day N Overview: day-n/index.md
       - App Hosting: day-n/app-hosting.md

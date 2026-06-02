@@ -2,13 +2,13 @@ testbed:
   name: iosxe-lab
 
 devices:
-  c9300x-lab:
+  c9300-lab:
     os: iosxe
     type: switch
     connections:
       cli:
         protocol: ssh
-        ip: 10.1.1.5
+        ip: 10.1.1.55
     credentials:
       default:
         username: admin

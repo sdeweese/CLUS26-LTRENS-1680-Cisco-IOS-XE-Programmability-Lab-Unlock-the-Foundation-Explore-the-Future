@@ -91,7 +91,6 @@ This lab follows a structured "Day 0 to Day N" approach, mirroring real-world ne
 ### [Day 2 - Device Monitoring](day-2/index.md)
 **Observability & Telemetry**
 - OpenTelemetry + Splunk Integration
-- gNXI Innovations (POLL/ONCE, ACL & VRF)
 - Model-Driven Telemetry
 
 ### [Day N - Device Optimization](day-n/index.md)
@@ -130,7 +129,7 @@ Prefer to explore specific topics? Jump directly to:
 
 - **Configuration Management**: [Terraform](day-1/terraform-netconf.md) or [Ansible](day-1/ansible-gnmi.md)
 - **Testing**: [PyATS](day-1/pyats-testing.md)
-- **Advanced Monitoring**: [gNXI Innovations](day-2/gnxi-innovations.md)
+- **Monitoring**: [OpenTelemetry + Splunk](day-2/opentelemetry-splunk.md)
 - **Edge Computing**: [Application Hosting](day-n/app-hosting.md)
 
 ---

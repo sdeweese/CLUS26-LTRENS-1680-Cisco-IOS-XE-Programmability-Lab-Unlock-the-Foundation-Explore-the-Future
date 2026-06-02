@@ -4,6 +4,216 @@
 
 ## Infrastructure as Code with Terraform and Cisco IOS XE
 
+## Student Quick Path (Pre-Provisioned Lab)
+
+Use this sequence for the lab:
+
+1. Work with one device first (`10.1.1.15`) to validate workflow end-to-end.
+2. Create or review `provider.tf`, `acl.tf`, and `interface.tf`.
+3. Run `terraform init`.
+4. Run `terraform validate`.
+5. Run `terraform plan` and review intended changes.
+6. Run `terraform apply` and verify on device.
+
+The sections below include deeper context and expanded examples.
+
+## NetasCode for Cisco IOS XE (Abstraction Layer)
+
+This module focuses on Terraform workflows with a NetasCode-first mindset.
+
+NetasCode for Cisco IOS XE provides a higher-level abstraction over raw provider resources, helping you model intent more consistently as your configurations scale:
+
+- https://netascode.cisco.com/
+
+How to use this in the lab:
+
+1. Learn the underlying Terraform provider workflow on one device first.
+2. Map that same intent to NetasCode abstractions as a follow-on step.
+3. Keep provider-level examples in this section as foundational knowledge for troubleshooting and validation.
+
+### NetasCode Examples (Intent to Terraform Mapping)
+
+Use these examples to model intent first, then implement with provider resources used later in this guide.
+
+#### Example 1: VLAN intent
+
+NetasCode-style intent model:
+
+```yaml
+switches:
+  - name: c9300-lab
+    vlans:
+      - id: 110
+        name: DEV
+      - id: 120
+        name: PROD
+```
+
+Equivalent Terraform provider resources:
+
+```hcl
+resource "iosxe_vlan" "dev_vlan" {
+  id   = 110
+  name = "DEV"
+}
+
+resource "iosxe_vlan" "prod_vlan" {
+  id   = 120
+  name = "PROD"
+}
+```
+
+#### Example 2: ACL intent + interface attachment
+
+NetasCode-style intent model:
+
+```yaml
+switches:
+  - name: c9300-lab
+    acls:
+      - name: MGMT_ACL
+        type: extended
+        entries:
+          - sequence: 10
+            action: permit
+            protocol: tcp
+            source: 10.10.10.0/24
+            destination: any
+            destination_port: 22
+          - sequence: 20
+            action: deny
+            protocol: ip
+            source: any
+            destination: any
+    interfaces:
+      - name: GigabitEthernet1/0/1
+        acl_in: MGMT_ACL
+```
+
+Equivalent Terraform provider resources:
+
+```hcl
+resource "iosxe_access_list_extended" "mgmt_acl" {
+  name = "MGMT_ACL"
+
+  access_list_entries = [
+    {
+      sequence = 10
+      permit = {
+        protocol = "tcp"
+        source = {
+          ipv4_address = "10.10.10.0"
+          mask = "0.0.0.255"
+        }
+        destination = {
+          any = true
+        }
+        destination_port = {
+          eq = 22
+        }
+      }
+    },
+    {
+      sequence = 20
+      deny = {
+        protocol = "ip"
+        source = {
+          any = true
+        }
+        destination = {
+          any = true
+        }
+      }
+    }
+  ]
+}
+
+resource "iosxe_interface_ethernet" "g1_0_1" {
+  type = "GigabitEthernet"
+  name = "1/0/1"
+
+  ip_access_group = {
+    in = "MGMT_ACL"
+  }
+}
+```
+
+#### Example 3: Day 1 pod copy/paste starter (exact lab values)
+
+Use this when you want a ready-to-run baseline for the Day 1 pod target (`10.1.1.15`).
+
+`provider.tf`:
+
+```hcl
+terraform {
+  required_providers {
+    iosxe = {
+      source  = "CiscoDevNet/iosxe"
+      version = "~> 0.17.0"
+    }
+  }
+}
+
+provider "iosxe" {
+  username = "admin"
+  password = "Cisco123"
+  host     = "10.1.1.15"
+  protocol = "netconf"
+  insecure = true
+}
+```
+
+`acl.tf`:
+
+```hcl
+resource "iosxe_access_list_extended" "mgmt_access" {
+  name = "MGMT_ACCESS"
+
+  entries = [
+    {
+      sequence               = 10
+      ace_rule_action        = "permit"
+      ace_rule_protocol      = "tcp"
+      source_prefix          = "10.0.0.0"
+      source_prefix_mask     = "0.0.255.255"
+      destination_any        = true
+      destination_port_equal = "22"
+    },
+    {
+      sequence               = 20
+      ace_rule_action        = "deny"
+      ace_rule_protocol      = "ip"
+      source_any             = true
+      destination_any        = true
+    }
+  ]
+}
+```
+
+`interface.tf`:
+
+```hcl
+resource "iosxe_interface_ethernet" "g1_0_1" {
+  type                      = "GigabitEthernet"
+  name                      = "1/0/1"
+  description               = "Managed by Terraform - Day1"
+  shutdown                  = "false"
+  ip_access_group_in_acl    = iosxe_access_list_extended.mgmt_access.id
+  ip_access_group_in_vrf_also = false
+}
+```
+
+Run sequence:
+
+```bash
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+
+These intent models are useful for design reviews, while the Terraform snippets are what you run in this lab environment.
+
 ### Introduction to Terraform Provider for IOS XE
 
 Terraform is a declarative Infrastructure as Code (IaC) tool that allows you to define and provision network infrastructure using configuration files. The [Cisco IOS XE Terraform Provider](https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs) enables you to manage IOS XE devices using both NETCONF and RESTCONF protocols.
@@ -60,7 +270,9 @@ Before starting, ensure you have:
 
 **Step 1: Install Terraform**
 
-From your SSH session on the VM, install Terraform:
+From your SSH session on the VM, install Terraform.
+
+In this lab image, Terraform is already installed, so this step is typically not required for you:
 
 ```bash
 # Download Terraform (check for latest version at terraform.io) This step has already been done for you in this environment
@@ -92,7 +304,7 @@ Learn how to use Terraform to configure network security policies using ACLs via
 Create a file called `provider.tf`:
 
 ```bash
-nano provider.tf
+vi provider.tf
 ```
 
 Add the following content:
@@ -138,7 +350,7 @@ Save and exit (Ctrl+X, Y, Enter).
 Create a file called `acl.tf`:
 
 ```bash
-nano acl.tf
+vi acl.tf
 ```
 
 Add the following configuration to create an extended ACL:
@@ -232,7 +444,7 @@ Save and exit.
 Create a file called `interface.tf`:
 
 ```bash
-nano interface.tf
+vi interface.tf
 ```
 
 Add configuration to apply the ACL to an interface:
@@ -323,7 +535,7 @@ Learn how to provision VLANs declaratively using Terraform.
 Create a file called `vlans.tf`:
 
 ```bash
-nano vlans.tf
+vi vlans.tf
 ```
 
 Add VLAN definitions:
@@ -391,7 +603,7 @@ show vlan id 200
 Edit `vlans.tf` to change a VLAN name:
 
 ```bash
-nano vlans.tf
+vi vlans.tf
 ```
 
 Change the Development VLAN name:
@@ -434,7 +646,7 @@ Build a complete network configuration using Infrastructure as Code principles.
 Create `complete_config.tf`:
 
 ```bash
-nano complete_config.tf
+vi complete_config.tf
 ```
 
 Add a comprehensive configuration:
@@ -610,6 +822,14 @@ Terraform provides a powerful, version-controlled approach to network configurat
 
 
 ---
+
+## Lab Transition
+
+Before moving to Ansible or PyATS:
+
+1. Run `terraform plan` one last time and confirm expected state.
+2. If needed for a clean handoff, run `terraform destroy` to reset lab-created resources.
+3. Return to your base lab workspace directory before starting the next module.
 
 ## Next Steps
 

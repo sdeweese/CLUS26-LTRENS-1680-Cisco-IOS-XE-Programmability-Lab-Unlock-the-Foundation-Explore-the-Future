@@ -12,6 +12,17 @@ These slides are available for reference while completing this lab:
 
 <a href="../resources/slides/TECOPS-2314-Programmability-and-Automation-with-Cisco-IOS-XE.pdf" target="_blank" rel="noopener">TECOPS-2314: Programmability and Automation with Cisco IOS XE (PDF)</a>
 
+### Connect Using VS Code (Lab Pod)
+
+Use this baseline workflow before starting any day module:
+
+1. Open the lab workspace in VS Code.
+2. Open a terminal and verify your working directory is the lab repo root.
+3. Keep one terminal for VM operations and open additional terminals for switch/API checks.
+4. Use the `PORTS` tab only when a module needs web access (for example Splunk in Day 2).
+
+This keeps terminal context stable as you move from Day 0 to Day N.
+
 ### What's New in IOS XE 26.1
 
 - Enhanced YANG models for better programmability

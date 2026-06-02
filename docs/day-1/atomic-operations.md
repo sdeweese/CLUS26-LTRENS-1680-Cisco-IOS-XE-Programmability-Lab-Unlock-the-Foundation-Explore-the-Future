@@ -593,6 +593,14 @@ This Ansible-based approach provides a production-ready framework for managing I
 
 ---
 
+## Lab Transition
+
+Before moving to the next Day 1 module:
+
+1. Return to your lab VM shell if you are still on switch CLI.
+2. Keep your Ansible working directory note handy for later reuse.
+3. Confirm any long-running terminal output is stopped before opening the next workflow.
+
 ## Next Steps
 
 ✅ Completed: Day 1 - Atomic Config Replace

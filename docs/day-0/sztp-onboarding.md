@@ -68,6 +68,19 @@ The repository includes comprehensive scripts for voucher generation:
 
 📚 **Full documentation**: [SZTP README](../resources/sztp/README.md)
 
+### Scripts Run in This Lab (Day 0)
+
+Use this quick list during lab execution:
+
+1. `./run_bulk_vouchers.sh --serial-source pod-devices-table.md`
+    - Generates ownership vouchers for listed serials.
+2. `scripts/validate-sztp-artifacts.sh`
+    - Verifies voucher/cert artifacts are present before container startup.
+3. `scripts/sztp-preflight.sh --env-file config/catalyst/c9350.env`
+    - Runs preflight checks for DHCP/redirect/bootstrap readiness.
+4. `SZTP_URL=https://10.1.1.3:8080 bash scripts/verify-sztp.sh`
+    - Confirms redirect/bootstrap flow and expected runtime markers.
+
 ## Bootstrap Server Setup
 
 After generating ownership vouchers, you need to set up a bootstrap server to deliver configurations to devices.
@@ -124,7 +137,7 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
 
 4. Bootstrap service (sztpd running mode, port 9090)
     - Verifies device identity and returns signed onboarding-information.
-    - In this repo it maps the C9300 PID to `first-onboarding-information`.
+    - In this repo it maps the C9350 PID to `first-onboarding-information`.
 
 5. Voucher and owner certificates
     - Ownership voucher and owner cert chain establish ownership trust.
@@ -185,11 +198,11 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
 
 3. Set your lab values in env file
 
-    Edit config/catalyst/c9300.env:
+    Edit config/catalyst/c9350.env:
 
     ```sh
     SZTP_URL=https://10.1.1.3:8080
-    SZTP_DEVICE_SN=C9300-24T
+    SZTP_DEVICE_SN=C9350-24T
     SZTP_VOUCHER_FILE=/local_files/FCW2126G05V.vcj
     SZTP_OWNER_CERT_FILE=/local_files/owner_cert_chain.cms
     ```
@@ -205,7 +218,7 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
     - Option A: Use container DHCP
 
     ```sh
-    docker compose --env-file config/catalyst/c9300.env --profile dhcp up -d
+    docker compose --env-file config/catalyst/c9350.env --profile dhcp up -d
     ```
 
     - Option B: Use existing upstream DHCP (as used in this lab). Ensure option 143 is correctly encoded and points to 10.1.1.3:8080.
@@ -221,7 +234,7 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
     If they are not up, run:
 
     ```sh
-    docker compose --env-file config/catalyst/c9300.env up -d
+    docker compose --env-file config/catalyst/c9350.env up -d
     docker ps --format 'table {{.Names}}\t{{.Status}}'
     ```
 
@@ -250,7 +263,7 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
 7. Run preflight checks
 
     ```sh
-    scripts/sztp-preflight.sh --env-file config/catalyst/c9300.env
+    scripts/sztp-preflight.sh --env-file config/catalyst/c9350.env
     ```
 
 8. Verify bootstrap patches/log markers and SBI behavior
@@ -338,7 +351,7 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
     - Commands:
 
     ```sh
-    docker compose --env-file config/catalyst/c9300.env up -d
+    docker compose --env-file config/catalyst/c9350.env up -d
     docker ps --format 'table {{.Names}}\t{{.Status}}'
     ```
 
@@ -403,6 +416,14 @@ Use the Cisco Live Session Catalog and search by session ID/title (availability 
 For the full curated IOS XE session list used by this lab, see: [Cisco Live IOS XE sessions](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/CLUS26-IOS-XE-Sessions.md)
 
 ---
+
+## Lab Transition
+
+Before moving to Day 1:
+
+1. Exit any active switch console session and return to your lab VM shell.
+2. Confirm SZTP containers/log tails are stopped or detached.
+3. Start Day 1 from the same VM workspace so paths/scripts remain valid.
 
 ## Next Steps
 

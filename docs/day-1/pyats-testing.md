@@ -4,9 +4,11 @@
 
 Use this section to apply required Day 1 platform features with a single PyATS script.
 
+In Day 1, we used Ansible ACR workflows on the 9300X. This module keeps the same NETCONF feature goals, but uses a PyATS workflow on the C9300 lab target at `10.1.1.55`.
+
 ## Goal
 
-Configure the following on the C9300X lab switch (`10.1.1.5`):
+Configure the following on the C9300 lab switch (`10.1.1.55`):
 
 ```text
 netconf-yang
@@ -16,26 +18,27 @@ yang-interfaces feature atomic-config
 
 ## Prerequisites
 
-1. PyATS/Unicon installed in your active Python environment.
-2. SSH reachability to `10.1.1.5`.
-3. Credentials for `c9300x-lab` (default lab values: `admin` / `Cisco123`).
+1. Lab files are already staged in `/home/auto/pyats`.
+2. Python 3 is available on the lab VM.
+3. SSH reachability to `10.1.1.55`.
+4. Credentials for `c9300-lab` (default lab values: `admin` / `Cisco123`).
 
 ## Testbed Example
 
-Create `testbed.yaml`:
+Use `testbed.yaml` (already provided in lab files):
 
 ```yaml
 testbed:
   name: iosxe-lab
 
 devices:
-  c9300x-lab:
+  c9300-lab:
 	os: iosxe
 	type: switch
 	connections:
 	  cli:
 		protocol: ssh
-		ip: 10.1.1.5
+		ip: 10.1.1.55
 	credentials:
 	  default:
 		username: admin
@@ -48,79 +51,25 @@ Save as `enable_netconf_atomic_pyats.py`:
 
 ```python
 #!/usr/bin/env python3
-"""Enable NETCONF candidate datastore + atomic config on IOS XE via pyATS."""
+"""Toggle NETCONF candidate datastore and atomic config on IOS XE via pyATS.
 
-import argparse
-import sys
+Behavior:
+- If required lines are missing, apply them.
+- If required lines are already present, unconfigure them.
+"""
 
-from pyats.topology import loader
-
-
-CONFIG_LINES = [
-	"netconf-yang",
-	"netconf-yang feature candidate-datastore",
-	"yang-interfaces feature atomic-config",
-]
-
-
-def parse_args() -> argparse.Namespace:
-	parser = argparse.ArgumentParser(
-		description="Configure NETCONF candidate + atomic config features using pyATS"
-	)
-	parser.add_argument(
-		"--testbed",
-		required=True,
-		help="Path to testbed YAML file",
-	)
-	parser.add_argument(
-		"--device",
-		default="c9300x-lab",
-		help="Device name in testbed YAML (default: c9300x-lab)",
-	)
-	parser.add_argument(
-		"--write-memory",
-		action="store_true",
-		help="Save running-config to startup-config after applying changes",
-	)
-	return parser.parse_args()
-
-
-def main() -> int:
-	args = parse_args()
-
-	testbed = loader.load(args.testbed)
-	if args.device not in testbed.devices:
-		print(f"ERROR: Device '{args.device}' not found in testbed file {args.testbed}")
-		return 2
-
-	device = testbed.devices[args.device]
-
-	print(f"Connecting to {args.device}...")
-	device.connect(log_stdout=False)
-
-	try:
-		print("Applying configuration...")
-		result = device.configure(CONFIG_LINES)
-		print(result)
-
-		if args.write_memory:
-			print("Saving configuration (write memory)...")
-			print(device.execute("write memory"))
-
-		print("Verifying running config...")
-		print(device.execute("show running-config | section netconf-yang"))
-		print(device.execute("show running-config | include atomic-config"))
-
-	finally:
-		device.disconnect()
-		print("Disconnected.")
-
-	return 0
-
-
-if __name__ == "__main__":
-	sys.exit(main())
+# See docs/resources/pyats/enable_netconf_atomic_pyats.py for full source.
 ```
+
+Operation logic in this combined script:
+
+1. Reads current running config state.
+2. Prints line-by-line state as `PRESENT` or `MISSING`.
+3. Chooses operation automatically:
+   - `APPLY` when one or more required lines are missing.
+   - `UNCONFIGURE` when all required lines are already present.
+4. Optionally saves config when `--write-memory` is used.
+5. Prints post-operation verification output.
 
 ## Review Before Running
 
@@ -132,7 +81,7 @@ Before executing the script, inspect the testbed and script files directly.
 	cat testbed.yaml
 	```
 
-	Confirm it targets the C9300X switch at `10.1.1.5`.
+	Confirm it targets the C9300 switch at `10.1.1.55`.
 
 	![PyATS testbed file review](../images/day1/day1-pyats-testbed.png)
 
@@ -143,6 +92,8 @@ Before executing the script, inspect the testbed and script files directly.
 	```
 
 	Confirm the script will configure these lines:
+	
+	The same script can also unconfigure these lines when it detects they are already present.
 
 	```text
 	netconf-yang
@@ -162,6 +113,8 @@ Before running the script, verify the target config is not yet present on the de
 
 Use this helper script to run the PyATS workflow end-to-end.
 
+On first run, the script creates `.venv` if needed and installs required packages if missing.
+
 Helper file in this repo:
 
 - [docs/resources/pyats/run_pyats.sh](../resources/pyats/run_pyats.sh)
@@ -175,7 +128,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="${SCRIPT_DIR}/.venv"
 
-DEVICE="c9300x-lab"
+DEVICE="c9300-lab"
 TESTBED="${SCRIPT_DIR}/testbed.yaml"
 WRITE_MEMORY="--write-memory"
 
@@ -186,7 +139,7 @@ Usage:
 
 Examples:
 	./run_pyats.sh
-	./run_pyats.sh --device c9300x-lab
+	./run_pyats.sh --device c9300-lab
 	./run_pyats.sh --testbed /home/auto/pyats/testbed.yaml --no-write-memory
 EOF
 }
@@ -265,7 +218,7 @@ chmod +x run_pyats.sh
 Optional flags:
 
 ```bash
-./run_pyats.sh --device c9300x-lab
+./run_pyats.sh --device c9300-lab
 ./run_pyats.sh --testbed testbed.yaml
 ./run_pyats.sh --no-write-memory
 ```
@@ -280,43 +233,31 @@ Follow this flow in order:
 cd /home/auto/pyats
 ```
 
-2. Create a virtual environment (one-time only):
+2. Create the virtual environment (one-time setup):
 
 ```bash
 python3 -m venv .venv
 ```
 
-3. Activate the virtual environment (required in each new terminal/session):
+3. Activate the virtual environment before running scripts:
 
 ```bash
 source .venv/bin/activate
 ```
 
-4. Upgrade packaging tools (recommended one-time):
+4. Run the helper script (recommended):
 
 ```bash
-python -m pip install --upgrade pip setuptools wheel
+./run_pyats.sh
 ```
 
-5. Install required packages (one-time unless you recreate the venv):
+5. Optional: run directly with explicit script flags if troubleshooting:
 
 ```bash
-python -m pip install pyats unicon genie
+python3 enable_netconf_atomic_pyats.py --testbed testbed.yaml --device c9300-lab --write-memory
 ```
 
-6. Verify pyATS installation:
-
-```bash
-pyats version check
-```
-
-7. Run the script:
-
-```bash
-python3 enable_netconf_atomic_pyats.py --testbed testbed.yaml --device c9300x-lab --write-memory
-```
-
-8. Exit the virtual environment when done:
+6. Exit the virtual environment when done with this set of scripts:
 
 ```bash
 deactivate
@@ -329,34 +270,92 @@ Example of what successful script execution looks like:
 ![PyATS run demo output](../images/day1/day1-pyats-demo.png)
 
 ```text
-(.venv) auto@ubuntu24-panda-pod7:~/pyats$ python3 enable_netconf_atomic_pyats.py --testbed testbed.yaml --device c9300x-lab --write-memory
-Connecting to c9300x-lab...
-Applying configuration...
-netconf-yang
-netconf-yang feature candidate-datastore
-yang-interfaces feature atomic-config
+(.venv) auto@ubuntu24-panda-pod7:~/pyats$ python3 enable_netconf_atomic_pyats.py --testbed testbed.yaml --device c9300-lab --write-memory
+Connecting to c9300-lab...
+[STATE] MISSING: netconf-yang
+[STATE] MISSING: netconf-yang feature candidate-datastore
+[STATE] MISSING: yang-interfaces feature atomic-config
+[OPERATION] APPLY: one or more required lines are missing.
+[OPERATION] Applying 3 line(s).
 Saving configuration (write memory)...
 Building configuration...
 [OK]
-Verifying running config...
+Verifying running config after operation...
 netconf-yang
  netconf-yang feature candidate-datastore
 yang-interfaces feature atomic-config
 Disconnected.
 ```
 
+When the same script is run again and all lines are already present, expected operation output changes to:
+
+```text
+[OPERATION] UNCONFIGURE: all required lines are present.
+```
+
 What to look for:
 
 1. No Python traceback or connection/authentication errors.
-2. `Building configuration... [OK]` after `write memory`.
-3. Verification output includes all three required lines.
+2. Clear operation label: either `APPLY` or `UNCONFIGURE`.
+3. `Building configuration... [OK]` after `write memory`.
+4. Verification output matches the selected operation.
+
+## Real NETCONF Proof (`<ok/>`)
+
+Use this test to prove NETCONF is live and accepting RPC operations.
+
+```bash
+python3 - <<'PY'
+from ncclient import manager
+
+with manager.connect(
+		host="10.1.1.55",
+		port=830,
+		username="admin",
+		password="Cisco123",
+		hostkey_verify=False,
+		look_for_keys=False,
+		allow_agent=False,
+		timeout=30,
+) as m:
+		lock_reply = m.lock(target="candidate")
+		print(lock_reply.xml)
+		unlock_reply = m.unlock(target="candidate")
+		print(unlock_reply.xml)
+PY
+```
+
+Expected proof output includes:
+
+```xml
+<rpc-reply ...>
+	<ok/>
+</rpc-reply>
+```
+
+If you see `<ok/>` for lock/unlock, NETCONF is up and working.
+
+## NETCONF Service/Session Verification
+
+From the switch CLI, verify NETCONF feature and active sessions:
+
+```text
+show running-config | include netconf-yang
+show netconf-yang sessions
+```
+
+If available on your image, you can also check YANG management process health:
+
+```text
+show platform software yang-management process
+```
 
 ## Validation Commands on Device
 
-SSH to the C9300X device first:
+SSH to the C9300 device first:
 
 ```bash
-ssh admin@10.1.1.5
+ssh admin@10.1.1.55
 ```
 
 Then run:
@@ -380,6 +379,20 @@ After running the script, confirm the configuration lines are now present.
 
 ![PyATS after verification](../images/day1/day1-pyats-after.png)
 
+## RESTCONF Payload Validation Note (Day 1)
+
+In addition to NETCONF checks, you can validate the Day 1 state with a quick RESTCONF read after running PyATS.
+
+Example:
+
+```bash
+curl -k -u admin:Cisco123 \
+	-H "Accept: application/yang-data+json" \
+	"https://10.1.1.55/restconf/data/Cisco-IOS-XE-native:native"
+```
+
+Confirm the response includes `netconf-yang` with expected Day 1 features present when the script runs in `APPLY` mode.
+
 ## Using PyATS with RESTCONF/NETCONF Payloads (Not Covered in This Lab)
 
 Per PyATS usage patterns, you can use PyATS as the test orchestration layer (testbed loading, device targeting, assertions, reporting) and send protocol payloads with Python clients inside the same test/script.
@@ -394,7 +407,15 @@ Per PyATS usage patterns, you can use PyATS as the test orchestration layer (tes
 	- Open NETCONF session on port `830` with a NETCONF client library.
 	- Send XML payloads with `edit-config`/`get-config`, then assert post-change state in test steps.
 
-This lab intentionally keeps scope to the PyATS CLI-based script shown above for enabling NETCONF candidate datastore and atomic-config prerequisites.
+This lab intentionally keeps scope to the PyATS CLI-based script shown above for applying or unconfiguring NETCONF candidate datastore and atomic-config prerequisites.
+
+## Lab Transition
+
+Before moving to the next module:
+
+1. Exit switch CLI and return to your lab VM terminal.
+2. Confirm your working directory is back in the docs/lab workspace.
+3. Deactivate Python virtual environments if still active.
 
 # Resources
 Learn more about PyATS at: [https://developer.cisco.com/docs/pyats](https://developer.cisco.com/docs/pyats).
@@ -408,7 +429,7 @@ Learn more about PyATS at: [https://developer.cisco.com/docs/pyats](https://deve
 
 **Ready for Day 2?**
 
-➡️ [Day 2: Device Monitoring Overview](../day-2/index.md) - Learn OpenTelemetry and gNXI
+➡️ [Day 2: Device Monitoring Overview](../day-2/index.md) - Learn OpenTelemetry + Splunk
 
 **Or return to:**
 - [Day 1 Overview](index.md)
