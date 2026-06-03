@@ -6,17 +6,15 @@ Day 1 covers modern configuration management approaches for Cisco IOS XE devices
 
 ### What You'll Learn
 
-- Atomic configuration operations with NETCONF
 - Infrastructure as Code with Terraform
-- Configuration automation with Ansible and gNMI
 - Network testing and validation with PyATS
+- Atomic configuration operations with NETCONF
 
 ### Topics Covered
 
-1. **Atomic Config Replace (ACR)**: Safe, atomic configuration changes via NETCONF
-2. **Terraform + NETCONF**: Declarative infrastructure as code
-3. **Ansible + gNMI**: Configuration management with gNMI protocol
-4. **PyATS**: Automated testing and validation
+1. **Terraform + NETCONF**: Declarative infrastructure as code
+2. **PyATS**: Automated testing and validation
+3. **Atomic Config Replace (ACR)**: Safe, atomic configuration changes via NETCONF
 
 ### Key Concepts
 
@@ -29,18 +27,6 @@ Day 1 covers modern configuration management approaches for Cisco IOS XE devices
 
 ## Lab Modules
 
-### [Atomic Config Replace](atomic-operations.md)
-Learn how to safely replace device configurations using NETCONF atomic operations. Includes error detection, automatic rollback, and confirmed commits.
-
-**Topics:**
-
-- ACR fundamentals and workflow
-- Syntax and dependency error isolation
-- Automatic rollback without confirm commit
-- Day 1 to Day N lifecycle management
-
----
-
 ### [Terraform + NETCONF](terraform-netconf.md)
 Build network infrastructure as code using Terraform's IOS XE provider with NETCONF protocol.
 
@@ -50,18 +36,6 @@ Build network infrastructure as code using Terraform's IOS XE provider with NETC
 - Creating ACLs and VLANs declaratively
 - State management and drift detection
 - Modular configuration patterns
-
----
-
-### [Ansible + gNMI](ansible-gnmi.md)
-Automate configuration management using Ansible with gNMI (gRPC Network Management Interface).
-
-**Topics:**
-
-- Ansible gNMI module configuration
-- Playbook development for IOS XE
-- Template-based configuration
-- Role-based automation
 
 ---
 
@@ -77,16 +51,27 @@ Implement automated network testing and validation using Cisco's PyATS framework
 
 ---
 
+### [Atomic Config Replace](atomic-operations.md)
+Learn how to safely replace device configurations using NETCONF atomic operations. Includes error detection, automatic rollback, and confirmed commits.
+
+**Topics:**
+
+- ACR fundamentals and workflow
+- Syntax and dependency error isolation
+- Automatic rollback without confirm commit
+- Day 1 to Day N lifecycle management
+
+---
+
 ## Next Steps
 
 ✅ Completed: Day 1 Overview
 
 **Start with a topic:**
 
-- ➡️ [Atomic Config Replace](atomic-operations.md) - Recommended starting point
-- [Terraform + NETCONF](terraform-netconf.md)
-- [Ansible + gNMI](ansible-gnmi.md)
+- ➡️ [Terraform + NETCONF](terraform-netconf.md) - Recommended starting point
 - [PyATS Testing](pyats-testing.md)
+- [Atomic Config Replace](atomic-operations.md)
 
 **Or navigate to:**
 - [Day 2: Device Monitoring](../day-2/index.md)

@@ -607,11 +607,10 @@ Before moving to the next Day 1 module:
 
 **Continue with Day 1:**
 
-➡️ [Terraform + NETCONF](terraform-netconf.md) - Learn Infrastructure as Code
+➡️ [Day 2: Device Monitoring](../day-2/index.md) - OpenTelemetry + Splunk
 
-**Or explore:**
+**Or return to:**
 
-- [Ansible + gNMI](ansible-gnmi.md)
+- [Terraform + NETCONF](terraform-netconf.md)
 - [PyATS Testing](pyats-testing.md)
 - [Day 1 Overview](index.md)
-- [Day 2: Device Monitoring](../day-2/index.md)

@@ -39,9 +39,11 @@ To access the lab, you will need to SSH to your assigned VM host. From the VM, y
    - **Terminal 1**: VM configuration and automation
    - **Terminal 2**: Direct switch access via telnet
 
+   <!-- -L 18000:localhost:8000  -->
+
 3. **SSH to the VM** (Terminal 1):
    ```bash
-   ssh -p 3389 -L 18480:localhost:8480 -L 13000:localhost:3000 auto@pod##-xelab.cisco.com
+   ssh -p 443 auto@pod##-xelab.cisco.com
    ```
    Replace `##` with your pod number. Use the password provided by the facilitator.
    
@@ -83,10 +85,9 @@ This lab follows a structured "Day 0 to Day N" approach, mirroring real-world ne
 
 ### [Day 1 - Device Configuration](day-1/index.md)
 **Configuration Management & Automation**
-- Atomic Config Replace (NETCONF)
 - Terraform + NETCONF (Infrastructure as Code)
-- Ansible + gNMI (Configuration Automation)
 - PyATS (Automated Testing)
+- Atomic Config Replace (NETCONF)
 
 ### [Day 2 - Device Monitoring](day-2/index.md)
 **Observability & Telemetry**
@@ -120,15 +121,16 @@ For the best learning experience, follow this sequence:
 
 1. **[Introduction: YANG Model Innovations](intro/index.md)** (~15 min)
 2. **[Day 0: SZTP Onboarding](day-0/index.md)** (~60 min)
-3. **[Day 1: Atomic Config Replace](day-1/atomic-operations.md)** (~60 min)
+3. **[Day 1: Terraform + NETCONF](day-1/terraform-netconf.md)** (~60 min)
 4. **[Day 2: OpenTelemetry + Splunk](day-2/opentelemetry-splunk.md)** (~90 min)
 
 ### Choose Your Own Adventure
 
 Prefer to explore specific topics? Jump directly to:
 
-- **Configuration Management**: [Terraform](day-1/terraform-netconf.md) or [Ansible](day-1/ansible-gnmi.md)
+- **Configuration Management**: [Terraform + NETCONF](day-1/terraform-netconf.md)
 - **Testing**: [PyATS](day-1/pyats-testing.md)
+- **Atomic Config Replace**: [ACR](day-1/atomic-operations.md)
 - **Monitoring**: [OpenTelemetry + Splunk](day-2/opentelemetry-splunk.md)
 - **Edge Computing**: [Application Hosting](day-n/app-hosting.md)
 

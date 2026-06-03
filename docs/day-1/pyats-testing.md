@@ -427,10 +427,11 @@ Learn more about PyATS at: [https://developer.cisco.com/docs/pyats](https://deve
 
 ✅ Completed: Day 1 - PyATS Testing
 
-**Ready for Day 2?**
+**Continue with Day 1:**
 
-➡️ [Day 2: Device Monitoring Overview](../day-2/index.md) - Learn OpenTelemetry + Splunk
+➡️ [Atomic Config Replace](atomic-operations.md) - Safe, atomic configuration changes via NETCONF
 
 **Or return to:**
+- [Terraform + NETCONF](terraform-netconf.md)
 - [Day 1 Overview](index.md)
-- [Atomic Config Replace](atomic-operations.md)
+- [Day 2: Device Monitoring](../day-2/index.md)
