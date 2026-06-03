@@ -1022,34 +1022,6 @@
   
   
     <li class="md-nav__item">
-      <a href="day-1/atomic-operations/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Atomic Config Replace
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="day-1/terraform-netconf/" class="md-nav__link">
         
   
@@ -1078,14 +1050,14 @@
   
   
     <li class="md-nav__item">
-      <a href="day-1/ansible-gnmi/" class="md-nav__link">
+      <a href="day-1/pyats-testing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Ansible + gNMI
+    PyATS Testing
   
 
     
@@ -1106,14 +1078,14 @@
   
   
     <li class="md-nav__item">
-      <a href="day-1/pyats-testing/" class="md-nav__link">
+      <a href="day-1/atomic-operations/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PyATS Testing
+    Atomic Config Replace
   
 
     
@@ -1590,15 +1562,15 @@
 <li>
 <p><strong>Terminal 1</strong>: VM configuration and automation</p>
 </li>
-<li>
-<p><strong>Terminal 2</strong>: Direct switch access via telnet</p>
-</li>
-<li>
-<p><strong>SSH to the VM</strong> (Terminal 1):
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">3389</span><span class="w"> </span>-L<span class="w"> </span><span class="m">18480</span>:localhost:8480<span class="w"> </span>-L<span class="w"> </span><span class="m">13000</span>:localhost:3000<span class="w"> </span>auto@pod##-xelab.cisco.com
+<li><strong>Terminal 2</strong>: Direct switch access via telnet</li>
+</ol>
+<!-- -L 18000:localhost:8000  -->
+
+<ol>
+<li><strong>SSH to the VM</strong> (Terminal 1):
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">443</span><span class="w"> </span>auto@pod##-xelab.cisco.com
 </span></code></pre></div>
-   Replace <code>##</code> with your pod number. Use the password provided by the facilitator.</p>
-</li>
+   Replace <code>##</code> with your pod number. Use the password provided by the facilitator.</li>
 </ol>
 <p>First-time login will prompt:
    <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Are you sure you want to continue connecting (yes/no/[fingerprint])?
@@ -1632,10 +1604,9 @@
 - Certificate-based authentication</p>
 <h3 id="day-1-device-configuration"><a href="day-1/">Day 1 - Device Configuration</a><a class="headerlink" href="#day-1-device-configuration" title="Permanent link">&para;</a></h3>
 <p><strong>Configuration Management &amp; Automation</strong>
-- Atomic Config Replace (NETCONF)
 - Terraform + NETCONF (Infrastructure as Code)
-- Ansible + gNMI (Configuration Automation)
-- PyATS (Automated Testing)</p>
+- PyATS (Automated Testing)
+- Atomic Config Replace (NETCONF)</p>
 <h3 id="day-2-device-monitoring"><a href="day-2/">Day 2 - Device Monitoring</a><a class="headerlink" href="#day-2-device-monitoring" title="Permanent link">&para;</a></h3>
 <p><strong>Observability &amp; Telemetry</strong>
 - OpenTelemetry + Splunk Integration
@@ -1659,14 +1630,15 @@
 <ol>
 <li><strong><a href="intro/">Introduction: YANG Model Innovations</a></strong> (~15 min)</li>
 <li><strong><a href="day-0/">Day 0: SZTP Onboarding</a></strong> (~60 min)</li>
-<li><strong><a href="day-1/atomic-operations/">Day 1: Atomic Config Replace</a></strong> (~60 min)</li>
+<li><strong><a href="day-1/terraform-netconf/">Day 1: Terraform + NETCONF</a></strong> (~60 min)</li>
 <li><strong><a href="day-2/opentelemetry-splunk/">Day 2: OpenTelemetry + Splunk</a></strong> (~90 min)</li>
 </ol>
 <h3 id="choose-your-own-adventure">Choose Your Own Adventure<a class="headerlink" href="#choose-your-own-adventure" title="Permanent link">&para;</a></h3>
 <p>Prefer to explore specific topics? Jump directly to:</p>
 <ul>
-<li><strong>Configuration Management</strong>: <a href="day-1/terraform-netconf/">Terraform</a> or <a href="day-1/ansible-gnmi/">Ansible</a></li>
+<li><strong>Configuration Management</strong>: <a href="day-1/terraform-netconf/">Terraform + NETCONF</a></li>
 <li><strong>Testing</strong>: <a href="day-1/pyats-testing/">PyATS</a></li>
+<li><strong>Atomic Config Replace</strong>: <a href="day-1/atomic-operations/">ACR</a></li>
 <li><strong>Monitoring</strong>: <a href="day-2/opentelemetry-splunk/">OpenTelemetry + Splunk</a></li>
 <li><strong>Edge Computing</strong>: <a href="day-n/app-hosting/">Application Hosting</a></li>
 </ul>

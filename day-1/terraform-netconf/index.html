@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://sdeweese.github.io/CLUS26-LTRENS-1680/day-1/terraform-netconf/">
       
       
-        <link rel="prev" href="../atomic-operations/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../ansible-gnmi/">
+        <link rel="next" href="../pyats-testing/">
       
       
         
@@ -729,34 +729,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../atomic-operations/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Atomic Config Replace
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -798,14 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../ansible-gnmi/" class="md-nav__link">
+      <a href="../pyats-testing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Ansible + gNMI
+    PyATS Testing
   
 
     
@@ -826,14 +798,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../pyats-testing/" class="md-nav__link">
+      <a href="../atomic-operations/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    PyATS Testing
+    Atomic Config Replace
   
 
     
@@ -1326,195 +1298,40 @@
 <h1 id="terraform-netconf">Terraform + NETCONF<a class="headerlink" href="#terraform-netconf" title="Permanent link">&para;</a></h1>
 <h1 id="tooling-module">Tooling Module<a class="headerlink" href="#tooling-module" title="Permanent link">&para;</a></h1>
 <h2 id="infrastructure-as-code-with-terraform-and-cisco-ios-xe">Infrastructure as Code with Terraform and Cisco IOS XE<a class="headerlink" href="#infrastructure-as-code-with-terraform-and-cisco-ios-xe" title="Permanent link">&para;</a></h2>
-<h2 id="student-quick-path-pre-provisioned-lab">Student Quick Path (Pre-Provisioned Lab)<a class="headerlink" href="#student-quick-path-pre-provisioned-lab" title="Permanent link">&para;</a></h2>
-<p>Use this sequence for the lab:</p>
-<ol>
-<li>Work with one device first (<code>10.1.1.15</code>) to validate workflow end-to-end.</li>
-<li>Create or review <code>provider.tf</code>, <code>acl.tf</code>, and <code>interface.tf</code>.</li>
-<li>Run <code>terraform init</code>.</li>
-<li>Run <code>terraform validate</code>.</li>
-<li>Run <code>terraform plan</code> and review intended changes.</li>
-<li>Run <code>terraform apply</code> and verify on device.</li>
-</ol>
-<p>The sections below include deeper context and expanded examples.</p>
-<h2 id="netascode-for-cisco-ios-xe-abstraction-layer">NetasCode for Cisco IOS XE (Abstraction Layer)<a class="headerlink" href="#netascode-for-cisco-ios-xe-abstraction-layer" title="Permanent link">&para;</a></h2>
-<p>This module focuses on Terraform workflows with a NetasCode-first mindset.</p>
-<p>NetasCode for Cisco IOS XE provides a higher-level abstraction over raw provider resources, helping you model intent more consistently as your configurations scale:</p>
+<div class="admonition info">
+<p class="admonition-title">Tested on</p>
 <ul>
-<li>https://netascode.cisco.com/</li>
+<li><strong>Device:</strong> Cisco Catalyst C9300 running IOS XE 26.1</li>
+<li><strong>Terraform:</strong> 1.3.4+</li>
+<li><strong>Provider:</strong> <code>CiscoDevNet/iosxe ~&gt; 0.18.0</code> (NETCONF transport)</li>
 </ul>
-<p>How to use this in the lab:</p>
+<p>The C9350 platform on IOS XE 26.1 has a known confd write-memory lock issue with provider 0.18 — use a C9300 for the Terraform demos.</p>
+</div>
+<h2 id="student-quick-path-pre-provisioned-lab">Student Quick Path (Pre-Provisioned Lab)<a class="headerlink" href="#student-quick-path-pre-provisioned-lab" title="Permanent link">&para;</a></h2>
+<p>This module is structured so you build confidence before making any changes:</p>
 <ol>
-<li>Learn the underlying Terraform provider workflow on one device first.</li>
-<li>Map that same intent to NetasCode abstractions as a follow-on step.</li>
-<li>Keep provider-level examples in this section as foundational knowledge for troubleshooting and validation.</li>
+<li><strong>Demo 1 — Read-only sanity check.</strong> Use a Terraform <code>data</code> source to read device state. Proves auth + transport + provider without any device risk. <strong>Always run this first.</strong></li>
+<li><strong>Demo 2 — Create an ACL + Loopback.</strong> First write. Smallest blast radius (loopback interface, never a front-panel port).</li>
+<li><strong>Demo 3 — VLAN configuration.</strong> Demonstrates <code>terraform apply</code> updating only what changed.</li>
+<li><strong>Demo 4 — Complete network segment.</strong> Combines VLAN + ACL + isolated interface as one declarative unit.</li>
 </ol>
-<h3 id="netascode-examples-intent-to-terraform-mapping">NetasCode Examples (Intent to Terraform Mapping)<a class="headerlink" href="#netascode-examples-intent-to-terraform-mapping" title="Permanent link">&para;</a></h3>
-<p>Use these examples to model intent first, then implement with provider resources used later in this guide.</p>
-<h4 id="example-1-vlan-intent">Example 1: VLAN intent<a class="headerlink" href="#example-1-vlan-intent" title="Permanent link">&para;</a></h4>
-<p>NetasCode-style intent model:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">switches</span><span class="p">:</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c9300-lab</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">vlans</span><span class="p">:</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEV</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">120</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PROD</span>
-</span></code></pre></div>
-<p>Equivalent Terraform provider resources:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;dev_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="na">id</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">110</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DEV&quot;</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">}</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;prod_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="na">id</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">120</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PROD&quot;</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
-</span></code></pre></div>
-<h4 id="example-2-acl-intent-interface-attachment">Example 2: ACL intent + interface attachment<a class="headerlink" href="#example-2-acl-intent-interface-attachment" title="Permanent link">&para;</a></h4>
-<p>NetasCode-style intent model:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">switches</span><span class="p">:</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c9300-lab</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">acls</span><span class="p">:</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MGMT_ACL</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extended</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="nt">entries</span><span class="p">:</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sequence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">            </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">permit</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">            </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tcp</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">            </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.0/24</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">            </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">            </span><span class="nt">destination_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sequence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">            </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deny</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">            </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ip</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">            </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">            </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nt">interfaces</span><span class="p">:</span>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GigabitEthernet1/0/1</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">        </span><span class="nt">acl_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MGMT_ACL</span>
-</span></code></pre></div>
-<p>Equivalent Terraform provider resources:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_access_list_extended&quot;</span><span class="w"> </span><span class="nv">&quot;mgmt_acl&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MGMT_ACL&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="na">access_list_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="na">sequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nb">permit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="nb">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">          </span><span class="na">ipv4_address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.10.10.0&quot;</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">          </span><span class="na">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.255&quot;</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="nb">destination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">          </span><span class="na">any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="nb">destination_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">          </span><span class="na">eq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">22</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">      </span><span class="p">}</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">      </span><span class="na">sequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">      </span><span class="nb">deny</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">        </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ip&quot;</span>
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">        </span><span class="nb">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">          </span><span class="na">any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">        </span><span class="nb">destination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">          </span><span class="na">any</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">      </span><span class="p">}</span>
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="p">}</span>
-</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
-</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_interface_ethernet&quot;</span><span class="w"> </span><span class="nv">&quot;g1_0_1&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="w">  </span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GigabitEthernet&quot;</span>
-</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1/0/1&quot;</span>
-</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>
-</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="w">  </span><span class="nb">ip_access_group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="w">    </span><span class="na">in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MGMT_ACL&quot;</span>
-</span><span id="__span-3-42"><a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-3-43"><a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="p">}</span>
-</span></code></pre></div>
-<h4 id="example-3-day-1-pod-copypaste-starter-exact-lab-values">Example 3: Day 1 pod copy/paste starter (exact lab values)<a class="headerlink" href="#example-3-day-1-pod-copypaste-starter-exact-lab-values" title="Permanent link">&para;</a></h4>
-<p>Use this when you want a ready-to-run baseline for the Day 1 pod target (<code>10.1.1.15</code>).</p>
-<p><code>provider.tf</code>:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nb">iosxe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CiscoDevNet/iosxe&quot;</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 0.17.0&quot;</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">}</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;iosxe&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cisco123&quot;</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="na">host</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.1.1.15&quot;</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;netconf&quot;</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="na">insecure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">}</span>
-</span></code></pre></div>
-<p><code>acl.tf</code>:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_access_list_extended&quot;</span><span class="w"> </span><span class="nv">&quot;mgmt_access&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MGMT_ACCESS&quot;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="na">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="na">sequence</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="na">source_prefix</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0&quot;</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="na">source_prefix_mask</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.255.255&quot;</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;22&quot;</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">      </span><span class="na">sequence</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ip&quot;</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">      </span><span class="na">source_any</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="p">}</span>
-</span></code></pre></div>
-<p><code>interface.tf</code>:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_interface_ethernet&quot;</span><span class="w"> </span><span class="nv">&quot;g1_0_1&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="na">type</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GigabitEthernet&quot;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="na">name</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1/0/1&quot;</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="na">description</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Managed by Terraform - Day1&quot;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="na">shutdown</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="na">ip_access_group_in_acl</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">iosxe_access_list_extended.mgmt_access.id</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="na">ip_access_group_in_vrf_also</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
-</span></code></pre></div>
-<p>Run sequence:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>terraform<span class="w"> </span>init
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>terraform<span class="w"> </span>validate
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>terraform<span class="w"> </span>plan
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>terraform<span class="w"> </span>apply
-</span></code></pre></div>
-<p>These intent models are useful for design reviews, while the Terraform snippets are what you run in this lab environment.</p>
+<p>A side-by-side <strong>NetasCode intent ↔ Terraform</strong> mapping is included at the <strong>end</strong> of this guide for reference and design discussion. You do not need to run any of those files — the lab is driven entirely by the four demos above.</p>
 <h3 id="introduction-to-terraform-provider-for-ios-xe">Introduction to Terraform Provider for IOS XE<a class="headerlink" href="#introduction-to-terraform-provider-for-ios-xe" title="Permanent link">&para;</a></h3>
 <p>Terraform is a declarative Infrastructure as Code (IaC) tool that allows you to define and provision network infrastructure using configuration files. The <a href="https://registry.terraform.io/providers/CiscoDevNet/iosxe/latest/docs">Cisco IOS XE Terraform Provider</a> enables you to manage IOS XE devices using both NETCONF and RESTCONF protocols.</p>
-<p><strong>Benefits of using Terraform with IOS XE:</strong>
-- <strong>Declarative configuration</strong>: Define desired state, Terraform handles the how
-- <strong>Version control</strong>: Track configuration changes in Git
-- <strong>Repeatability</strong>: Apply the same configuration across multiple devices
-- <strong>Idempotent</strong>: Safe to run multiple times without side effects
-- <strong>State management</strong>: Track actual vs. desired configuration state</p>
+<p><strong>Benefits of using Terraform with IOS XE:</strong></p>
+<ul>
+<li><strong>Declarative configuration</strong>: Define desired state, Terraform handles the how</li>
+<li><strong>Version control</strong>: Track configuration changes in Git</li>
+<li><strong>Repeatability</strong>: Apply the same configuration across multiple devices</li>
+<li><strong>Idempotent</strong>: Safe to run multiple times without side effects</li>
+<li><strong>State management</strong>: Track actual vs. desired configuration state</li>
+</ul>
 <h3 id="netconf-vs-restconf-support">NETCONF vs RESTCONF Support<a class="headerlink" href="#netconf-vs-restconf-support" title="Permanent link">&para;</a></h3>
 <p>The Cisco IOS XE Terraform provider has evolved to support multiple management protocols:</p>
 <ul>
-<li><strong>Version 0.10.0 (Oct 2023)</strong>: NETCONF support added (experimental) - first version to support both protocols</li>
-<li><strong>Version 0.15.0 (Jan 2024)</strong>: <strong>Default changed from RESTCONF to NETCONF</strong> (breaking change)</li>
-<li><strong>Current versions (0.15.0+)</strong>: NETCONF is the default and recommended protocol</li>
+<li><strong>Version 0.10.0 (Oct 2023)</strong>: NETCONF support added; first version to support both NETCONF &amp; RESTCONF protocols</li>
+<li><strong>Version 0.15.0 (Jan 2024)</strong>: <strong>Default changed from RESTCONF to NETCONF</strong> (major change)</li>
+<li><strong>Current versions (0.18.0+)</strong>: NETCONF is the default and recommended protocol</li>
 </ul>
 <p><strong>Why NETCONF is now the default:</strong></p>
 <table>
@@ -1575,183 +1392,242 @@
 <p>Before starting, ensure you have:</p>
 <ol>
 <li>Terraform installed on the VM</li>
-<li>Access to the C9300 switch (10.1.1.15)</li>
+<li>Access to the C9300 switch (10.1.1.55)</li>
 <li>NETCONF enabled on the switch</li>
 </ol>
 <h3 id="lab-setup">Lab Setup<a class="headerlink" href="#lab-setup" title="Permanent link">&para;</a></h3>
+<p><strong>Step 0: Open a Terminal tab to connect to your 9350 switch</strong></p>
+<p>In a new terminal window, SSH to your 95300 switch</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ssh admin@10.1.1.55
+</span></code></pre></div>
+<p>Password</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cisco123
+</span></code></pre></div>
+<p>Once you are connected to the device, run this command to learn about the current NETCONF &amp; RESTCONF configuration
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>show running-config | include netconf-yang|restconf|atomic|candidate
+</span></code></pre></div></p>
+<p>Confirm that the output resembles this:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>netconf-yang
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>netconf-yang feature candidate-datastore
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>netconf-yang ssh local-vrf guestshell enable
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>restconf
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>yang-interfaces feature atomic-config
+</span></code></pre></div></p>
 <p><strong>Step 1: Install Terraform</strong></p>
-<p>From your SSH session on the VM, install Terraform.</p>
-<p>In this lab image, Terraform is already installed, so this step is typically not required for you:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Download Terraform (check for latest version at terraform.io) This step has already been done for you in this environment</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># cd ~</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># wget https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># unzip terraform_1.7.0_linux_amd64.zip</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># sudo mv terraform /usr/local/bin/</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># terraform version</span>
+<p>From your SSH session on the VM, ensure Terraform is installed.</p>
+<p>In this lab image, Terraform is already installed, so this step is typically not required for you. However, if you are running this in your own environment, you will need to run the following commands:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Download Terraform (check for latest version at terraform.io) This step has already been done for you in this environment</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># cd ~</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># wget https://releases.hashicorp.com/terraform/1.7.0/terraform_1.7.0_linux_amd64.zip</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># unzip terraform_1.7.0_linux_amd64.zip</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># sudo mv terraform /usr/local/bin/</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># terraform version</span>
 </span></code></pre></div>
-<p><strong>Step 2: Create a working directory</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>~/CLUS2026-terraform-iosxe-lab
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">cd</span><span class="w"> </span>~/CLUS2026-terraform-iosxe-lab
+<p><strong>Step 2: Navigate to the working directory with the Terraform files</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">cd</span><span class="w"> </span>~/CLUS2026-terraform-iosxe-lab
 </span></code></pre></div>
-<h3 id="demo-1-configure-extended-acls-and-apply-to-interface">Demo 1: Configure Extended ACLs and Apply to Interface<a class="headerlink" href="#demo-1-configure-extended-acls-and-apply-to-interface" title="Permanent link">&para;</a></h3>
-<p>In this demo, you'll use Terraform to create an extended Access Control List (ACL) and apply it to an interface on the C9300 switch.</p>
+<h3 id="demo-1-get-current-configurations-on-device-using-terraform-netconf">Demo 1: Get Current Configurations on Device using Terraform + NETCONF<a class="headerlink" href="#demo-1-get-current-configurations-on-device-using-terraform-netconf" title="Permanent link">&para;</a></h3>
+<p>Before you write <em>anything</em> to the device, prove that Terraform can talk to it. A Terraform <code>data</code> source fetches device state read-only. Nothing is created, modified, or removed. If this demo fails, the problem is authentication, networking, NETCONF, or the provider, not your config files. Ensure this step works before proceeding to the next steps.</p>
 <h4 id="objective">Objective<a class="headerlink" href="#objective" title="Permanent link">&para;</a></h4>
-<p>Learn how to use Terraform to configure network security policies using ACLs via NETCONF/YANG.</p>
+<p>Validate the full Terraform → NETCONF → Cisco IOS XE path using a read-only data source.</p>
 <h4 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Navigate to the pre-staged read-only demo directory</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">cd</span><span class="w"> </span>~/tf-readonly
+</span></code></pre></div>
+<p><strong>Step 2: Examine <code>main.tf</code></strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cat<span class="w"> </span>main.tf
+</span></code></pre></div>
+<p>You should see:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nb">iosxe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CiscoDevNet/iosxe&quot;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 0.18.0&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">}</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;iosxe&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cisco123&quot;</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="na">host</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.1.1.55&quot;</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;netconf&quot;</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="na">insecure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="p">}</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># READ-ONLY: fetch device system info via NETCONF get-config</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="kr">data</span><span class="w"> </span><span class="nc">&quot;iosxe_system&quot;</span><span class="w"> </span><span class="nv">&quot;this&quot;</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;hostname&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span><span class="na">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.iosxe_system.this.hostname</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="p">}</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="kr">output</span><span class="w"> </span><span class="nv">&quot;ip_routing_enabled&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">  </span><span class="na">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">data.iosxe_system.this.ip_routing</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Step 3: Initialize and run</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>terraform<span class="w"> </span>init
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-auto-approve
+</span></code></pre></div>
+<p>Expected output ends with something like:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Outputs:
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>hostname           = &quot;cat9300-pod-XXc-sztp&quot;
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>ip_routing_enabled = true
+</span></code></pre></div>
+<p><strong>Step 4: Interpret the result</strong></p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Meaning</th>
+<th>Next step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Outputs print real values</td>
+<td>NETCONF + auth + provider all healthy</td>
+<td>Move on to Demo 2</td>
+</tr>
+<tr>
+<td><code>Error: Client Error</code> on the data source</td>
+<td>Provider can't reach NETCONF (auth, port 830, or transport)</td>
+<td>Check <code>ssh -p 830 admin@10.1.1.55</code>; confirm <code>netconf-yang</code> is configured on device</td>
+</tr>
+<tr>
+<td>Outputs are blank / null</td>
+<td>YANG path returned no data</td>
+<td>Run <code>show platform software yang-management process</code> on device — all should be <code>Running</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Takeaway</strong>: <code>data</code> sources read; <code>resource</code> blocks write. Always read first when bringing a new device or provider version into your workflow — it isolates 90% of problems in 30 seconds, with zero device risk.</p>
+<hr />
+<h3 id="demo-2-create-an-extended-acl-and-a-loopback-interface">Demo 2: Create an Extended ACL and a Loopback Interface<a class="headerlink" href="#demo-2-create-an-extended-acl-and-a-loopback-interface" title="Permanent link">&para;</a></h3>
+<p>In this demo, you'll use Terraform to create an extended Access Control List (ACL) and a Loopback interface on the C9350 switch.
+The ACL is created independently of any production interface so it cannot affect connectivity.</p>
+<h4 id="objective_1">Objective<a class="headerlink" href="#objective_1" title="Permanent link">&para;</a></h4>
+<p>Learn how to use Terraform to configure ACLs and an isolated test interface via NETCONF/YANG.</p>
+<h4 id="steps-to-create-a-loopback-and-acl-with-terraform">Steps to create a Loopback and ACL with Terraform<a class="headerlink" href="#steps-to-create-a-loopback-and-acl-with-terraform" title="Permanent link">&para;</a></h4>
+<p><strong>Step 0: Confirm that the following config does not yet exist on your device</strong> Note: Through the following steps, we will add this configuration using Terraform and NETCONF. </p>
+<p>On your switch, type the following commands</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>show ip access-lists LAB_TEST_ACL
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>show running-config interface Loopback100
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>show ip interface Loopback100
+</span></code></pre></div>
 <p><strong>Step 1: Create the Terraform provider configuration</strong></p>
-<p>Create a file called <code>provider.tf</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vi<span class="w"> </span>provider.tf
+<p>The following steps should be completed from your VM tab (NOT your switch tab since we are using APIs to programmatically configure your switch.)</p>
+<p>Examine a file called <code>provider.tf</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cat<span class="w"> </span>provider.tf
 </span></code></pre></div>
-<p>Add the following content:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nb">iosxe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CiscoDevNet/iosxe&quot;</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 0.17.0&quot;</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="p">}</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;iosxe&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cisco123&quot;</span>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="na">host</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.1.1.15&quot;</span>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1">  # Protocol: &quot;netconf&quot; (default, recommended) or &quot;restconf&quot;</span>
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1">  # NETCONF provides better performance and atomic operations</span>
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">  </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;netconf&quot;</span>
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
-</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1">  # Skip TLS certificate verification (lab environment only)</span>
-</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">  </span><span class="na">insecure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="p">}</span>
-</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
-</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c1"># Optional: To use RESTCONF instead, change protocol:</span>
-</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="c1"># provider &quot;iosxe&quot; {</span>
-</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="c1">#   username = &quot;admin&quot;</span>
-</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="c1">#   password = &quot;Cisco123&quot;</span>
-</span><span id="__span-11-27"><a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="c1">#   host     = &quot;10.1.1.15&quot;</span>
-</span><span id="__span-11-28"><a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="c1">#   protocol = &quot;restconf&quot;</span>
-</span><span id="__span-11-29"><a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="c1">#   url      = &quot;https://10.1.1.15&quot;  # Required for RESTCONF</span>
-</span><span id="__span-11-30"><a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="c1">#   insecure = true</span>
-</span><span id="__span-11-31"><a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="c1"># }</span>
+<p>Review the following content:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nb">iosxe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;CiscoDevNet/iosxe&quot;</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 0.18.0&quot;</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="p">}</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;iosxe&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cisco123&quot;</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span><span class="na">host</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.1.1.55&quot;</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1">  # Protocol: &quot;netconf&quot; (default, recommended) or &quot;restconf&quot;</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1">  # NETCONF provides better performance and atomic operations</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">  </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;netconf&quot;</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="c1">  # Skip TLS certificate verification (lab environment only)</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">  </span><span class="na">insecure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="p">}</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="c1"># Optional: To use RESTCONF instead, change protocol:</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="c1"># provider &quot;iosxe&quot; {</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="c1">#   username = &quot;admin&quot;</span>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="c1">#   password = &quot;Cisco123&quot;</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="c1">#   host     = &quot;10.1.1.55&quot;</span>
+</span><span id="__span-13-28"><a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="c1">#   protocol = &quot;restconf&quot;</span>
+</span><span id="__span-13-29"><a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="c1">#   url      = &quot;https://10.1.1.55&quot;  # Required for RESTCONF</span>
+</span><span id="__span-13-30"><a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="c1">#   insecure = true</span>
+</span><span id="__span-13-31"><a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="c1"># }</span>
 </span></code></pre></div>
-<p>Save and exit (Ctrl+X, Y, Enter).</p>
 <p><strong>Step 2: Create the Extended ACL configuration</strong></p>
-<p>Create a file called <code>acl.tf</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vi<span class="w"> </span>acl.tf
+<p>Examine a file called <code>acl.tf</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>cat<span class="w"> </span>acl.tf
 </span></code></pre></div>
-<p>Add the following configuration to create an extended ACL:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Extended ACL for securing management traffic</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_access_list_extended&quot;</span><span class="w"> </span><span class="nv">&quot;management_acl&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MGMT_ACCESS&quot;</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="na">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow SSH from management subnet&quot;</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">      </span><span class="na">source_prefix</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0&quot;</span>
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">      </span><span class="na">source_prefix_mask</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.255.255&quot;</span>
-</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;22&quot;</span>
-</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
-</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow HTTPS from management subnet&quot;</span>
-</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
-</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">      </span><span class="na">source_prefix</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.0.0.0&quot;</span>
-</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">      </span><span class="na">source_prefix_mask</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.255.255&quot;</span>
-</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;443&quot;</span>
-</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
-</span><span id="__span-13-28"><a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow ICMP for troubleshooting&quot;</span>
-</span><span id="__span-13-29"><a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-13-30"><a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;icmp&quot;</span>
-</span><span id="__span-13-31"><a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-32"><a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-33"><a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-13-34"><a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-13-35"><a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">40</span>
-</span><span id="__span-13-36"><a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny all other traffic&quot;</span>
-</span><span id="__span-13-37"><a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
-</span><span id="__span-13-38"><a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ip&quot;</span>
-</span><span id="__span-13-39"><a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-40"><a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-41"><a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a><span class="w">      </span><span class="na">log</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-42"><a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-13-43"><a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-13-44"><a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a><span class="p">}</span>
-</span><span id="__span-13-45"><a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>
-</span><span id="__span-13-46"><a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a><span class="c1"># Additional ACL for data plane traffic</span>
-</span><span id="__span-13-47"><a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_access_list_extended&quot;</span><span class="w"> </span><span class="nv">&quot;data_acl&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-13-48"><a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DATA_TRAFFIC&quot;</span>
-</span><span id="__span-13-49"><a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a>
-</span><span id="__span-13-50"><a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a><span class="w">  </span><span class="na">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-13-51"><a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-13-52"><a id="__codelineno-13-52" name="__codelineno-13-52" href="#__codelineno-13-52"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
-</span><span id="__span-13-53"><a id="__codelineno-13-53" name="__codelineno-13-53" href="#__codelineno-13-53"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Permit established TCP connections&quot;</span>
-</span><span id="__span-13-54"><a id="__codelineno-13-54" name="__codelineno-13-54" href="#__codelineno-13-54"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-13-55"><a id="__codelineno-13-55" name="__codelineno-13-55" href="#__codelineno-13-55"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
-</span><span id="__span-13-56"><a id="__codelineno-13-56" name="__codelineno-13-56" href="#__codelineno-13-56"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-57"><a id="__codelineno-13-57" name="__codelineno-13-57" href="#__codelineno-13-57"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-58"><a id="__codelineno-13-58" name="__codelineno-13-58" href="#__codelineno-13-58"></a><span class="w">      </span><span class="na">established</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-59"><a id="__codelineno-13-59" name="__codelineno-13-59" href="#__codelineno-13-59"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-13-60"><a id="__codelineno-13-60" name="__codelineno-13-60" href="#__codelineno-13-60"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-13-61"><a id="__codelineno-13-61" name="__codelineno-13-61" href="#__codelineno-13-61"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
-</span><span id="__span-13-62"><a id="__codelineno-13-62" name="__codelineno-13-62" href="#__codelineno-13-62"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Permit HTTP traffic&quot;</span>
-</span><span id="__span-13-63"><a id="__codelineno-13-63" name="__codelineno-13-63" href="#__codelineno-13-63"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-13-64"><a id="__codelineno-13-64" name="__codelineno-13-64" href="#__codelineno-13-64"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
-</span><span id="__span-13-65"><a id="__codelineno-13-65" name="__codelineno-13-65" href="#__codelineno-13-65"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-66"><a id="__codelineno-13-66" name="__codelineno-13-66" href="#__codelineno-13-66"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-67"><a id="__codelineno-13-67" name="__codelineno-13-67" href="#__codelineno-13-67"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;80&quot;</span>
-</span><span id="__span-13-68"><a id="__codelineno-13-68" name="__codelineno-13-68" href="#__codelineno-13-68"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-13-69"><a id="__codelineno-13-69" name="__codelineno-13-69" href="#__codelineno-13-69"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-13-70"><a id="__codelineno-13-70" name="__codelineno-13-70" href="#__codelineno-13-70"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
-</span><span id="__span-13-71"><a id="__codelineno-13-71" name="__codelineno-13-71" href="#__codelineno-13-71"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Permit DNS queries&quot;</span>
-</span><span id="__span-13-72"><a id="__codelineno-13-72" name="__codelineno-13-72" href="#__codelineno-13-72"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-13-73"><a id="__codelineno-13-73" name="__codelineno-13-73" href="#__codelineno-13-73"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;udp&quot;</span>
-</span><span id="__span-13-74"><a id="__codelineno-13-74" name="__codelineno-13-74" href="#__codelineno-13-74"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-75"><a id="__codelineno-13-75" name="__codelineno-13-75" href="#__codelineno-13-75"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-13-76"><a id="__codelineno-13-76" name="__codelineno-13-76" href="#__codelineno-13-76"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;53&quot;</span>
-</span><span id="__span-13-77"><a id="__codelineno-13-77" name="__codelineno-13-77" href="#__codelineno-13-77"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-13-78"><a id="__codelineno-13-78" name="__codelineno-13-78" href="#__codelineno-13-78"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-13-79"><a id="__codelineno-13-79" name="__codelineno-13-79" href="#__codelineno-13-79"></a><span class="p">}</span>
+<p>Examine the ACL that will be configured. Each entry uses only fields supported by the
+Cisco-IOS-XE-native YANG <code>acl</code> model on 26.1. <strong>Do not</strong> add <code>remark</code>, <code>established</code>, or <code>log</code> to the same entry as a <code>permit</code>/<code>deny</code> rule. A <code>remark</code> is its own Access Control Entry (ACE)
+type in the YANG model, and the device will refuse the commit if they are combined.</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Simple extended ACL (no remark/established/log mixed in)</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_access_list_extended&quot;</span><span class="w"> </span><span class="nv">&quot;lab_test_acl&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;LAB_TEST_ACL&quot;</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="na">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">      </span><span class="na">sequence</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">      </span><span class="na">source_any</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;22&quot;</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">      </span><span class="na">sequence</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">      </span><span class="na">source_any</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-20"><a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;443&quot;</span>
+</span><span id="__span-15-21"><a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-15-22"><a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-15-23"><a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">      </span><span class="na">sequence</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
+</span><span id="__span-15-24"><a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
+</span><span id="__span-15-25"><a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;icmp&quot;</span>
+</span><span id="__span-15-26"><a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">      </span><span class="na">source_any</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-27"><a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-28"><a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-15-29"><a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-15-30"><a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="w">      </span><span class="na">sequence</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="m">40</span>
+</span><span id="__span-15-31"><a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
+</span><span id="__span-15-32"><a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ip&quot;</span>
+</span><span id="__span-15-33"><a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a><span class="w">      </span><span class="na">source_any</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-34"><a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-15-35"><a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-15-36"><a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-15-37"><a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Save and exit.</p>
-<p><strong>Step 3: Apply ACL to an interface</strong></p>
-<p>Create a file called <code>interface.tf</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vi<span class="w"> </span>interface.tf
+<p><strong>Step 3: Create a safe Loopback interface</strong></p>
+<p>Review a file called <code>loopback.tf</code>. We deliberately use <code>Loopback100</code> instead of a
+front-panel port so the change has zero blast radius — a loopback never carries
+production traffic and can be removed at any time.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>cat<span class="w"> </span>loopback.tf
 </span></code></pre></div>
-<p>Add configuration to apply the ACL to an interface:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Configure GigabitEthernet interface with ACL</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_interface_ethernet&quot;</span><span class="w"> </span><span class="nv">&quot;ge1_0_1&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="na">type</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GigabitEthernet&quot;</span>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="na">name</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1/0/1&quot;</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="na">description</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Managed by Terraform - ACL Applied&quot;</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="na">shutdown</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="na">ip_access_group_in_enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="na">ip_access_group_in</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">iosxe_access_list_extended.data_acl.name</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="na">ip_access_group_out_enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span><span class="na">ip_access_group_out</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">iosxe_access_list_extended.management_acl.name</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="p">}</span>
+<p>Examine the file to see the interface loopback configuration that will be applied</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_interface_loopback&quot;</span><span class="w"> </span><span class="nv">&quot;lab_loopback&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="na">name</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Terraform-managed lab loopback&quot;</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="na">ipv4_address</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;192.0.2.1&quot;</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="na">ipv4_address_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;255.255.255.0&quot;</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Save and exit.</p>
 <p><strong>Step 4: Initialize Terraform</strong></p>
 <p>Initialize Terraform to download the IOS XE provider:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>terraform<span class="w"> </span>init
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>terraform<span class="w"> </span>init
 </span></code></pre></div>
 <p>You should see output indicating the provider was successfully installed.</p>
 <p><strong>Step 5: Validate the configuration</strong></p>
 <p>Check for syntax errors:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>terraform<span class="w"> </span>validate
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>terraform<span class="w"> </span>validate
 </span></code></pre></div>
 <p><strong>Step 6: Preview the changes</strong></p>
 <p>See what Terraform will configure:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>terraform<span class="w"> </span>plan
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>terraform<span class="w"> </span>plan
 </span></code></pre></div>
 <p>Review the output carefully. Terraform will show you:</p>
 <ul>
@@ -1761,174 +1637,163 @@
 </ul>
 <p><strong>Step 7: Apply the configuration</strong></p>
 <p>Apply the configuration to the switch:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>terraform<span class="w"> </span>apply
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>terraform<span class="w"> </span>apply
 </span></code></pre></div>
 <p>Type <code>yes</code> when prompted to confirm.</p>
 <p><strong>Step 8: Verify on the device</strong></p>
-<p>From your telnet session to the switch, verify the ACLs were created:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>show ip access-lists MGMT_ACCESS
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>show ip access-lists DATA_TRAFFIC
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>show running-config interface GigabitEthernet1/0/1
+<p>From your telnet session to the switch, verify the ACL and loopback were created:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>show ip access-lists LAB_TEST_ACL
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>show running-config interface Loopback100
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>show ip interface Loopback100
 </span></code></pre></div>
-<p><strong>Key Takeaway</strong>: Terraform provides a declarative way to configure ACLs and apply them to interfaces, with built-in validation and state tracking.</p>
+<p><strong>Key Takeaway</strong>: Terraform provides a declarative way to configure ACLs and isolated test interfaces with built-in validation and state tracking, without risking production connectivity.</p>
 <hr />
-<h3 id="demo-2-vlan-configuration-with-terraform">Demo 2: VLAN Configuration with Terraform<a class="headerlink" href="#demo-2-vlan-configuration-with-terraform" title="Permanent link">&para;</a></h3>
+<h3 id="demo-3-vlan-configuration-with-terraform">Demo 3: VLAN Configuration with Terraform<a class="headerlink" href="#demo-3-vlan-configuration-with-terraform" title="Permanent link">&para;</a></h3>
 <p>In this demo, you'll create VLANs using Terraform and understand how to manage switching configurations as code.</p>
-<h4 id="objective_1">Objective<a class="headerlink" href="#objective_1" title="Permanent link">&para;</a></h4>
+<h4 id="objective_2">Objective<a class="headerlink" href="#objective_2" title="Permanent link">&para;</a></h4>
 <p>Learn how to provision VLANs declaratively using Terraform.</p>
 <h4 id="steps_1">Steps<a class="headerlink" href="#steps_1" title="Permanent link">&para;</a></h4>
-<p><strong>Step 1: Create VLAN configuration</strong></p>
-<p>Create a file called <code>vlans.tf</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>vi<span class="w"> </span>vlans.tf
+<p><strong>Step 1: Examine the VLAN configuration</strong></p>
+<p>From your <code>~/CLUS2026-terraform-iosxe-lab</code> directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>cat<span class="w"> </span>vlans.tf
 </span></code></pre></div>
-<p>Add VLAN definitions:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Development VLAN</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;dev_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
-</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DEVELOPMENT&quot;</span>
-</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="p">}</span>
-</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1"># Production VLAN</span>
-</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;prod_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
-</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PRODUCTION&quot;</span>
-</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="p">}</span>
-</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
-</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="c1"># Guest VLAN</span>
-</span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;guest_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-22-17"><a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">300</span>
-</span><span id="__span-22-18"><a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GUEST_NETWORK&quot;</span>
-</span><span id="__span-22-19"><a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-22-20"><a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="p">}</span>
-</span><span id="__span-22-21"><a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a>
-</span><span id="__span-22-22"><a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="c1"># Management VLAN</span>
-</span><span id="__span-22-23"><a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;mgmt_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-22-24"><a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">999</span>
-</span><span id="__span-22-25"><a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MANAGEMENT&quot;</span>
-</span><span id="__span-22-26"><a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-22-27"><a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a><span class="p">}</span>
+<p>You should see the following VLAN definitions:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Development VLAN</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;dev_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DEVELOPMENT&quot;</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="p">}</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># Production VLAN</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;prod_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PRODUCTION&quot;</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="p">}</span>
+</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>
+</span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="c1"># Guest VLAN</span>
+</span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;guest_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">300</span>
+</span><span id="__span-24-18"><a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GUEST_NETWORK&quot;</span>
+</span><span id="__span-24-19"><a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+</span><span id="__span-24-20"><a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a><span class="p">}</span>
+</span><span id="__span-24-21"><a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>
+</span><span id="__span-24-22"><a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="c1"># Management VLAN</span>
+</span><span id="__span-24-23"><a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;mgmt_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-24"><a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">999</span>
+</span><span id="__span-24-25"><a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MANAGEMENT&quot;</span>
+</span><span id="__span-24-26"><a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+</span><span id="__span-24-27"><a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Save and exit.</p>
 <p><strong>Step 2: Plan and apply</strong></p>
 <p>Preview the changes:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>terraform<span class="w"> </span>plan
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>terraform<span class="w"> </span>plan
 </span></code></pre></div>
 <p>Apply the VLAN configuration:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>terraform<span class="w"> </span>apply
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>terraform<span class="w"> </span>apply
 </span></code></pre></div>
 <p>Type <code>yes</code> to confirm.</p>
 <p><strong>Step 3: Verify on the device</strong></p>
 <p>From the switch:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>show vlan brief
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>show vlan id 100
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>show vlan id 200
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>show vlan brief
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>show vlan id 100
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>show vlan id 200
 </span></code></pre></div>
 <p><strong>Step 4: Modify a VLAN (demonstrating updates)</strong></p>
-<p>Edit <code>vlans.tf</code> to change a VLAN name:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vi<span class="w"> </span>vlans.tf
+<p>Open <code>vlans.tf</code> in your preferred editor and change the Development VLAN name from <code>DEVELOPMENT</code> to <code>DEV_UPDATED</code>:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;dev_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DEV_UPDATED&quot;</span><span class="c1">  # Changed from DEVELOPMENT</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Change the Development VLAN name:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;dev_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
-</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DEV_UPDATED&quot;</span><span class="c1">  # Changed from DEVELOPMENT</span>
-</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="p">}</span>
-</span></code></pre></div>
-<p>Save and apply:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>terraform<span class="w"> </span>apply
+<p>Save the file, then apply:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>terraform<span class="w"> </span>apply
 </span></code></pre></div>
 <p>Terraform will detect the change and update only that VLAN. Verify:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>show vlan id 100
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>show vlan id 100
 </span></code></pre></div>
 <p><strong>Key Takeaway</strong>: Terraform tracks state and only applies changes that differ from the current configuration, making updates efficient and predictable.</p>
 <hr />
-<h3 id="demo-3-complete-network-segment-with-acl-vlan-and-interface">Demo 3: Complete Network Segment with ACL, VLAN, and Interface<a class="headerlink" href="#demo-3-complete-network-segment-with-acl-vlan-and-interface" title="Permanent link">&para;</a></h3>
+<h3 id="demo-4-complete-network-segment-with-acl-vlan-and-interface">Demo 4: Complete Network Segment with ACL, VLAN, and Interface<a class="headerlink" href="#demo-4-complete-network-segment-with-acl-vlan-and-interface" title="Permanent link">&para;</a></h3>
 <p>This comprehensive demo combines ACLs, VLANs, and interface configuration to provision a complete network segment.</p>
-<h4 id="objective_2">Objective<a class="headerlink" href="#objective_2" title="Permanent link">&para;</a></h4>
+<h4 id="objective_3">Objective<a class="headerlink" href="#objective_3" title="Permanent link">&para;</a></h4>
 <p>Build a complete network configuration using Infrastructure as Code principles.</p>
 <h4 id="steps_2">Steps<a class="headerlink" href="#steps_2" title="Permanent link">&para;</a></h4>
-<p><strong>Step 1: Create a complete configuration file</strong></p>
-<p>Create <code>complete_config.tf</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>vi<span class="w"> </span>complete_config.tf
+<p><strong>Step 1: Examine the complete configuration file</strong></p>
+<p>From your <code>~/CLUS2026-terraform-iosxe-lab</code> directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>cat<span class="w"> </span>complete_config.tf
 </span></code></pre></div>
-<p>Add a comprehensive configuration:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Security VLAN</span>
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;security_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SECURITY_ZONE&quot;</span>
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="p">}</span>
-</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>
-</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="c1"># Security ACL</span>
-</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_access_list_extended&quot;</span><span class="w"> </span><span class="nv">&quot;security_acl&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SECURITY_ZONE_ACL&quot;</span>
-</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>
-</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="w">  </span><span class="na">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
-</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow HTTPS to security appliances&quot;</span>
-</span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-31-17"><a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
-</span><span id="__span-31-18"><a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-31-19"><a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a><span class="w">      </span><span class="na">destination_prefix</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.5.5.0&quot;</span>
-</span><span id="__span-31-20"><a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a><span class="w">      </span><span class="na">destination_prefix_mask</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.255&quot;</span>
-</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;443&quot;</span>
-</span><span id="__span-31-22"><a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-31-23"><a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-31-24"><a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
-</span><span id="__span-31-25"><a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Allow syslog&quot;</span>
-</span><span id="__span-31-26"><a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
-</span><span id="__span-31-27"><a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;udp&quot;</span>
-</span><span id="__span-31-28"><a id="__codelineno-31-28" name="__codelineno-31-28" href="#__codelineno-31-28"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-31-29"><a id="__codelineno-31-29" name="__codelineno-31-29" href="#__codelineno-31-29"></a><span class="w">      </span><span class="na">destination_prefix</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.5.5.10&quot;</span>
-</span><span id="__span-31-30"><a id="__codelineno-31-30" name="__codelineno-31-30" href="#__codelineno-31-30"></a><span class="w">      </span><span class="na">destination_prefix_mask</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span>
-</span><span id="__span-31-31"><a id="__codelineno-31-31" name="__codelineno-31-31" href="#__codelineno-31-31"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;514&quot;</span>
-</span><span id="__span-31-32"><a id="__codelineno-31-32" name="__codelineno-31-32" href="#__codelineno-31-32"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-31-33"><a id="__codelineno-31-33" name="__codelineno-31-33" href="#__codelineno-31-33"></a><span class="w">    </span><span class="p">{</span>
-</span><span id="__span-31-34"><a id="__codelineno-31-34" name="__codelineno-31-34" href="#__codelineno-31-34"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
-</span><span id="__span-31-35"><a id="__codelineno-31-35" name="__codelineno-31-35" href="#__codelineno-31-35"></a><span class="w">      </span><span class="na">remark</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Deny and log all other traffic&quot;</span>
-</span><span id="__span-31-36"><a id="__codelineno-31-36" name="__codelineno-31-36" href="#__codelineno-31-36"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
-</span><span id="__span-31-37"><a id="__codelineno-31-37" name="__codelineno-31-37" href="#__codelineno-31-37"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ip&quot;</span>
-</span><span id="__span-31-38"><a id="__codelineno-31-38" name="__codelineno-31-38" href="#__codelineno-31-38"></a><span class="w">      </span><span class="na">source_any</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-31-39"><a id="__codelineno-31-39" name="__codelineno-31-39" href="#__codelineno-31-39"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-31-40"><a id="__codelineno-31-40" name="__codelineno-31-40" href="#__codelineno-31-40"></a><span class="w">      </span><span class="na">log</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-31-41"><a id="__codelineno-31-41" name="__codelineno-31-41" href="#__codelineno-31-41"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-31-42"><a id="__codelineno-31-42" name="__codelineno-31-42" href="#__codelineno-31-42"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-31-43"><a id="__codelineno-31-43" name="__codelineno-31-43" href="#__codelineno-31-43"></a><span class="p">}</span>
-</span><span id="__span-31-44"><a id="__codelineno-31-44" name="__codelineno-31-44" href="#__codelineno-31-44"></a>
-</span><span id="__span-31-45"><a id="__codelineno-31-45" name="__codelineno-31-45" href="#__codelineno-31-45"></a><span class="c1"># Configure interface for security VLAN</span>
-</span><span id="__span-31-46"><a id="__codelineno-31-46" name="__codelineno-31-46" href="#__codelineno-31-46"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_interface_ethernet&quot;</span><span class="w"> </span><span class="nv">&quot;security_interface&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-31-47"><a id="__codelineno-31-47" name="__codelineno-31-47" href="#__codelineno-31-47"></a><span class="w">  </span><span class="na">type</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GigabitEthernet&quot;</span>
-</span><span id="__span-31-48"><a id="__codelineno-31-48" name="__codelineno-31-48" href="#__codelineno-31-48"></a><span class="w">  </span><span class="na">name</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1/0/2&quot;</span>
-</span><span id="__span-31-49"><a id="__codelineno-31-49" name="__codelineno-31-49" href="#__codelineno-31-49"></a><span class="w">  </span><span class="na">description</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Security Zone - Managed by Terraform&quot;</span>
-</span><span id="__span-31-50"><a id="__codelineno-31-50" name="__codelineno-31-50" href="#__codelineno-31-50"></a><span class="w">  </span><span class="na">shutdown</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
-</span><span id="__span-31-51"><a id="__codelineno-31-51" name="__codelineno-31-51" href="#__codelineno-31-51"></a><span class="w">  </span><span class="na">ip_access_group_in_enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-31-52"><a id="__codelineno-31-52" name="__codelineno-31-52" href="#__codelineno-31-52"></a><span class="w">  </span><span class="na">ip_access_group_in</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">iosxe_access_list_extended.security_acl.name</span>
-</span><span id="__span-31-53"><a id="__codelineno-31-53" name="__codelineno-31-53" href="#__codelineno-31-53"></a>
-</span><span id="__span-31-54"><a id="__codelineno-31-54" name="__codelineno-31-54" href="#__codelineno-31-54"></a><span class="c1">  # Dependencies ensure proper order</span>
-</span><span id="__span-31-55"><a id="__codelineno-31-55" name="__codelineno-31-55" href="#__codelineno-31-55"></a><span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-31-56"><a id="__codelineno-31-56" name="__codelineno-31-56" href="#__codelineno-31-56"></a><span class="w">    </span><span class="nv">iosxe_vlan.security_vlan</span><span class="p">,</span>
-</span><span id="__span-31-57"><a id="__codelineno-31-57" name="__codelineno-31-57" href="#__codelineno-31-57"></a><span class="w">    </span><span class="nv">iosxe_access_list_extended.security_acl</span>
-</span><span id="__span-31-58"><a id="__codelineno-31-58" name="__codelineno-31-58" href="#__codelineno-31-58"></a><span class="w">  </span><span class="p">]</span>
-</span><span id="__span-31-59"><a id="__codelineno-31-59" name="__codelineno-31-59" href="#__codelineno-31-59"></a><span class="p">}</span>
+<p>You should see a comprehensive configuration. Again, we use a Loopback interface so the
+example is non-disruptive on a production lab device:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Security VLAN</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;security_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">500</span>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="w">  </span><span class="na">name</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SECURITY_ZONE&quot;</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="w">  </span><span class="na">shutdown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">false</span>
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="p">}</span>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="c1"># Security ACL (simple ACEs only — no remark/log on permit/deny entries)</span>
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_access_list_extended&quot;</span><span class="w"> </span><span class="nv">&quot;security_acl&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="w">  </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SECURITY_ZONE_ACL&quot;</span>
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>
+</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a><span class="w">  </span><span class="na">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-32-13"><a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-32-14"><a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="m">10</span>
+</span><span id="__span-32-15"><a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
+</span><span id="__span-32-16"><a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+</span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a><span class="w">      </span><span class="na">source_any</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-32-18"><a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a><span class="w">      </span><span class="na">destination_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.5.5.0&quot;</span>
+</span><span id="__span-32-19"><a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a><span class="w">      </span><span class="na">destination_prefix_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.255&quot;</span>
+</span><span id="__span-32-20"><a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;443&quot;</span>
+</span><span id="__span-32-21"><a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-32-22"><a id="__codelineno-32-22" name="__codelineno-32-22" href="#__codelineno-32-22"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-32-23"><a id="__codelineno-32-23" name="__codelineno-32-23" href="#__codelineno-32-23"></a><span class="w">      </span><span class="na">sequence</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
+</span><span id="__span-32-24"><a id="__codelineno-32-24" name="__codelineno-32-24" href="#__codelineno-32-24"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;permit&quot;</span>
+</span><span id="__span-32-25"><a id="__codelineno-32-25" name="__codelineno-32-25" href="#__codelineno-32-25"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;udp&quot;</span>
+</span><span id="__span-32-26"><a id="__codelineno-32-26" name="__codelineno-32-26" href="#__codelineno-32-26"></a><span class="w">      </span><span class="na">source_any</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-32-27"><a id="__codelineno-32-27" name="__codelineno-32-27" href="#__codelineno-32-27"></a><span class="w">      </span><span class="na">destination_prefix</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.5.5.10&quot;</span>
+</span><span id="__span-32-28"><a id="__codelineno-32-28" name="__codelineno-32-28" href="#__codelineno-32-28"></a><span class="w">      </span><span class="na">destination_prefix_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.0.0.0&quot;</span>
+</span><span id="__span-32-29"><a id="__codelineno-32-29" name="__codelineno-32-29" href="#__codelineno-32-29"></a><span class="w">      </span><span class="na">destination_port_equal</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;514&quot;</span>
+</span><span id="__span-32-30"><a id="__codelineno-32-30" name="__codelineno-32-30" href="#__codelineno-32-30"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-32-31"><a id="__codelineno-32-31" name="__codelineno-32-31" href="#__codelineno-32-31"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-32-32"><a id="__codelineno-32-32" name="__codelineno-32-32" href="#__codelineno-32-32"></a><span class="w">      </span><span class="na">sequence</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="m">30</span>
+</span><span id="__span-32-33"><a id="__codelineno-32-33" name="__codelineno-32-33" href="#__codelineno-32-33"></a><span class="w">      </span><span class="na">ace_rule_action</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deny&quot;</span>
+</span><span id="__span-32-34"><a id="__codelineno-32-34" name="__codelineno-32-34" href="#__codelineno-32-34"></a><span class="w">      </span><span class="na">ace_rule_protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ip&quot;</span>
+</span><span id="__span-32-35"><a id="__codelineno-32-35" name="__codelineno-32-35" href="#__codelineno-32-35"></a><span class="w">      </span><span class="na">source_any</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-32-36"><a id="__codelineno-32-36" name="__codelineno-32-36" href="#__codelineno-32-36"></a><span class="w">      </span><span class="na">destination_any</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-32-37"><a id="__codelineno-32-37" name="__codelineno-32-37" href="#__codelineno-32-37"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-32-38"><a id="__codelineno-32-38" name="__codelineno-32-38" href="#__codelineno-32-38"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-32-39"><a id="__codelineno-32-39" name="__codelineno-32-39" href="#__codelineno-32-39"></a><span class="p">}</span>
+</span><span id="__span-32-40"><a id="__codelineno-32-40" name="__codelineno-32-40" href="#__codelineno-32-40"></a>
+</span><span id="__span-32-41"><a id="__codelineno-32-41" name="__codelineno-32-41" href="#__codelineno-32-41"></a><span class="c1"># Isolated Loopback interface for the security zone (safe — no front-panel port)</span>
+</span><span id="__span-32-42"><a id="__codelineno-32-42" name="__codelineno-32-42" href="#__codelineno-32-42"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_interface_loopback&quot;</span><span class="w"> </span><span class="nv">&quot;security_loopback&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-32-43"><a id="__codelineno-32-43" name="__codelineno-32-43" href="#__codelineno-32-43"></a><span class="w">  </span><span class="na">name</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="m">200</span>
+</span><span id="__span-32-44"><a id="__codelineno-32-44" name="__codelineno-32-44" href="#__codelineno-32-44"></a><span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Security Zone test loopback - Terraform managed&quot;</span>
+</span><span id="__span-32-45"><a id="__codelineno-32-45" name="__codelineno-32-45" href="#__codelineno-32-45"></a><span class="w">  </span><span class="na">ipv4_address</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;192.0.2.200&quot;</span>
+</span><span id="__span-32-46"><a id="__codelineno-32-46" name="__codelineno-32-46" href="#__codelineno-32-46"></a><span class="w">  </span><span class="na">ipv4_address_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;255.255.255.0&quot;</span>
+</span><span id="__span-32-47"><a id="__codelineno-32-47" name="__codelineno-32-47" href="#__codelineno-32-47"></a>
+</span><span id="__span-32-48"><a id="__codelineno-32-48" name="__codelineno-32-48" href="#__codelineno-32-48"></a><span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-32-49"><a id="__codelineno-32-49" name="__codelineno-32-49" href="#__codelineno-32-49"></a><span class="w">    </span><span class="nv">iosxe_vlan.security_vlan</span><span class="p">,</span>
+</span><span id="__span-32-50"><a id="__codelineno-32-50" name="__codelineno-32-50" href="#__codelineno-32-50"></a><span class="w">    </span><span class="nv">iosxe_access_list_extended.security_acl</span><span class="p">,</span>
+</span><span id="__span-32-51"><a id="__codelineno-32-51" name="__codelineno-32-51" href="#__codelineno-32-51"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-32-52"><a id="__codelineno-32-52" name="__codelineno-32-52" href="#__codelineno-32-52"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Save and exit.</p>
 <p><strong>Step 2: Apply the complete configuration</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>terraform<span class="w"> </span>plan
-</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>terraform<span class="w"> </span>apply
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>terraform<span class="w"> </span>plan
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>terraform<span class="w"> </span>apply
 </span></code></pre></div>
 <p><strong>Step 3: View Terraform state</strong></p>
 <p>Terraform maintains state of all managed resources:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>terraform<span class="w"> </span>show
-</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>terraform<span class="w"> </span>show
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
 </span></code></pre></div>
 <p><strong>Step 4: Verify the complete configuration</strong></p>
 <p>From the switch:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>show vlan id 500
-</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>show ip access-lists SECURITY_ZONE_ACL
-</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>show running-config interface GigabitEthernet1/0/2
+<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>show vlan id 500
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>show ip access-lists SECURITY_ZONE_ACL
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>show running-config interface Loopback200
 </span></code></pre></div>
 <hr />
 <h3 id="terraform-best-practices-for-ios-xe">Terraform Best Practices for IOS XE<a class="headerlink" href="#terraform-best-practices-for-ios-xe" title="Permanent link">&para;</a></h3>
@@ -1942,38 +1807,38 @@
 </ol>
 <h3 id="advanced-exercise-using-variables">Advanced Exercise: Using Variables<a class="headerlink" href="#advanced-exercise-using-variables" title="Permanent link">&para;</a></h3>
 <p>Create a <code>variables.tf</code> file to make your configuration more flexible:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;switch_ip&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IP address of the IOS XE device&quot;</span>
-</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.1.1.15&quot;</span>
-</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="p">}</span>
-</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>
-</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;switch_username&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Username for device authentication&quot;</span>
-</span><span id="__span-35-9"><a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-</span><span id="__span-35-10"><a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
-</span><span id="__span-35-11"><a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-35-12"><a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a><span class="p">}</span>
-</span><span id="__span-35-13"><a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>
-</span><span id="__span-35-14"><a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;switch_password&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-35-15"><a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Password for device authentication&quot;</span>
-</span><span id="__span-35-16"><a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
-</span><span id="__span-35-17"><a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cisco123&quot;</span>
-</span><span id="__span-35-18"><a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-35-19"><a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a><span class="p">}</span>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;switch_ip&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IP address of the IOS XE device&quot;</span>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;10.1.1.55&quot;</span>
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="p">}</span>
+</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
+</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;switch_username&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Username for device authentication&quot;</span>
+</span><span id="__span-36-9"><a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+</span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;admin&quot;</span>
+</span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="p">}</span>
+</span><span id="__span-36-13"><a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a>
+</span><span id="__span-36-14"><a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;switch_password&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-36-15"><a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Password for device authentication&quot;</span>
+</span><span id="__span-36-16"><a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+</span><span id="__span-36-17"><a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a><span class="w">  </span><span class="na">default</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Cisco123&quot;</span>
+</span><span id="__span-36-18"><a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a><span class="w">  </span><span class="na">sensitive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-36-19"><a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Then update <code>provider.tf</code> to use variables:</p>
-<div class="language-hcl highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;iosxe&quot;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.switch_username</span>
-</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.switch_password</span>
-</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span><span class="na">host</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.switch_ip</span>
-</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="w">  </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;netconf&quot;</span>
-</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="w">  </span><span class="na">insecure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
-</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="p">}</span>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;iosxe&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.switch_username</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.switch_password</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">  </span><span class="na">host</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nv">var.switch_ip</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="w">  </span><span class="na">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;netconf&quot;</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="w">  </span><span class="na">insecure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">true</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="cleanup-optional">Cleanup (Optional)<a class="headerlink" href="#cleanup-optional" title="Permanent link">&para;</a></h3>
 <p>To remove all Terraform-managed resources:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>terraform<span class="w"> </span>destroy
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>terraform<span class="w"> </span>destroy
 </span></code></pre></div>
 <p>Type <code>yes</code> to confirm. This will remove all ACLs, VLANs, and interface configurations created by Terraform.</p>
 <h3 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h3>
@@ -1994,8 +1859,114 @@
 </ul>
 <p>Terraform provides a powerful, version-controlled approach to network configuration management that integrates seamlessly with modern DevOps workflows.</p>
 <hr />
+<h2 id="appendix-netascode-for-cisco-ios-xe">Appendix: NetasCode for Cisco IOS XE<a class="headerlink" href="#appendix-netascode-for-cisco-ios-xe" title="Permanent link">&para;</a></h2>
+<p><a href="https://netascode.cisco.com/">NetasCode</a> is Cisco's higher-level <strong>intent abstraction</strong> over raw Terraform provider resources. You describe <em>what</em> the network should look like in compact YAML; NetasCode-distributed Terraform modules render that intent into the same <code>iosxe_*</code> resources you used in Demos 2–4.</p>
+<p>The promise: you stop hand-writing HCL for every VLAN, ACL, and interface. You describe the desired switch in a few lines of YAML, and a curated module library handles the translation, schema validation, and dependency wiring.</p>
+<h3 id="intent-terraform-mapping-reference">Intent ↔ Terraform mapping (reference)<a class="headerlink" href="#intent-terraform-mapping-reference" title="Permanent link">&para;</a></h3>
+<p>These examples are <strong>side-by-side reference only</strong> — you do not run them in this lab. They show how a NetasCode-style intent file collapses verbose HCL into compact YAML.</p>
+<h4 id="example-1-vlan-intent">Example 1: VLAN intent<a class="headerlink" href="#example-1-vlan-intent" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nt">switches</span><span class="p">:</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c9300-lab</span>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="w">    </span><span class="nt">vlans</span><span class="p">:</span>
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">110</span>
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEV</span>
+</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">120</span>
+</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PROD</span>
+</span></code></pre></div>
+<p>Equivalent Terraform provider resources (what you'd write by hand without NetasCode):</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;dev_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">110</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w">  </span><span class="na">name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DEV&quot;</span>
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="p">}</span>
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;iosxe_vlan&quot;</span><span class="w"> </span><span class="nv">&quot;prod_vlan&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="w">  </span><span class="na">vlan_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">120</span>
+</span><span id="__span-40-8"><a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a><span class="w">  </span><span class="na">name</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;PROD&quot;</span>
+</span><span id="__span-40-9"><a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="example-2-acl-interface-attachment-intent">Example 2: ACL + interface attachment intent<a class="headerlink" href="#example-2-acl-interface-attachment-intent" title="Permanent link">&para;</a></h4>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="nt">switches</span><span class="p">:</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c9300-lab</span>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">    </span><span class="nt">acls</span><span class="p">:</span>
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MGMT_ACL</span>
+</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">extended</span>
+</span><span id="__span-41-6"><a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="w">        </span><span class="nt">entries</span><span class="p">:</span>
+</span><span id="__span-41-7"><a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sequence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+</span><span id="__span-41-8"><a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a><span class="w">            </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">permit</span>
+</span><span id="__span-41-9"><a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a><span class="w">            </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tcp</span>
+</span><span id="__span-41-10"><a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a><span class="w">            </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.10.10.0/24</span>
+</span><span id="__span-41-11"><a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a><span class="w">            </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
+</span><span id="__span-41-12"><a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a><span class="w">            </span><span class="nt">destination_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">22</span>
+</span><span id="__span-41-13"><a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sequence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+</span><span id="__span-41-14"><a id="__codelineno-41-14" name="__codelineno-41-14" href="#__codelineno-41-14"></a><span class="w">            </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">deny</span>
+</span><span id="__span-41-15"><a id="__codelineno-41-15" name="__codelineno-41-15" href="#__codelineno-41-15"></a><span class="w">            </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ip</span>
+</span><span id="__span-41-16"><a id="__codelineno-41-16" name="__codelineno-41-16" href="#__codelineno-41-16"></a><span class="w">            </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
+</span><span id="__span-41-17"><a id="__codelineno-41-17" name="__codelineno-41-17" href="#__codelineno-41-17"></a><span class="w">            </span><span class="nt">destination</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">any</span>
+</span><span id="__span-41-18"><a id="__codelineno-41-18" name="__codelineno-41-18" href="#__codelineno-41-18"></a><span class="w">    </span><span class="nt">interfaces</span><span class="p">:</span>
+</span><span id="__span-41-19"><a id="__codelineno-41-19" name="__codelineno-41-19" href="#__codelineno-41-19"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Loopback100</span>
+</span><span id="__span-41-20"><a id="__codelineno-41-20" name="__codelineno-41-20" href="#__codelineno-41-20"></a><span class="w">        </span><span class="nt">acl_in</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MGMT_ACL</span>
+</span></code></pre></div>
+<p>Equivalent hand-written Terraform (~30+ lines of HCL) is shown in <a href="#demo-2-create-an-extended-acl-and-a-loopback-interface">Demo 2</a>.</p>
+<h3 id="how-to-consume-netascode-without-writing-terraform-yourself">How to consume NetasCode without writing Terraform yourself<a class="headerlink" href="#how-to-consume-netascode-without-writing-terraform-yourself" title="Permanent link">&para;</a></h3>
+<p>The repos and module families below let you treat Terraform as an <em>engine</em> and edit only YAML day to day. Pick the path that matches your environment:</p>
+<ol>
+<li><strong>NetasCode for IOS XE — <code>terraform-iosxe-nac-modules</code></strong><ul>
+<li>Cisco-published Terraform modules (<a href="https://github.com/netascode">github.com/netascode</a>) that consume a YAML data model and produce the right <code>iosxe_*</code> resources.</li>
+<li>Workflow: edit <code>data/switches.yaml</code> → <code>terraform plan</code> → <code>terraform apply</code>. You never open an <code>.hcl</code> file.</li>
+</ul>
+</li>
+<li><strong><code>nac-data</code> + <code>nac-validate</code> CLI</strong><ul>
+<li><code>pip install nac-validate</code> to lint your YAML against the published schema <em>before</em> Terraform sees it. Catches typos and structural mistakes without burning a <code>plan</code> cycle.</li>
+</ul>
+</li>
+<li><strong>Excel / Catalyst Center / NSO ingestion</strong><ul>
+<li>The same YAML schema can be generated from an Excel template (<code>nac-data</code> includes an XLSX → YAML converter), Catalyst Center inventory exports, or as the southbound output of an NSO service. Useful when the source of truth lives outside Git.</li>
+</ul>
+</li>
+<li><strong>CI/CD pipeline pattern</strong><ul>
+<li>GitHub Actions / GitLab CI runs: <code>nac-validate</code> (schema) → <code>terraform fmt -check</code> → <code>terraform plan</code> (uploaded as artifact for review) → manual approval → <code>terraform apply</code>. Operators only ever edit YAML.</li>
+</ul>
+</li>
+</ol>
+<h3 id="when-to-use-netascode-vs-raw-terraform">When to use NetasCode vs raw Terraform<a class="headerlink" href="#when-to-use-netascode-vs-raw-terraform" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Use raw <code>iosxe_*</code> resources when…</th>
+<th>Use NetasCode modules when…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>You're learning the provider or debugging a specific resource</td>
+<td>You manage 10+ devices with similar config patterns</td>
+</tr>
+<tr>
+<td>You need a feature not yet in the abstraction layer</td>
+<td>You want operators to edit YAML, not HCL</td>
+</tr>
+<tr>
+<td>You're doing a one-off proof of concept</td>
+<td>You need schema validation in CI</td>
+</tr>
+<tr>
+<td>The provider is your only tool</td>
+<td>You also use NSO, Catalyst Center, or Excel-based inventory and want one source of truth</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lab-follow-on-do-at-your-desk-not-in-the-pod">Lab follow-on (do at your desk, not in the pod)<a class="headerlink" href="#lab-follow-on-do-at-your-desk-not-in-the-pod" title="Permanent link">&para;</a></h3>
+<p>If you want to try NetasCode end-to-end against your own lab gear after the conference:</p>
+<ol>
+<li>Clone an example NetasCode IOS XE repo: <code>git clone https://github.com/netascode/terraform-iosxe-nac-modules-example</code></li>
+<li>Edit <code>data/switches.yaml</code> for your devices.</li>
+<li>Run <code>nac-validate data/</code>.</li>
+<li>Run <code>terraform init &amp;&amp; terraform plan &amp;&amp; terraform apply</code>.</li>
+<li>Compare the generated state to what your Demo 2–4 HCL produced — same provider, same NETCONF traffic, half the code.</li>
+</ol>
+<hr />
 <h2 id="lab-transition">Lab Transition<a class="headerlink" href="#lab-transition" title="Permanent link">&para;</a></h2>
-<p>Before moving to Ansible or PyATS:</p>
+<p>Before moving to PyATS:</p>
 <ol>
 <li>Run <code>terraform plan</code> one last time and confirm expected state.</li>
 <li>If needed for a clean handoff, run <code>terraform destroy</code> to reset lab-created resources.</li>
@@ -2004,10 +1975,9 @@
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>✅ Completed: Day 1 - Terraform + NETCONF</p>
 <p><strong>Continue with Day 1:</strong></p>
-<p>➡️ <a href="../ansible-gnmi/">Ansible + gNMI</a> - Learn configuration automation</p>
+<p>➡️ <a href="../pyats-testing/">PyATS Testing</a> - Automated network testing and validation</p>
 <p><strong>Or explore:</strong>
 - <a href="../atomic-operations/">Atomic Config Replace</a>
-- <a href="../pyats-testing/">PyATS Testing</a>
 - <a href="../">Day 1 Overview</a>
 - <a href="../../day-2/">Day 2: Device Monitoring</a></p>
 
@@ -2047,7 +2017,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../atomic-operations/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Atomic Config Replace">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Day 1 Overview">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2057,20 +2027,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Atomic Config Replace
+                Day 1 Overview
               </div>
             </div>
           </a>
         
         
           
-          <a href="../ansible-gnmi/" class="md-footer__link md-footer__link--next" aria-label="Next: Ansible + gNMI">
+          <a href="../pyats-testing/" class="md-footer__link md-footer__link--next" aria-label="Next: PyATS Testing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Ansible + gNMI
+                PyATS Testing
               </div>
             </div>
             <div class="md-footer__button md-icon">
