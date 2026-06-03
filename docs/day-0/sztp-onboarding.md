@@ -151,7 +151,7 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
 <a id="hands-on-runbook"></a>
 ### B) One-switch runbook (recommended sequence)
 
-Target switch in this lab: **C9350 at `10.1.1.15`**.
+Target switch in this lab: **C9350 at `10.1.1.5`**.
 
 1. Review DHCP behavior on the VM first
 
@@ -184,28 +184,21 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
 
     *DHCP on the VM advertises secure SZTP first, then classic ZTP, then autoinstall fallback.*
 
-2. Console to the C9350 switch (`10.1.1.15`)
+2. Console to the C9350 switch (`10.1.1.5`)
 
     ```sh
-    console-helper
+    console-helper-x
     ```
 
     Optional direct access:
 
     ```sh
-    ssh admin@10.1.1.15
+    ssh admin@10.1.1.5
     ```
 
-3. Set your lab values in env file
+3. Review files in ~/sztp/local_files/
 
-    Edit config/catalyst/c9350.env:
-
-    ```sh
-    SZTP_URL=https://10.1.1.3:8080
-    SZTP_DEVICE_SN=C9350-24T
-    SZTP_VOUCHER_FILE=/local_files/FCW2126G05V.vcj
-    SZTP_OWNER_CERT_FILE=/local_files/owner_cert_chain.cms
-    ```
+Here the vouchers, SUDI certificates, and Pinned-domain-cert files are stored. These files are served into the Docker containers so the sztp can access them as needed.
 
 4. Validate ownership artifacts before bringing up containers
 
@@ -213,7 +206,7 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
     scripts/validate-sztp-artifacts.sh
     ```
 
-5. Choose DHCP mode
+5. Choose DHCP mode: Option B is pre-configured in this lab:
 
     - Option A: Use container DHCP
 
@@ -246,19 +239,9 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
         docker exec -it sztp-bootstrap-1 sh
         ```
 
-    2. Read each onboarding text artifact one line at a time (`/mnt`) and confirm intent:
+    2. Read each onboarding text artifact
 
-        - `sed -n '1,200p' /mnt/first-pre-configuration-script.sh`: Runs before first configuration is applied. Prepares the initial device state (for example baseline interface/system prerequisites and environment setup) so first-stage onboarding can execute cleanly.
-        - `sed -n '1,200p' /mnt/first-configuration.xml`: First-stage structured configuration payload. Baseline config delivered during initial onboarding.
-        - `sed -n '1,200p' /mnt/first-post-configuration-script.sh`: Runs after first configuration is applied. Verifies first-stage outcomes and performs cleanup/finalization actions (for example checks expected config state and records success markers).
-
-        - `sed -n '1,200p' /mnt/second-pre-configuration-script.sh`: Runs before second-stage configuration. Prepares dependencies for stage two (for example enabling required features, setting variables, or ensuring services/state from stage one are ready).
-        - `sed -n '1,200p' /mnt/second-configuration.xml`: Second-stage structured configuration payload. Extends/refines first-stage onboarding config.
-        - `sed -n '1,200p' /mnt/second-post-configuration-script.sh`: Runs after second-stage configuration is applied. Validates stage-two applied state and performs post-change tasks (for example consistency checks and transition prep for stage three).
-
-        - `sed -n '1,200p' /mnt/third-pre-configuration-script.sh`: Runs before third-stage configuration. Performs final prerequisite checks/adjustments so the last onboarding payload can apply without rollback.
-        - `sed -n '1,200p' /mnt/third-configuration.xml`: Third-stage structured configuration payload. Typically completes Day 0 target state.
-        - `sed -n '1,200p' /mnt/third-post-configuration-script.sh`: Runs after third-stage configuration is applied. Executes final validation and handoff actions (for example verify intended end state, cleanup temporary artifacts, and mark onboarding complete).
+    These files are in the ~/sztp/config/ folder. Currently all of the logic is within the first-pre-configuration-script.sh file. Lets explore this file to understand that it does.
 
 7. Run preflight checks
 
@@ -275,7 +258,11 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
 
     Expected verify result: 401 access-denied (this is good and confirms mTLS endpoint behavior).
 
-9. Reset and reload the switch (`10.1.1.15`) so SZTP re-triggers
+9. Reset and reload the switch (`10.1.1.5`) so SZTP re-triggers
+
+1 liner: pnpa service reset no-prompt
+
+Detailed method:
 
     ```text
     enable
@@ -291,7 +278,7 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
 
     *Steps to trigger SZTP process to begin*
 
-10. Watch onboarding from host and switch (`10.1.1.15`)
+10. Watch onboarding from host and switch (`10.1.1.5`)
 
     On host:
 
@@ -309,11 +296,11 @@ Target switch in this lab: **C9350 at `10.1.1.15`**.
 
     ![Switch SZTP internal logs - part 1](../images/day0/screenshots/day0-show-logging-1.png)
 
-    *Important in image 1: confirm option 143/bootstrap-server-list discovery and redirect start (8080 path).* 
+    *Important in image 1: confirm option 143/bootstrap-server-list discovery and redirect start (8080 path).*
 
     ![Switch SZTP internal logs - part 2](../images/day0/screenshots/day0-show-logging-2.png)
 
-    *Important in image 2: confirm voucher and owner certificate chain verification success (no reject/fail markers).* 
+    *Important in image 2: confirm voucher and owner certificate chain verification success (no reject/fail markers).*
 
     ![Switch SZTP internal logs - part 3](../images/day0/screenshots/day0-show-logging-3.png)
 
@@ -375,7 +362,7 @@ show ip dhcp binding
 
 **Verify bootstrap server reachability**:
 ```bash
-# From device (10.1.1.15)
+# From device (10.1.1.5)
 ping bootstrap.example.com
 ```
 
