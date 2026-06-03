@@ -151,7 +151,7 @@ If you want to jump directly to hands-on: [Go to B) One-switch runbook](#hands-o
 <a id="hands-on-runbook"></a>
 ### B) One-switch runbook (recommended sequence)
 
-Target switch in this lab: **C9350 at `10.1.1.5`**.
+Target switch in this lab: **C9350 at `10.1.1.15`**.
 
 1. Review DHCP behavior on the VM first
 
@@ -184,16 +184,16 @@ Target switch in this lab: **C9350 at `10.1.1.5`**.
 
     *DHCP on the VM advertises secure SZTP first, then classic ZTP, then autoinstall fallback.*
 
-2. Console to the C9350 switch (`10.1.1.5`)
+2. Console to the C9350 switch (`10.1.1.15`)
 
     ```sh
-    console-helper-x
+    console-helper-ss
     ```
 
     Optional direct access:
 
     ```sh
-    ssh admin@10.1.1.5
+    ssh admin@10.1.1.15
     ```
 
 3. Review files in ~/sztp/local_files/
@@ -258,7 +258,7 @@ Here the vouchers, SUDI certificates, and Pinned-domain-cert files are stored. T
 
     Expected verify result: 401 access-denied (this is good and confirms mTLS endpoint behavior).
 
-9. Reset and reload the switch (`10.1.1.5`) so SZTP re-triggers
+9. Reset and reload the switch (`10.1.1.15`) so SZTP re-triggers
 
 1 liner: pnpa service reset no-prompt
 
@@ -278,7 +278,7 @@ Detailed method:
 
     *Steps to trigger SZTP process to begin*
 
-10. Watch onboarding from host and switch (`10.1.1.5`)
+10. Watch onboarding from host and switch (`10.1.1.15`)
 
     On host:
 
@@ -362,7 +362,7 @@ show ip dhcp binding
 
 **Verify bootstrap server reachability**:
 ```bash
-# From device (10.1.1.5)
+# From device (10.1.1.15)
 ping bootstrap.example.com
 ```
 
