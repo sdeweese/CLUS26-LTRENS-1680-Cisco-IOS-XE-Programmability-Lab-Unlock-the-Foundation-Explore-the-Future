@@ -1,132 +1,102 @@
 # Application Hosting with Smart Switch
 
-## Day N App Hosting (Lecture-Aligned Lab)
+## Day N App Hosting Reference Guide
 
-This module is aligned to the Cisco Live App Hosting content and uses a pre-staged lab workflow.
 
-In this lab, students do not build a container image from scratch. Instead, they validate and operate a pre-baked application hosting setup on Catalyst hardware.
+This module is aligned to the Cisco Live App Hosting content and uses a pre-staged lab workflow. Students validate by reading; no commands are issued against the switch.
 
 ## What You Will Learn
 
 1. How App Hosting fits into Catalyst optimization workflows.
 2. The key building blocks: IOx framework, container runtime, AppGig networking, and persistent storage.
-3. How to verify an app package is installed, activated, and operational.
-4. How to validate persistent data mounts used by containerized applications.
+3. What a healthy `app-hosting` install/activate sequence looks like.
+4. What persistent data mounts look like for containerized applications.
 
 ## App Hosting Slide Context
 
-These slides from the session deck provide architecture context for this lab flow.
+These slides from the session deck provide architecture context for this walkthrough.
 
 ### Slide: App Hosting Section Intro
 
 ![App Hosting section intro](../images/dayn/slides/dayn-app-hosting-slide-128.png)
 
-This slide marks the transition into Application Hosting as the Day N optimization topic. It is important because it frames app hosting as an operations capability, not just a platform feature.
+This slide marks the transition into Application Hosting as the Day N optimization topic. It frames app hosting as an operations capability, not just a platform feature.
 
-### Slide: C9K/C9350 Throughput Use Case
+### Slide: C9K/C9300 Throughput Use Case
 
-![C9K/C9350 app hosting throughput concept](../images/dayn/slides/dayn-app-hosting-slide-129.png)
+![C9K/C9300 app hosting throughput concept](../images/dayn/slides/dayn-app-hosting-slide-129.png)
 
-This slide presents a practical throughput-testing use case using a containerized toolset on the switch. It is important because it connects App Hosting to measurable validation outcomes students can reproduce.
+A practical throughput-testing use case using a containerized toolset on the switch. It connects App Hosting to measurable validation outcomes.
 
 ### Slide: Catalyst 9000 App Hosting Infrastructure
 
 ![Catalyst 9000 app hosting infrastructure](../images/dayn/slides/dayn-app-hosting-slide-130.png)
 
-This slide shows the IOx framework and container runtime relationship inside IOS XE. It is important because students can visualize where their app runs in relation to the switch OS and hardware resources.
+Shows the IOx framework and container runtime relationship inside IOS XE. Useful for visualizing where an app runs in relation to the switch OS and hardware resources.
 
 ### Slide: AppGigEthernet Data Path
 
 ![AppGigEthernet data path](../images/dayn/slides/dayn-app-hosting-slide-131.png)
 
-This slide explains AppGigEthernet as the internal high-speed data path between hosted apps and front-panel switching. It is important for understanding how container traffic enters and leaves the application environment.
+Explains AppGigEthernet as the internal high-speed data path between hosted apps and front-panel switching — how container traffic enters and leaves the app environment.
 
 ### Slide: Container Networking on C9K
 
 ![Container networking on C9K](../images/dayn/slides/dayn-app-hosting-slide-132.png)
 
-This slide illustrates container interfaces and addressing patterns used in hosted app networking. It is important because network reachability troubleshooting depends on understanding these interface mappings.
+Illustrates container interfaces and addressing patterns used in hosted app networking — the basis for any reachability troubleshooting.
 
 ### Slide: App Hosting Operational Data via YANG
 
 ![App hosting operational data via YANG](../images/dayn/slides/dayn-app-hosting-slide-133.png)
 
-This slide highlights that App Hosting is model-driven with both configuration and operational state available over APIs. It is important because the lab emphasizes programmatic verification, not only CLI checks.
+App Hosting is model-driven: configuration and operational state are available over APIs, not only CLI.
 
 ### Slide: YANG Suite Hosted on C9K
 
 ![YANG Suite app hosting example](../images/dayn/slides/dayn-app-hosting-slide-134.png)
 
-This slide gives a concrete example of hosting YANG Suite directly on Catalyst hardware. It is important because it demonstrates real edge use cases where tooling runs on-device for local operations.
+A concrete example of hosting YANG Suite directly on Catalyst hardware — a real edge use case where tooling runs on-device for local operations.
 
 ### Slide: SmokePing Packaging and Install Flow
 
 ![SmokePing app hosting packaging concept](../images/dayn/slides/dayn-app-hosting-slide-135.png)
 
-This slide walks through package placement and `app-hosting install` workflow using USB-backed storage. It is important because it maps directly to the install/activate command sequence students validate in this lab.
+Walks through package placement and the `app-hosting install` workflow using USB-backed storage. Maps directly to the install/activate command sequence shown below.
 
 ### Slide: Persistent Data Folder Mapping
 
 ![Persistent data folder mapping](../images/dayn/slides/dayn-app-hosting-slide-136.png)
 
-This slide explains Docker `run-opts` volume mappings between switch storage and container paths. It is important because persistence across app restart or switch reload is a core operational requirement.
+Explains Docker `run-opts` volume mappings between switch storage and container paths — the basis for persistence across app restart or switch reload.
 
-## Lab Model (Pre-Baked for Students)
+## What Was Pre-Built for You
 
-The pod image is prepared with App Hosting assets so students can focus on operations and validation:
+The pod was bootstrapped before lab start with the following:
 
-1. Application package tar and related files are pre-staged.
-2. Required bootstrapping has already been completed on the source VM.
-3. Students run verification and lifecycle commands rather than building images.
+1. Application package tar staged on `usbflash1:`.
+2. App installed and activated on the Catalyst 9300.
+3. AppGig data path and guest-interface networking wired up.
+4. Persistent USB-backed volume mounts configured.
 
-## Quick Workflow
-
-1. Verify the app-hosting environment on the switch.
-2. Confirm package/app presence and runtime status.
-3. Validate app networking and reachability.
-4. Validate persistent storage mapping.
+You do **not** need to install, start, or stop the app.
 
 ## Day N Architecture (Lab Workflow)
 
 ```mermaid
 flowchart LR
-	A[Pre-baked Pod Assets\napp package + configs] --> B[Catalyst 9300\nIOx App Hosting]
-	B --> C[Install and Activate App\napp-hosting install/start]
-	C --> D[App Runtime + AppGig Networking]
-	D --> E[Operational Validation\nshow app-hosting detail/list]
-	C --> F[Persistent Storage Mapping\nUSB volume run-opts]
-	F --> E
+    A[Pre-baked Pod Assets\napp package + configs] --> B[Catalyst 9300\nIOx App Hosting]
+    B --> C[Install and Activate App\napp-hosting install/start]
+    C --> D[App Runtime + AppGig Networking]
+    D --> E[Operational Validation\nshow app-hosting detail/list]
+    C --> F[Persistent Storage Mapping\nUSB volume run-opts]
+    F --> E
 ```
 
-This diagram shows the lab-first model: students validate and operate a pre-staged app-hosting workflow rather than building the container image from scratch.
+## Example: App Install + Activation (Reference Only)
 
-## Step 1: Verify App Hosting Prerequisites on Device
-
-SSH to the target switch and verify app-hosting capability:
-
-```bash
-ssh admin@10.1.1.5
-```
-
-Run:
-
-```text
-show app-hosting list
-show app-hosting utilization
-show app-hosting detail appid <your-app-id>
-```
-
-Expected outcome:
-
-1. The target application ID appears in the app list.
-2. Resource utilization is visible.
-3. App detail output shows deployment/runtime state.
-
-## Step 2: Validate App Package and Activation Flow
-
-Use the pre-staged package and confirm lifecycle operations.
-
-Representative install pattern from slide workflow:
+This is the install/activate pattern from the slide deck — the same sequence
+that was already run on your pod's switch. Read it; do not run it.
 
 ```text
 app-hosting install appid <your-app-id> usbflash1:<your-app-package>.tar
@@ -136,23 +106,32 @@ app-hosting appid <your-app-id>
  start
 ```
 
-Then verify status:
+What to notice:
+
+- `app-hosting install` stages the package from local flash.
+- The `app-hosting appid <id>` block defines the **runtime networking**: an AppGig trunk vNIC and a default gateway tied to a guest interface.
+- `start` is the lifecycle verb that flips the app to running.
+
+### Example: Verification Output
+
+The lab builders confirm the app is up using these reads:
 
 ```text
 show app-hosting list
+show app-hosting utilization
 show app-hosting detail appid <your-app-id>
 ```
 
-Expected outcome:
+Expected:
 
-1. App state reports running/activated.
-2. Network-facing app interface information is populated.
+1. The app ID appears in the list with state `RUNNING`.
+2. CPU/memory utilization is visible.
+3. App detail shows AppGig vNIC info and any mounted volumes.
 
-## Step 3: Validate Persistent Data Mapping
+## Example: Persistent Data Mapping (Reference Only)
 
-App Hosting commonly maps USB-backed directories into container paths for persistence.
-
-Representative persistent mapping pattern:
+App Hosting commonly maps USB-backed directories into container paths so data
+survives restart/reload. The pattern looks like this:
 
 ```text
 app-hosting appid <your-app-id>
@@ -161,59 +140,33 @@ app-hosting appid <your-app-id>
   run-opts 2 "-v /vol/usb1/iox_host_data_share:/var/lib/<app>/"
 ```
 
-Verify after reload/restart that app data remains available.
+Why this matters:
 
-## Step 4: Operational Validation (What Students Should Prove)
+1. Without `run-opts -v`, any container-local state is lost when the app or switch restarts.
+2. USB-backed mounts give you durable config and data on the switch itself — no external storage.
+3. Multiple `run-opts` entries let one volume be projected into several container paths.
 
-Students should capture evidence for:
+## Things to Notice While You Walk Through the Module
 
-1. App is installed and in running state.
-2. App networking is configured (AppGig/guest interface data present).
-3. Persistent storage paths are mapped.
-4. App functionality is reachable per lab scenario.
-
-## Troubleshooting Quick Checks
-
-1. App not running:
-	- Check `show app-hosting detail appid <your-app-id>` for startup errors.
-2. Package issues:
-	- Verify package file exists on `usbflash1:` and app ID matches commands.
-3. Connectivity issues:
-	- Verify AppGig/app-vnic settings and gateway config.
-4. Data not persistent:
-	- Re-check `run-opts` volume mount paths and USB storage availability.
-
-## Notes for Instructors/TAs
-
-1. Keep this lab focused on validate/operate workflows rather than image build mechanics.
-2. Use the slide visuals above to explain architecture before students run commands.
-3. If needed, demonstrate one install/start cycle, then let students perform verification tasks.
+1. The lifecycle verbs — `install`, `start`, `stop`, `uninstall` — are first-class IOS XE CLI, not something tacked on.
+2. AppGig is the data-plane bridge between the switch ASIC and the hosted container.
+3. All of the above is exposed via YANG, so the same config can be driven by NETCONF/RESTCONF (think back to Day 1).
+4. Persistent storage via `run-opts` is what makes on-box apps practical for operations, not just demos.
 
 ## References
 
-1. Cisco App Hosting developer documentation:
-	- https://developer.cisco.com/docs/app-hosting/
-2. Docker runtime options for app hosting:
-	- https://developer.cisco.com/docs/app-hosting/#!application-hosting-configuration/docker-runtime-options
-
----
-
-## Lab Transition
-
-Before ending Day N or moving to another module:
-
-1. Return from switch CLI to your lab VM terminal.
-2. Record app-hosting verification evidence (running state, mounts, reachability).
-3. If required by your lab workflow, stop or reset app instances to baseline.
+- Cisco App Hosting developer documentation: <https://developer.cisco.com/docs/app-hosting/>
+- Docker runtime options for app hosting: <https://developer.cisco.com/docs/app-hosting/#!application-hosting-configuration/docker-runtime-options>
 
 ## Next Steps
 
-✅ Completed: Day N - Application Hosting
+✅ Completed: Day N — Application Hosting (review-only)
 
 **Explore additional resources:**
 
-➡️ [Resources Overview](../resources/index.md) - YANG Suite, Sandboxes, and APIs
+➡️ [Resources Overview](../resources/index.md) — YANG Suite, Sandboxes, and APIs
 
 **Or return to:**
+
 - [Day N Overview](index.md)
 - [Day 2: Device Monitoring](../day-2/index.md)

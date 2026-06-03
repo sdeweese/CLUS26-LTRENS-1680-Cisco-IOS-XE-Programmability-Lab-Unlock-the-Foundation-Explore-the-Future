@@ -772,7 +772,7 @@ The repos and module families below let you treat Terraform as an *engine* and e
 
 If you want to try NetasCode end-to-end against your own lab gear after the conference:
 
-1. Clone an example NetasCode IOS XE repo: `git clone https://github.com/netascode/terraform-iosxe-nac-modules-example`
+1. Clone an example NetasCode IOS XE repo: `git clone https://github.com/netascode/nac-iosxe-vxlan-example`
 2. Edit `data/switches.yaml` for your devices.
 3. Run `nac-validate data/`.
 4. Run `terraform init && terraform plan && terraform apply`.
@@ -782,7 +782,7 @@ If you want to try NetasCode end-to-end against your own lab gear after the conf
 
 ## Lab Transition
 
-Before moving to PyATS:
+Before moving on:
 
 1. Run `terraform plan` one last time and confirm expected state.
 2. If needed for a clean handoff, run `terraform destroy` to reset lab-created resources.
@@ -794,9 +794,8 @@ Before moving to PyATS:
 
 **Continue with Day 1:**
 
-➡️ [PyATS Testing](pyats-testing.md) - Automated network testing and validation
+➡️ [Atomic Config Replace](atomic-operations.md)
 
 **Or explore:**
-- [Atomic Config Replace](atomic-operations.md)
 - [Day 1 Overview](index.md)
 - [Day 2: Device Monitoring](../day-2/index.md)

@@ -7,14 +7,12 @@ Day 1 covers modern configuration management approaches for Cisco IOS XE devices
 ### What You'll Learn
 
 - Infrastructure as Code with Terraform
-- Network testing and validation with PyATS
 - Atomic configuration operations with NETCONF
 
 ### Topics Covered
 
 1. **Terraform + NETCONF**: Declarative infrastructure as code
-2. **PyATS**: Automated testing and validation
-3. **Atomic Config Replace (ACR)**: Safe, atomic configuration changes via NETCONF
+2. **Atomic Config Replace (ACR)**: Safe, atomic configuration changes via NETCONF
 
 ### Key Concepts
 
@@ -39,18 +37,6 @@ Build network infrastructure as code using Terraform's IOS XE provider with NETC
 
 ---
 
-### [PyATS Testing](pyats-testing.md)
-Implement automated network testing and validation using Cisco's PyATS framework.
-
-**Topics:**
-
-- PyATS testbed setup
-- Writing test cases for configuration validation
-- Automated testing workflows
-- Integration with CI/CD pipelines
-
----
-
 ### [Atomic Config Replace](atomic-operations.md)
 Learn how to safely replace device configurations using NETCONF atomic operations. Includes error detection, automatic rollback, and confirmed commits.
 
@@ -70,7 +56,6 @@ Learn how to safely replace device configurations using NETCONF atomic operation
 **Start with a topic:**
 
 - ➡️ [Terraform + NETCONF](terraform-netconf.md) - Recommended starting point
-- [PyATS Testing](pyats-testing.md)
 - [Atomic Config Replace](atomic-operations.md)
 
 **Or navigate to:**

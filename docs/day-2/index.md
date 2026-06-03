@@ -30,13 +30,13 @@ Learn how to ingest IOS XE telemetry directly into OpenTelemetry and export to S
 - Splunk HEC integration
 - Dashboard import and validation
 
-**Reference implementation (upstream repo):**
+**Reference implementations (upstream):**
 
-- [otel-grpc-cisco-receiver repository](https://github.com/jeremycohoe/otel-grpc-cisco-receiver)
-- [README.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/README.md)
-- [SPLUNK-SETUP.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/SPLUNK-SETUP.md)
-- [docs/CONFIG.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/CONFIG.md)
-- [docs/SECURITY.md](https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/SECURITY.md)
+- [OTel contrib `yanggrpcreceiver`](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/yanggrpcreceiver) — decodes IOS XE kvGPB telemetry
+- [Splunk distribution of the OpenTelemetry collector](https://github.com/signalfx/splunk-otel-collector)
+- [Splunk HEC exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/splunkhecexporter)
+- [Cisco IOS XE MDT reference](https://github.com/jeremycohoe/cisco-ios-xe-mdt)
+- [Splunk Add-On for OpenTelemetry Collector](https://splunkbase.splunk.com/app/7125)
 
 ---
 

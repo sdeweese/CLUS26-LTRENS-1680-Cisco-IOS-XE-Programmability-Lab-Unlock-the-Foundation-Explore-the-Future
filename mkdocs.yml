@@ -51,7 +51,6 @@ nav:
   - Day 1 - Device Config:
       - Day 1 Overview: day-1/index.md
       - Terraform + NETCONF: day-1/terraform-netconf.md
-      - PyATS Testing: day-1/pyats-testing.md
       - Atomic Config Replace: day-1/atomic-operations.md
   - Day 2 - Device Monitoring:
       - Day 2 Overview: day-2/index.md

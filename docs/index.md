@@ -1,6 +1,6 @@
-# Welcome to the Cisco Live 26 IOS XE Programmability Lab
+# Welcome to the Cisco Live 26 Cisco IOS XE Programmability Lab
 
-## Unlock the Foundation, Explore the Future
+## Unlock the Foundation, Explore the Future!
 
 ### Cisco IOS XE Version 26.1
 
@@ -25,6 +25,30 @@ Open in a new tab and keep it side-by-side as you work through each module:
 To access the lab, you will need to SSH to your assigned VM host. From the VM, you will have access to the switch and all required software dependencies.
 
 **See lab environment access information provided by instructors.**
+
+### Pod Topology
+
+All three lab switches share the `10.1.1.0/24` management network with your Ubuntu VM:
+
+```mermaid
+flowchart LR
+  VM["Ubuntu VM<br/>10.1.1.3<br/>(automation host)"]
+  SW1["Catalyst 9350<br/>10.1.1.15"]
+  SW2["Catalyst 9300<br/>10.1.1.55"]
+  SW3["Catalyst 9300X<br/>10.1.1.5"]
+  NET(("10.1.1.0/24<br/>management network"))
+  VM --- NET
+  SW1 --- NET
+  SW2 --- NET
+  SW3 --- NET
+```
+
+| Device | IP | Role in the lab |
+|---|---|---|
+| Ubuntu VM | `10.1.1.3` | SSH jump host, automation tooling, OTel collector, Splunk |
+| Catalyst 9350 | `10.1.1.15` | Primary device for most Day 0–2 modules (telnet target) |
+| Catalyst 9300 | `10.1.1.55` | Terraform / Ansible target |
+| Catalyst 9300X | `10.1.1.5` | DEVWKS-2810 atomic-config / ACR target |
 
 ---
 
@@ -86,7 +110,6 @@ This lab follows a structured "Day 0 to Day N" approach, mirroring real-world ne
 ### [Day 1 - Device Configuration](day-1/index.md)
 **Configuration Management & Automation**
 - Terraform + NETCONF (Infrastructure as Code)
-- PyATS (Automated Testing)
 - Atomic Config Replace (NETCONF)
 
 ### [Day 2 - Device Monitoring](day-2/index.md)
@@ -129,7 +152,6 @@ For the best learning experience, follow this sequence:
 Prefer to explore specific topics? Jump directly to:
 
 - **Configuration Management**: [Terraform + NETCONF](day-1/terraform-netconf.md)
-- **Testing**: [PyATS](day-1/pyats-testing.md)
 - **Atomic Config Replace**: [ACR](day-1/atomic-operations.md)
 - **Monitoring**: [OpenTelemetry + Splunk](day-2/opentelemetry-splunk.md)
 - **Edge Computing**: [Application Hosting](day-n/app-hosting.md)

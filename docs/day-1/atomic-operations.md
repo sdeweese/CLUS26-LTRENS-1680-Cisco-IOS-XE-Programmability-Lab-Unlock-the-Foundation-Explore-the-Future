@@ -1,64 +1,25 @@
-# Atomic Config Replace (ACR) with Ansible
+# The Atomic Shift: Modernizing Your Network Management using Atomic Configuration Replace (ACR)
 
-## Introduction
+This workshop is designed for the Cisco Live Las Vegas 2026 DEVWKS-2810 workshop!
 
-Atomic Config Replace (ACR) is a powerful configuration management approach that replaces the entire device configuration in a single atomic transaction. This lab uses an **Ansible-based framework** that runs over NETCONF to provide safe, repeatable, and auditable configuration management for Cisco IOS XE devices.
+To learn more about Atomic Configuration replace and for the device credentials to access this lab environment, please see your instructor.
 
-### Why Ansible + NETCONF?
+Ansible playbooks for performing **atomic config replace** on Cisco IOS XE devices running **26.1.1+**. Supports two parallel workflows that both run over NETCONF:
 
-Unlike traditional CLI-based configuration methods that apply changes line-by-line, this framework provides:
+- **CLI-RPC workflow** (recommended): send IOS CLI text via the `Cisco-IOS-XE-cli-rpc` YANG model (`config-ios-cli-trans` / `get-modelled-config-clis`).
+- **YANG/XML workflow**: send native YANG/XML via standard NETCONF `edit-config` with `operation="replace"`.
 
-- **Atomic operations**: All changes succeed together or fail together (no partial configs)
-- **Safe preview**: Stage changes to candidate datastore, review diffs, then commit or discard
-- **Automated backups**: Before/after configs captured automatically
-- **Idempotent workflows**: Safe to run multiple times without side effects
-- **Version control ready**: Configuration files tracked in Git
-- **No SSH/CLI required**: All operations use NETCONF for structured, reliable communication
+Both workflows use the candidate datastore and atomic commit, with no SSH/CLI pushes involved. This lab focuses on the first (CLI RPC). For full details, see the GitHub Repository for this project: <https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible>
 
-### Two Parallel Workflows
+This toolkit (`atomic-netconf-ansible`) replaces the entire device configuration atomically. It either fully succeeds or keeps the current config on the device. No partial config states. No risk of half-applied changes.
 
-This framework supports two approaches (both over NETCONF):
+## How It Works
 
-1. **CLI-RPC workflow** (recommended) — Work with familiar IOS CLI text, delivered via the `Cisco-IOS-XE-cli-rpc` YANG model
-2. **YANG/XML workflow** — Use native YANG/XML payloads with standard NETCONF `edit-config`
+### Architecture
 
-Both workflows use the **candidate datastore** and **atomic commit** for safe, all-or-nothing configuration replacement.
-
-### Start Here: Pick One Workflow
-
-Use **one** workflow path for a given run. Do not mix CLI and XML playbooks in the same change cycle.
-
-| Workflow | Primary Config Format | Core Playbooks | Best For |
-|----------|------------------------|----------------|----------|
-| CLI-RPC | CLI text files (`.cfg`) | `01 -> 05 -> 07 -> 06` | Fast operator-friendly changes using familiar IOS CLI syntax |
-| YANG/XML | XML/YANG payloads | `01 -> 02 -> 04 -> 03` | Model-driven workflows and strict data-model alignment |
-
-Quick decision rule:
-
-- If you want to edit a CLI file like `configs/desired/<hostname>.cfg`, use the **CLI-RPC** path.
-- If you want to work with model-native XML payloads, use the **YANG/XML** path.
-
-In this lab, we will focus on full config replace operations using the CLI-RPC workflow.
-
----
-
-> **📦 Lab Framework Source**
-> 
-> This lab follows the **IOS XE Atomic Config Replace — Ansible Framework** developed by Jeremy Cohoe.
-> 
-> **GitHub Repository**: [jeremycohoe/iosxe-atomic-netconf-ansible](https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible)
-> 
-> The repository provides production-ready Ansible playbooks, inventory templates, and comprehensive documentation for atomic configuration management on Cisco IOS XE devices. We'll clone this repository and use its playbooks throughout this lab module.
-
----
-
-## Architecture Overview
-
-### How It Works
-
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
-│                        Your Lab Pod VM                          │
+│                        Your Workstation                         │
 │                                                                 │
 │  configs/desired/           Ansible            NETCONF (830)    │
 │  ┌──────────────┐      ┌────────────┐      ┌────────────────┐  │
@@ -74,23 +35,23 @@ In this lab, we will focus on full config replace operations using the CLI-RPC w
 │                              │               commit (atomic)    │
 │  configs/backups/            │                     │            │
 │  ┌──────────────┐            │              ┌──────┴──────┐     │
-│  │ pre_atomic_*.cfg │◀───────┘              │   Running   │     │
+│  │ pre_atomic_*.cfg │◀──────────┘              │   Running   │     │
 │  │ (auto backup) │                          │   Config    │     │
 │  └──────────────┘                           └─────────────┘     │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Atomic Workflow — Step by Step
+### Atomic Workflow Step by Step
 
-```
+```text
 ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
 │ Precheck │────▶│ Baseline │────▶│   Edit   │────▶│ Preview  │────▶│   Push   │
-│          │     │ Capture  │     │ Desired  │     │  (diff)  │     │  (atomic)│
+│          │     │ Capture  │     │ Desired  │     │  (diff)  │     │  (atomic)   │
 │ 01       │     │ 05       │     │ .cfg     │     │ 07       │     │ 06       │
 └──────────┘     └──────────┘     └──────────┘     └──────────┘     └──────────┘
   Verify           Pull              Make            Stage to         Stage to
   NETCONF,         running           your            candidate,       candidate,
-  candidate,       config as         changes         diff vs          diff, then
+  candidate,       config as         changes          diff vs         diff, then
   atomic-cfg       CLI text                          running,         COMMIT +
                                                      discard          save
                                                      (safe)           (atomic)
@@ -98,30 +59,28 @@ In this lab, we will focus on full config replace operations using the CLI-RPC w
 
 ### What Happens on the Device
 
-1. **Stage** — Desired config is pushed to the candidate datastore using `config-ios-cli-trans` with `<do-commit>false</do-commit>`. Running config is untouched.
-2. **Diff** — Candidate is compared against running using `get-modelled-config-clis` on both datastores. You see exactly what will change.
-3. **Commit** (live push only) — Candidate is atomically committed to running. All-or-nothing — if any part fails, the entire transaction rolls back.
-4. **Save** — Running config is written to startup.
+1. **Stage**: Desired config is pushed to the **candidate datastore** using `config-ios-cli-trans` with `<do-commit>false</do-commit>`. Running config is untouched.
+2. **Diff**: Candidate is compared against running using `get-modelled-config-clis` on both datastores. You see exactly what will change.
+3. **Commit** (live push only): Candidate is atomically committed to running. All-or-nothing behavior applies. If any part fails, the entire transaction rolls back.
+4. **Save**: Running config is written to startup.
 
-> **Dry run (default)**: Steps 1–2 only, then discard. The device is never modified.
-
----
+> **Dry run** (default): Steps 1 and 2 only, then discard. The device is never modified.
 
 ## Prerequisites
 
 ### IOS XE Device Requirements
 
-| Requirement | Value |
-|-------------|-------|
-| IOS XE version | 26.1.1 or later |
-| NETCONF | Enabled and reachable on port 830 |
-| Candidate datastore | Explicitly enabled (not on by default) |
-| Atomic config | Feature flag enabled |
-| Credentials | Local user with privilege 15 |
+| Requirement | Detail |
+|---|---|
+| **IOS XE version** | 26.1.1 or later |
+| **NETCONF** | Enabled and reachable on port 830 |
+| **Candidate datastore** | Explicitly enabled (not on by default) |
+| **Atomic config** | Feature flag enabled |
+| **Credentials** | Local user with privilege 15 |
 
-**Enable on the lab switch (`c9300x-lab`, `10.1.1.5`):**
+Enable on each device:
 
-```cisco
+```
 conf t
   netconf-yang
   netconf-yang feature candidate-datastore
@@ -130,12 +89,12 @@ end
 write memory
 ```
 
-> **Note**: After enabling candidate datastore, NETCONF restarts automatically (~60 seconds). Wait before testing connectivity.
+After enabling candidate datastore, NETCONF restarts automatically (~60 seconds). Wait before testing connectivity.
 
 ### Workstation Requirements
 
-| Software | Version | Purpose |
-|----------|---------|---------|
+| Component | Version | Purpose |
+|---|---|---|
 | Python | 3.10+ | Runtime |
 | Ansible | 2.15+ | Automation framework |
 | ncclient | 0.6.13+ | NETCONF client (used by Ansible netconf plugin) |
@@ -143,91 +102,102 @@ write memory
 | paramiko | any | SSH transport for NETCONF |
 | xmltodict | any | XML parsing helpers |
 
-### Lab Environment
+### Lab Environment Setup
 
-The lab pod VM is pre-configured to access:
+<!-- for DevNet Workshop only
 
-- **Lab switch**: `10.1.1.5:830` (hostname: `c9300x-lab`)
-- **Credentials**: `admin` / `Cisco123`
+Note: Your instructor will give you a unique pod number, IP, and credentials to complete this lab.
 
-These values are already set in the inventory files—no changes needed.
+1. On the laptop provided, use password 'cisco' to login.
 
----
+2. Open Visual Studio Code. Open a new Terminal Window.
+Type
 
-## Installation
+`ssh –p 443 auto@pod##-xelab.cisco.com`
 
-### Step 1: Change to the ACR Lab Directory
+Relace ## is pod number on your desk.
+Ex) Pod 5 will be: `ssh –p 443 auto@pod05-xelab.cisco.com`
+If asked about adding a fingerprint, type yes
+Password for your pod is
+`pandalab2026!`
 
-From your SSH session on the lab pod VM:
+-->
 
-```bash
-cd ~/iosxe-atomic-netconf-ansible/atomic-netconf-ansible
+SSH to your unique pod using the credentials provided by your instructor. Open a new terminal tab (pro tip, split the terminal window within Visual Studio Code to see the Cisco IOS XE device on one side and the workspace for running scripts on the other side using
+
+```
+ssh admin@10.1.1.5
 ```
 
-### Step 2: Verify Ansible
+and password:
 
-Lab pods typically ship with Ansible pre-installed:
+```
+Cisco123
+```
+
+Recommended: once you're connected to your switch, type `terminal monitor` to see real-time logs.
+
+<!-- ![Connect to your switch](../images/acr-split-screen.png) -->
+
+Navigate to the `DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace` directory.
 
 ```bash
+# 1. Clone the repository (this has already been done for you in the lab pod)
+#git clone https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible.git
+
+cd DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace/atomic-netconf-ansible
+
+# 2. Confirm Ansible is available (lab pods normally ship with it)
 ansible --version
+
+# 3. Install the required Ansible collections (this has already been done for you in the lab pod)
+#ansible-galaxy collection install -r requirements.yml
 ```
 
-Expected output: Ansible 2.15 or later
+### Network Connectivity
 
-### Step 3: Install Required Ansible Collections
+The workstation (your pod VM) must reach the lab switch on **TCP port 830** (NETCONF over SSH). In the standard lab pod environment the switch is directly reachable at `10.1.1.5`, and the inventory is already configured for this.
 
-```bash
-ansible-galaxy collection install -r requirements.yml
-```
-
-This installs:
-
-- `ansible.netcommon`
-- `ansible.utils`
-- `community.general`
-
-### Step 4: Verify Python Dependencies
-
-If you encounter errors about missing Python libraries, install them:
-
-```bash
-python3 -m pip install --user ansible ncclient lxml xmltodict paramiko
-```
+| Scenario | Setup |
+|---|---|
+| **In-pod (default)** | Inventory already points at `10.1.1.5:830`, so no changes are needed |
+| **Direct access (other)** | Edit `inventory/hosts.yml` and set `ansible_host` to the device management IP |
+| **Via VPN** | No special config is required; ensure port 830 is reachable |
 
 ---
 
 ## Project Structure
 
-```
+```text
 atomic-netconf-ansible/
 ├── ansible.cfg                              # Ansible settings (YAML output, timeouts)
 ├── requirements.yml                         # Ansible Galaxy dependencies
-├── README.md                                # GitHub repository documentation
+├── README.md                                # This file
 │
 ├── inventory/
 │   ├── hosts.yml                            # Pre-configured: c9300x-lab @ 10.1.1.5
 │   └── group_vars/
 │       ├── all/
 │       │   ├── vars.yml                     # Connection settings, config paths
-│       │   └── vault.yml                    # Credentials (admin/Cisco123)
+│       │   └── vault.yml                    # Credentials (admin/Cisco123 by default)
 │       └── access_switches/
 │           └── vars.yml                     # Group-specific overrides
 │
 ├── playbooks/
 │   ├── 01_precheck.yml                      # Verify device readiness
 │   ├── 02_baseline_capture.yml              # Capture running config (YANG/XML)
-│   ├── 03_atomic_push.yml                   # Atomic push (YANG/XML)
+│   ├── 03_atomic_push.yml                   # atomic push (YANG/XML)
 │   ├── 04_diff_preview.yml                  # Diff preview (YANG/XML)
-│   ├── 05_baseline_capture_cli.yml          # Capture running config (CLI-RPC)
-│   ├── 06_atomic_push_cli.yml               # Atomic push (CLI-RPC) — includes before/after
+│   ├── 05_baseline_capture_cli.yml          # Capture running config (CLI-RPC: get-modelled-config-clis)
+│   ├── 06_atomic_push_cli.yml               # Atomic push (CLI-RPC: config-ios-cli-trans), includes before/after capture
 │   └── 07_diff_preview_cli.yml              # Diff preview (CLI-RPC)
 │
 ├── configs/
-│   ├── baseline/<hostname>/baseline.cfg     # Reference configs (auto-generated)
+│   ├── baseline/<hostname>/baseline.cfg     # Reference configs (auto-generated, don't edit)
 │   ├── desired/<hostname>.cfg               # Desired configs (EDIT THESE)
-│   └── backups/<hostname>/                  # Pre/post-commit backups
-│       ├── pre_atomic_*.cfg                 #   Before commit snapshot
-│       └── post_atomic_*.cfg                #   After commit snapshot
+│   └── backups/<hostname>/                  # Pre/post-commit backups (auto-generated)
+│       ├── pre_atomic_*.cfg                 #   Running config before commit
+│       └── post_atomic_*.cfg                #   Running config after commit
 │
 └── docs/
     └── quickstart.md                        # Detailed step-by-step walkthrough
@@ -235,382 +205,248 @@ atomic-netconf-ansible/
 
 ---
 
-## Quick Start Guide
+## Quick Start
 
-All commands are run from inside the `atomic-netconf-ansible/` directory.
+All commands are run from inside the extracted `DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace/atomic-netconf-ansible/` directory.
 
-### Step 0: Review Inventory and Precheck Files
+## Day 0 → Day 1 → Day 2 → Day 0 Cycle with `apply-config-day.sh`
 
-Before running any playbook, inspect the target inventory:
+Once your baseline is captured and you're comfortable with the preview/push flow, the lab includes a helper that rotates the active desired config between three checkpoint files and runs the live atomic push for you:
 
-```bash
-cat inventory/hosts.yml
-```
+- `configs/desired/POD-<id>-day0.cfg` — clean baseline (starting state). Hostname `cat9300x-pod<id>a-sztp`, single user VLAN (pod# + 20).
+- `configs/desired/POD-<id>-day1.cfg` — access-layer additions. Hostname becomes `cat9300x-pod<id>-day1`; adds VLANs `311` and `700` to the VLAN list; moves a block of access ports to `switchport access vlan 311` with `switchport mode access`; adds two `description setting for vlan ...` comments on selected interfaces.
+- `configs/desired/POD-<id>-day2.cfg` — routing + time additions on top of day1. Hostname becomes `cat9300x-pod<id>-day2`; adds `router ospf 1` with `network 10.10.10.0 0.0.0.255 area 0`; sets `ntp source Vlan<pod#+20>`; adds NTP servers `10.1.7.2` and `10.11.13.10`.
 
-Next, review the precheck tasks:
+Each pod has slightly different configs (the pod VLAN = pod# + 20) to support the lab flow. Your POD id comes from `cat ~/PODID` (e.g. `POD-13`). The script:
 
-```bash
-cat playbooks/01_precheck.yml
-```
+1. Repoints the symlink `configs/desired/c9300x-lab.cfg` → `POD-<id>-day<N>.cfg`
+2. Runs `ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false`
 
-Confirm the device host/IP and connection variables are correct for your lab pod.
+Run `apply-config-day.sh --help` for full options (`--list`, `--no-run`).
 
-### Step 1: Verify Device Readiness
+### One-time setup
 
-Run the precheck playbook to verify NETCONF connectivity, candidate datastore support, and atomic config capability:
-
-```bash
-ansible-playbook -i inventory/hosts.yml playbooks/01_precheck.yml
-```
-
-**What it checks:**
-
-- NETCONF connectivity on port 830
-- Candidate datastore enabled
-- Atomic config feature enabled
-- IOS XE version 26.1.1+
-
-Expected output: All checks passed (green)
-
-### Step 2: Capture Baseline Configuration
-
-Pull the current running configuration from the device and save it as your baseline:
+Ensure you are in the correct directory and make the script executable.
 
 ```bash
-ansible-playbook -i inventory/hosts.yml playbooks/05_baseline_capture_cli.yml
+cd ~/DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace/atomic-netconf-ansible/
+# Make the script executable (this has been done for you)
+# chmod +x apply-config-day.sh
 ```
 
-**What it creates:**
+### What you'll see when you run it
 
-- `configs/baseline/c9300x-lab/baseline.cfg` — Reference copy (don't edit)
-- `configs/desired/c9300x-lab.cfg` — Your working copy (edit this)
+The script prints the symlink update, then streams the full `ansible-playbook` output (the same output you'd see running the playbook by hand):
 
-Both files contain the complete device configuration in IOS CLI format.
-
-### Step 3: Edit Desired Configuration
-
-Open the desired configuration file and make your changes: configs/desired/c9300x-lab.cfg
-
-**Example changes:**
-
-```diff
- interface TenGigabitEthernet1/0/1
-- description Uplink Port
-+ description UPLINK-TO-DIST-SW
-  shutdown
-  switchport access vlan 30
- exit
- 
-+interface TenGigabitEthernet1/0/2
-+ description TEST-PORT-FOR-DEMO
-+ switchport access vlan 100
-+ no shutdown
-+exit
+```text
+./apply-config-day.sh
 ```
 
-> **Important**: This file contains the **complete** device configuration. Atomic config replace performs a full replace — anything you remove from this file will be removed from the device. Keep all physical interfaces defined.
+You should see an output similar to this
 
-Save file.
+```text
+Detected PODID: POD-13
+Which day would you like to rotate to? (Simply type the number and then press ENTER)
+For Day0, type 0
+For Day1, type 1
+For Day2, type 2
+Please Enter 0, 1, or 2: 1
 
-### Step 4: Preview Changes (Safe Dry Run)
+Starting config replace for Day 1...
+```
 
-Stage your desired config to the candidate datastore, generate a diff against running config, then discard. The device is never modified:
+<!-- Updated: c9300x-lab.cfg -> POD-13-day1.cfg
+Running Ansible full-replace playbook...
+Command: ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false
+
+PLAY [Atomic config push (CLI-RPC)] ********************************************
+TASK [Gathering Facts] *********************************************************
+...
+TASK [Show diff] ***************************************************************
+...
+TASK [Commit candidate to running] *********************************************
+changed: [c9300x-lab]
+
+PLAY RECAP *********************************************************************
+c9300x-lab : ok=12   changed=1    unreachable=0    failed=0    skipped=0
+-->
+
+If you face an error, check the Ansible output for the specific error message. Common issues include syntax errors in the desired config or missing required configuration elements. Use the error message to debug the issue.
+
+If the `PLAY RECAP` line shows `failed=0`, the atomic commit succeeded and the device's running config now matches `POD-13-day1.cfg`.
+
+### Walk the lifecycle
+
+Run the script once per stage and pick the day at the prompt. After each commit, optionally re-run the diff preview to confirm the device matches the new desired state.
+
+**Stage 1 — Apply Day 0 (baseline)**
+
+```bash
+./apply-config-day.sh
+# When prompted, enter: 0
+```
+
+Result: device is reset to the clean POD baseline. Hostname becomes `cat9300x-pod<id>a-sztp`.
+
+**Stage 2 — Apply Day 1 (access-layer VLAN/interface adds)**
+
+```bash
+./apply-config-day.sh
+# When prompted, enter: 1
+```
+
+Watch the `PLAY RECAP`. If it shows `failed=0`, the day-1 deltas committed cleanly:
+hostname is now `cat9300x-pod<id>-day1`, VLANs `311` and `700` are in the VLAN database, and
+a block of access ports moved to `switchport access vlan 311` /
+`switchport mode access`. Verify on the device:
+
+```
+show vlan brief | include 311|700
+show running-config | section interface TenGigabit
+```
+
+#### If Stage 2 fails
+
+If the `PLAY RECAP` instead shows `failed=1`, **the device did not change** — that is
+the atomic guarantee. The candidate config was validated, IOS XE rejected one of the
+lines, and the entire transaction was rolled back before anything touched the running
+config.
+
+Prove it for yourself:
+
+```
+show running-config | include hostname
+```
+
+The hostname is still the day-0 hostname (`cat9300x-pod<id>a-sztp`), not
+`cat9300x-pod<id>-day1`. No VLANs were added, no ports were moved. Nothing landed.
+
+**Read the Ansible failure output** — the error message will quote the exact CLI line
+the device refused, typically with an `% Invalid input` marker or a parser error
+pointing at the bad keyword.
+
+**Fix the desired config:** open `configs/pod-targets/POD-<id>-day1.cfg` (or follow
+the symlink at `configs/desired/c9300x-lab.cfg`), locate the offending line, correct
+or remove it, and save.
+
+> Tip: a quick way to spot what changed in day-1 is to diff against day-0:
+> `diff configs/pod-targets/POD-<id>-day0.cfg configs/pod-targets/POD-<id>-day1.cfg`.
+> One of the new lines is the culprit.
+
+Re-run the push:
+
+```bash
+./apply-config-day.sh
+# When prompted, enter: 1
+```
+
+This time `PLAY RECAP` should show `failed=0`. Re-run the verify commands above to
+confirm the day-1 state is live.
+
+**Stage 3 — Apply Day 2 (add OSPF routing + NTP)**
+
+```bash
+./apply-config-day.sh
+# When prompted, enter: 2
+```
+
+Result: a single atomic transaction layers the day-2 deltas on top of day-1:
+
+- Hostname changes to `cat9300x-pod<id>-day2`.
+- `router ospf 1` is enabled
+- NTP sourcing is pinned to the pod SVI: `ntp source Vlan<pod#+20>` (e.g. `Vlan33` for POD-13, `Vlan27` for POD-7).
+
+Verify on the device after the commit:
+
+```
+sh run | s ospf
+```
+
+Should return
+
+```
+router ospf 1
+ network 10.10.10.0 0.0.0.255 area 0
+```
+
+**Stage 4 — Roll back to Day 0**
+
+```bash
+./apply-config-day.sh
+# When prompted, enter: 0
+```
+
+Result: full atomic replace back to the clean baseline. Day-1 (access-port/VLAN) and Day-2 (OSPF + NTP) additions are removed in a single transaction — no partial state, no reboot. Hostname returns to `cat9300x-pod<id>a-sztp` and `show ip protocols` no longer lists OSPF.
+
+### Useful flags
+
+```bash
+./apply-config-day.sh --list      # show all available POD-*-day*.cfg targets
+./apply-config-day.sh --no-run    # repoint the symlink only; skip the Ansible push
+```
+
+### Verify between stages (optional but recommended)
 
 ```bash
 ansible-playbook -i inventory/hosts.yml playbooks/07_diff_preview_cli.yml
 ```
 
-**What you'll see:**
+Expected after each `apply-config-day.sh` run: `Desired matches running (no diff)`.
 
-```diff
-DIFF: c9300x-lab
+### If something goes wrong
 
-- description Uplink Port
-+ description UPLINK-TO-DIST-SW
+Ansible reports the failure in its standard `PLAY RECAP` (`failed=1`) and the script exits non-zero. Because this is an **atomic** replace, a failed push leaves the device on its previous running config — you'll never end up in a half-applied state.
 
-+interface TenGigabitEthernet1/0/2
-+ description TEST-PORT-FOR-DEMO
-+ switchport access vlan 100
-+ no shutdown
-+exit
+Troubleshooting checklist:
 
-Lines added: 5
-Lines removed: 1
-```
+1. Confirm POD id: `cat ~/PODID`
+2. Confirm target exists: `ls configs/desired/POD-*-day*.cfg`
+3. Check device reachability: `ansible-playbook -i inventory/hosts.yml playbooks/01_precheck.yml`
+4. Preview the diff: `ansible-playbook -i inventory/hosts.yml playbooks/07_diff_preview_cli.yml`
+5. Re-run verbosely: `ansible-playbook -vvv -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false`
+6. Common payload issues in `configs/desired/POD-*-dayN.cfg`:
+    - close blocks with `exit`, **not** `end`
+    - do **not** include `netconf-yang` or `restconf` (those are day-0 bootstrap, already on the device)
 
-**Diff symbols:**
+### Tips
 
-- `+` = Lines being added
-- `-` = Lines being removed
-- ` ` = Unchanged context
-
-If the diff looks incorrect or you see unexpected changes, **do not proceed to Step 5**. Go back to Step 3 and fix your desired config file.
-
-### Step 5: Test Push with Dry Run
-
-Perform a complete dry run that stages the config, shows the diff, and creates a backup — but does **not** commit to running:
-
-```bash
-ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml
-```
-
-**What happens:**
-
-1. Captures current running config (pre-backup)
-2. Stages desired config to candidate datastore
-3. Shows diff (same as Step 4)
-4. **Discards** candidate (device unchanged)
-5. Saves pre-backup to `configs/backups/c9300x-lab/pre_atomic_<timestamp>.cfg`
-
-This is your final safety check before the live push.
-
-### Step 6: Live Push (Commit Changes)
-
-When you're confident the changes are correct, run the live push:
-
-```bash
-ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false
-```
-
-**What happens:**
-
-1. Captures BEFORE snapshot
-2. Stages config to candidate
-3. Shows diff
-4. **Commits atomically** to running config
-5. Saves running config to startup
-6. Captures AFTER snapshot
-7. Saves both snapshots to `configs/backups/c9300x-lab/`
-
-**Atomic guarantee**: If any part of the commit fails (syntax error, dependency issue, etc.), the **entire transaction rolls back** automatically. Running config is never left in a partial state.
-
-### Step 7: Verify Changes
-
-Re-run the preview playbook to confirm no diff remains:
-
-```bash
-ansible-playbook -i inventory/hosts.yml playbooks/07_diff_preview_cli.yml
-```
-
-Expected output: `Desired matches running (no diff)`
-
-You can also verify from the device CLI:
-
-```bash
-# SSH to the C9300X lab switch (10.1.1.5)
-ssh admin@10.1.1.5
-
-# Check the changes
-show run interface TenGigabitEthernet1/0/1
-show run interface TenGigabitEthernet1/0/2
-```
-
----
+- Payload files (`POD-*-dayN.cfg`) must use `exit` to close every config block. `end` is rejected by the NETCONF CLI-RPC parser.
+- Do **not** put `netconf-yang` or `restconf` inside these payloads. Those are day-0 bootstrap commands and are already enabled on the device.
+- Each run produces `pre_atomic_*.cfg` and `post_atomic_*.cfg` snapshots under `configs/backups/c9300x-lab/` for audit.
+- If the device ever drifts, just `./apply-config-day.sh` → `0` to snap it back to baseline in a single transaction.
 
 ## Playbook Reference
 
 ### CLI-RPC Workflow (Recommended)
 
-Work with familiar IOS CLI text—but the payload is delivered over NETCONF using the `Cisco-IOS-XE-cli-rpc` YANG model. No SSH/CLI session is opened.
+Work with familiar IOS CLI text. The payload is delivered over NETCONF using the `Cisco-IOS-XE-cli-rpc` YANG model (`config-ios-cli-trans` to push, `get-modelled-config-clis` to read). No SSH/CLI session is opened against the device.
 
-| Order | Playbook | Purpose | Device Modified? |
-|-------|----------|---------|------------------|
+| # | Playbook | Purpose | Modifies Device? |
+|---|---|---|---|
 | 01 | `01_precheck.yml` | Verify NETCONF, candidate, atomic support | No |
 | 05 | `05_baseline_capture_cli.yml` | Pull running config as CLI text via CLI-RPC | No |
-| 07 | `07_diff_preview_cli.yml` | Stage to candidate, diff, discard | No |
-| 06 | `06_atomic_push_cli.yml` | Full config replace via CLI-RPC | Dry run: No<br>Live: Yes |
-
-**Usage examples:**
-
-```bash
-# Precheck
-ansible-playbook -i inventory/hosts.yml playbooks/01_precheck.yml
-
-# Capture baseline
-ansible-playbook -i inventory/hosts.yml playbooks/05_baseline_capture_cli.yml
-
-# Preview (safe dry run)
-ansible-playbook -i inventory/hosts.yml playbooks/07_diff_preview_cli.yml
-
-# Push (dry run - default)
-ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml
-
-# Push (live commit)
-ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false
-```
-
-### YANG/XML Workflow
-
-Work with native YANG/XML config payloads using standard NETCONF `edit-config` with `operation="replace"`. No CLI-RPC involvement.
-
-| Order | Playbook | Purpose | Device Modified? |
-|-------|----------|---------|------------------|
-| 01 | `01_precheck.yml` | Verify NETCONF, candidate, atomic support | No |
-| 02 | `02_baseline_capture.yml` | Pull running config as XML | No |
-| 04 | `04_diff_preview.yml` | Stage to candidate, preview, discard | No |
-| 03 | `03_atomic_push.yml` | Full config replace via edit-config | Dry run: No<br>Live: Yes |
-
-**Usage examples:**
-
-```bash
-# Precheck
-ansible-playbook -i inventory/hosts.yml playbooks/01_precheck.yml
-
-# Capture baseline (XML)
-ansible-playbook -i inventory/hosts.yml playbooks/02_baseline_capture.yml
-
-# Preview (safe dry run)
-ansible-playbook -i inventory/hosts.yml playbooks/04_diff_preview.yml
-
-# Push (dry run - default)
-ansible-playbook -i inventory/hosts.yml playbooks/03_atomic_push.yml
-
-# Push (live commit)
-ansible-playbook -i inventory/hosts.yml playbooks/03_atomic_push.yml -e dry_run=false
-```
-
----
-
-## Multi-Device Usage
-
-The default lab pod inventory contains a single switch (`c9300x-lab`), so playbooks automatically run against that host. If you extend the inventory with additional devices, target a subset with `--limit`:
-
-```bash
-# Single device
-ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml --limit c9300x-lab
-
-# Device group
-ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml --limit access_switches
-
-# Multiple specific devices
-ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml --limit "c9300x-lab,switch-02"
-```
-
-Without `--limit`, playbooks run against all devices in the `iosxe` group.
-
----
-
-## Technical Details
-
-### How config-ios-cli-trans Works
-
-The `config-ios-cli-trans` RPC from the `Cisco-IOS-XE-cli-rpc` YANG model accepts a `<do-commit>` leaf that controls whether the RPC auto-commits to running:
-
-| `<do-commit>` Value | Candidate Datastore | Running Config | Use Case |
-|---------------------|---------------------|----------------|----------|
-| `true` (default if omitted) | Written | Also written | Quick one-shot apply |
-| `false` | Written | Untouched | Safe stage → diff → commit pattern |
-
-All playbooks in this toolkit use `<do-commit>false</do-commit>` so that:
-
-- Preview and dry-run can safely stage → diff → discard
-- Live push explicitly commits only after showing the diff
-
-### IOS XE 26.1.1+ Benefits
-
-- **Crypto certificates abstracted** — No filtering or special handling needed during baseline capture
-- **Candidate datastore** — Enables safe stage-then-commit workflows
-- **Atomic config** — Ensures all-or-nothing config replacement with automatic rollback on failure
-
----
+| 07 | `07_diff_preview_cli.yml` | Stage to candidate via CLI-RPC, diff, discard | No |
+| 06 | `06_atomic_push_cli.yml` | Full config replace via CLI-RPC | **Dry run: No** / Live: **Yes** |
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
+| Problem | Solution |
+|---|---|
 | NETCONF connection refused | Verify `netconf-yang` is enabled; check port 830 reachability |
-| NETCONF connection timeout | Increase `command_timeout` in ansible.cfg; verify network path to the switch |
+| NETCONF connection timeout | Increase `command_timeout` in `ansible.cfg`; verify network path to the switch |
 | Precheck fails on candidate | Run `netconf-yang feature candidate-datastore` on device; wait 60s for NETCONF restart |
 | Precheck fails on atomic config | Run `yang-interfaces feature atomic-config` on device |
-| "Sync is in progress" error | Device busy with previous RPC — wait 30s and retry |
-| `get-modelled-config-clis` slow | Normal — this RPC is heavy. Allow 30–60s per device |
-| Diff shows unexpected reordering | YANG normalization reorders some CLI — focus on +/- lines |
+| "Sync is in progress" error | Device busy with previous RPC. Wait 30s and retry |
+| `get-modelled-config-clis` slow | Normal. This RPC is heavy. Allow 30-60s per device |
+| Diff shows unexpected reordering | YANG normalization reorders some CLI. Focus on `+`/`-` lines |
 | Diff shows no changes | Desired config already matches running |
 | Push commit fails | Running config is untouched (atomic rollback). Check error message and fix desired config |
 
----
+## Reference
 
-## Additional Exercises
-
-### Exercise 1: Multi-Interface Configuration
-
-Edit your desired config to add descriptions and VLANs to multiple interfaces, then preview and push the changes.
-
-### Exercise 2: VLAN Management
-
-Add new VLANs (e.g., VLAN 200, 300) to the desired config. Preview to see them staged, then commit.
-
-### Exercise 3: Rollback Test
-
-1. Capture a baseline
-2. Make and commit changes
-3. Restore the baseline by copying `baseline.cfg` over `desired/<hostname>.cfg`
-4. Preview and push to roll back
-
-### Exercise 4: Error Handling
-
-Intentionally create an invalid configuration (e.g., reference a non-existent VLAN in an interface config). Attempt to push and observe the atomic rollback behavior.
-
----
-
-## Reference Links
-
-### Official Documentation
-
-- [Cisco IOS XE Programmability Guide — Atomic Config Replace](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/xe-26/prog-xe-26-book.html)
+- [Cisco IOS XE 26.1 Programmability Guide](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/26x/26x-programmability-cg.html)
 - YANG model: `Cisco-IOS-XE-cli-rpc` (revision 2026-02-01, v1.3.0)
+- Detailed walkthrough: `docs/quickstart.md` (in the lab repo)
+- Jinja pod generation workflow: `docs/jinja-pod-workflow.md` (in the lab repo)
 
-### GitHub Repositories
-
-- **This Ansible framework**: [jeremycohoe/iosxe-atomic-netconf-ansible](https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible)
-- **Detailed walkthrough**: [docs/quickstart.md](https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible/blob/main/atomic-netconf-ansible/docs/quickstart.md)
-- **Python-based ACR examples**: [jeremycohoe/cisco-ios-xe-atomic-config-replace](https://github.com/jeremycohoe/cisco-ios-xe-atomic-config-replace)
-
-### Alternative Approaches
-
-If you prefer Python-based workflows, see the older Python ACR examples preserved in this repository:
-
-- [atomic-operations/old-python-based-content/](../../atomic-operations/old-python-based-content/)
-
-### PyATS Resources
-
-- [PyATS Hands-On Learning](https://developer.cisco.com/docs/pyats/hands-on-learning/)
-
----
-
-## Summary
-
-In this module, you've learned how to:
-
-✅ Use Ansible + NETCONF for atomic configuration replacement  
-✅ Stage configurations to candidate datastore for safe preview  
-✅ Generate diffs to see exactly what will change before committing  
-✅ Perform atomic commits with automatic rollback on failure  
-✅ Capture before/after snapshots for audit trails  
-✅ Work with both CLI-RPC and YANG/XML workflows  
-
-This Ansible-based approach provides a production-ready framework for managing IOS XE device configurations at scale with safety, auditability, and repeatability.
-
----
-
-## Lab Transition
-
-Before moving to the next Day 1 module:
-
-1. Return to your lab VM shell if you are still on switch CLI.
-2. Keep your Ansible working directory note handy for later reuse.
-3. Confirm any long-running terminal output is stopped before opening the next workflow.
-
-## Next Steps
-
-✅ Completed: Day 1 - Atomic Config Replace
-
-**Continue with Day 1:**
-
-➡️ [Day 2: Device Monitoring](../day-2/index.md) - OpenTelemetry + Splunk
-
-**Or return to:**
-
-- [Terraform + NETCONF](terraform-netconf.md)
-- [PyATS Testing](pyats-testing.md)
-- [Day 1 Overview](index.md)
+Congrats! You've completed the Atomic Config Replace Workshop!

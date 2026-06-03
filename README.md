@@ -77,7 +77,6 @@ This lab follows a structured "Day 0 to Day N" approach, mirroring real-world ne
 - Atomic Config Replace (NETCONF)
 - Terraform + NETCONF (Infrastructure as Code)
 - Ansible + gNMI (Configuration Automation)
-- PyATS (Automated Testing)
 
 ### [Day 2 - Device Monitoring](day-2/index.md)
 **Observability & Telemetry**
@@ -119,7 +118,6 @@ For the best learning experience, follow this sequence:
 Prefer to explore specific topics? Jump directly to:
 
 - **Configuration Management**: [Terraform](day-1/terraform-netconf.md) or [Ansible](day-1/ansible-gnmi.md)
-- **Testing**: [PyATS](day-1/pyats-testing.md)
 - **Monitoring**: [OpenTelemetry + Splunk](day-2/opentelemetry-splunk.md)
 - **Edge Computing**: [Application Hosting](day-n/app-hosting.md)
 

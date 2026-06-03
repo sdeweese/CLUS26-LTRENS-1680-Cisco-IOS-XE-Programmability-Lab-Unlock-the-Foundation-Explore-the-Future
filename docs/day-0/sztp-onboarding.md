@@ -384,7 +384,7 @@ ping bootstrap.example.com
 
 - [IETF RFC 8572 - Secure Zero Touch Provisioning](https://datatracker.ietf.org/doc/html/rfc8572)
 - [Cisco blog - Secure ZTP overview](https://blogs.cisco.com/developer/secureztp01)
-- [Cisco SZTP Documentation](https://www.cisco.com/c/en/us/support/docs/switches/catalyst-9000/sztp-guide.html)
+- [Cisco IOS XE Programmability Configuration Guide — Secure ZTP](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/26x/26x-programmability-cg.html)
 - [SZTP Scripts Repository](https://github.com/sdeweese/sztp)
 - [SZTP Scripts README](../resources/sztp/README.md)
 - [MASA OV generation script (bulk)](../resources/sztp/run_bulk_vouchers.sh)
@@ -399,8 +399,6 @@ Use the Cisco Live Session Catalog and search by session ID/title (availability 
 - DEVNET-1232: Swagger Into RESTCONF: Navigating the IOS XE API and DevNet Sandboxes
 - BRKOPS-2594: Navigating the SNMP-Free Journey with Model-Driven Telemetry
 - DEVWKS-2810: The Atomic Shift (NETCONF/YANG and ACR workflow)
-
-For the full curated IOS XE session list used by this lab, see: [Cisco Live IOS XE sessions](https://github.com/sdeweese/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/blob/main/CLUS26-IOS-XE-Sessions.md)
 
 ---
 

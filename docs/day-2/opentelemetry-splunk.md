@@ -1,19 +1,17 @@
-# OpenTelemetry + Splunk (OTel-Only Guide)
+# OpenTelemetry + Splunk Guide
 
-## Day 2 Device Monitoring with OpenTelemetry and Splunk
+## Day 2: Device Monitoring with OpenTelemetry and Splunk
 
 This guide is intentionally focused on one pipeline:
 
 Cisco IOS XE -> OpenTelemetry Collector (`cisco_telemetry` receiver) -> Splunk HEC -> Splunk dashboards
 
-It does not cover alternate collectors or time-series stacks.
-
 ## Day 2 Feature Context (Short History)
 
 This lab sits on the progression of IOS XE model-driven telemetry:
 
-1. Device exports model-based telemetry streams over gRPC.
-2. OpenTelemetry collector normalizes and forwards data.
+1. The device exports model-based telemetry streams over gRPC.
+2. An OpenTelemetry collector normalizes and forwards the data.
 3. Splunk ingests the stream through HEC.
 4. Splunk TA dashboards provide the operational view used in this session.
 
@@ -23,67 +21,28 @@ In short: Day 2 takes model-driven telemetry and turns it into dashboard-ready o
 
 These three terms are different parts of the same solution:
 
-1. Splunk (platform)
-  - The full Splunk service and web UI where you search data and view dashboards.
-  - In this lab, you access it from Splunk Web (typically port `8000`, or forwarded `8001` in remote pod environments).
+1. **Splunk (platform)** — the full Splunk service and web UI where data is searched and dashboards are viewed. Splunk Web is on port `8000` (or a forwarded `8001` in remote pods).
+2. **Splunk HEC (HTTP Event Collector)** — the ingestion API endpoint the OTel collector exporter writes into. HEC listens on `8088` and uses a token (`cisco-mdt-token`). HEC is for ingest, not viewing.
+3. **Splunk TA (Technology Add-on)** — a Splunk app package that provides field mappings, saved searches, and dashboards for a specific data domain. The Cisco MDT TA visualizes telemetry once it is indexed.
 
-2. Splunk HEC (HTTP Event Collector)
-  - The ingestion API endpoint used by the OTel collector exporter to send telemetry into Splunk.
-  - In this lab, HEC listens on port `8088` and uses a token (for example `cisco-mdt-token`).
-  - HEC is for data ingest, not dashboard viewing.
+How they fit together in the running lab:
 
-3. Splunk TA (Technology Add-on)
-  - A Splunk app package that provides field mappings, saved searches, dashboards, and content for a specific data domain.
-  - In this lab, the Cisco MDT TA content is used to visualize telemetry once data is already indexed in Splunk.
+- OTel collector exports telemetry → Splunk HEC.
+- HEC writes into Splunk index `cisco_mdt`.
+- Splunk TA dashboards read that indexed data for visualization.
 
-How they work together in this lab:
+## Lab Values (Pre-Configured for You)
 
-- OTel collector exports telemetry -> Splunk HEC
-- HEC writes data into Splunk index (`cisco_mdt`)
-- Splunk TA dashboards read that indexed data for visualization
-
-## Feedback-Aligned Focus for This Lab
-
-This page is optimized for the exact demo flow requested:
-
-1. Validate OTel collector and Splunk are running.
-2. Review the script that applies the full IOS XE subscription set (already run for students).
-3. Confirm data is flowing from switch -> collector -> Splunk.
-4. Show dashboards in Splunk.
-
-Reference links used in this update:
-
-- OTel contrib YANG gRPC receiver: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/yanggrpcreceiver
-- Receiver config/README: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/yanggrpcreceiver/README.md
-- Receiver implementation discussion: https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/44015
-- Splunk TA (Cisco MDT): https://splunkbase.splunk.com/app/7125
-
-## Lab Values Used in This Guide
-
-- IOS XE device IP: `10.1.1.15`
-- OTel collector host IP: `10.1.1.3`
-- Telemetry receiver port: `57500`
-- Splunk Web: `http://localhost:8000`
-- Splunk HEC: `https://localhost:8088`
-
-## TA Quick Path (What to Show First)
-
-Use this sequence during demos to prove switch-to-Splunk telemetry quickly:
-
-1. Show the script used to enable all subscriptions and note it is already applied in this lab image.
-2. Validate OTel collector and Splunk are both running.
-3. Focus on Splunk TA dashboards as the source of truth for indexed metrics.
-4. Confirm end-to-end data flow from `10.1.1.15` to Splunk.
-5. Open Splunk dashboards and verify live updates.
-
-## What You Will Build
-
-By the end of this lab you will:
-
-1. Run Splunk and an OTel collector that can ingest Cisco IOS XE gRPC dial-out telemetry.
-2. Configure IOS XE telemetry subscriptions to send `encode-kvgpb` data to the collector.
-3. Validate end-to-end flow from switch to Splunk.
-4. Import and use prebuilt Splunk dashboards for telemetry analysis.
+| Item | Value |
+|---|---|
+| IOS XE device IP | `10.1.1.15` |
+| OTel collector host IP | `10.1.1.3` |
+| Telemetry receiver port | `57500` |
+| Splunk Web | `http://localhost:8000` (or forwarded `8001`) |
+| Splunk HEC | `https://localhost:8088` |
+| HEC token | `cisco-mdt-token` |
+| Metrics index | `cisco_mdt` |
+| Splunk login | `admin` / `Cisco123` |
 
 ## Architecture
 
@@ -97,11 +56,16 @@ flowchart LR
 
 ## Upstream Reference Implementation
 
-This Day 2 workflow aligns with Jeremy Cohoe's receiver project:
+This Day 2 workflow is built on the upstream OpenTelemetry Cisco IOS XE
+telemetry receiver and the Splunk distribution of the OTel collector:
 
-- https://github.com/jeremycohoe/otel-grpc-cisco-receiver
+- OTel contrib YANG gRPC receiver (the `cisco_telemetry`-style decoder): <https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/yanggrpcreceiver>
+- Splunk distribution of the OpenTelemetry collector: <https://github.com/signalfx/splunk-otel-collector>
+- Cisco IOS XE Model-Driven Telemetry reference (subscriptions, YANG paths): <https://github.com/jeremycohoe/cisco-ios-xe-mdt>
 
-Key files in that repo used by this guide:
+File types that drive what is running in the lab pod (delivered pre-staged on
+the collector host — you don't need to open them, but they’re named here so you
+recognize them in the slide deck):
 
 - `docker-compose.yaml`
 - `docker-collector-config.yaml`
@@ -113,109 +77,22 @@ Key files in that repo used by this guide:
 - `configure-mdt.py`
 - `scripts/fetch-yang-models.sh`
 
-## Prerequisites
+## What Was Pre-Built for You
 
-1. Docker and Docker Compose available on the host.
-2. Reachability between IOS XE device and OTel collector host on telemetry port `57500`.
-3. IOS XE device with telemetry support (17.x+ recommended).
-4. Lab access to the switch console/CLI.
+The pod was bootstrapped before lab start with the following:
 
-## Step 1: Change to the OTel Lab Directory
+1. Docker and Docker Compose installed on the collector host.
+2. The Splunk container and OTel collector container started via `docker compose up -d`.
+3. Splunk dashboards imported via `./scripts/import-dashboards.sh`.
+4. IOS XE YANG models pulled via `./scripts/fetch-yang-models.sh` for richer metadata.
+5. The full IOS XE subscription bundle (`c9300x-mdt-subscriptions.cfg`) applied to `10.1.1.15` via `configure-mdt.py`.
 
-```bash
-cd otel-grpc-cisco-receiver
-```
+You do **not** need to re-run any of these.
 
-## Step 2: Start Splunk + OTel Collector
+## Example: A Single Telemetry Subscription
 
-Use either helper scripts or Compose.
-
-### Option A (helper scripts)
-
-```bash
-./start-splunk.sh
-./start-otel.sh
-./scripts/import-dashboards.sh
-```
-
-### Option B (Compose)
-
-```bash
-docker compose up -d
-```
-
-With the default Compose setup, you should have:
-
-1. OTel collector listening on `57500` for telemetry.
-2. OTel self-metrics endpoint on `8888`.
-3. Splunk Web on `8000`.
-4. Splunk HEC on `8088`.
-
-Default lab credentials and HEC values (as documented in the upstream repo):
-
-- Splunk user: `admin`
-- Splunk password: `Cisco123`
-- HEC token: `cisco-mdt-token`
-- Metrics index: `cisco_mdt`
-
-### Port-forwarding note for remote lab environments
-
-If you are running in a remote pod/VM workspace with forwarded ports:
-
-1. At the top of the terminal window, click the `PORTS` tab.
-2. Delete all existing forwarded ports.
-3. Click `Forward a Port`, enter `8000`, and press Enter.
-4. The environment will auto-generate a localhost URL (typically `localhost:8001`).
-5. Open that link in a browser (you may need `Cmd+Click`).
-6. Sign in to Splunk using lab credentials.
-
-![Forward Splunk port from PORTS tab](../images/day2/day2-add-splunk-port.png)
-
-Use this when direct access to host port `8000` is not available from your laptop.
-
-## Step 2a: Verify Containers with `docker ps`
-
-After startup, verify both Splunk and OTel containers are running:
-
-```bash
-docker ps
-```
-
-Look for:
-
-1. A Splunk container in `Up` state.
-2. Port mapping that includes `8000->8000/tcp` (Splunk Web).
-3. Port mapping that includes `8088->8088/tcp` (Splunk HEC).
-4. OTel collector container in `Up` state.
-
-![docker ps output showing Splunk and mapped ports](../images/day2/day2-docker-ps.png)
-
-### Access Splunk Web on Port 8000
-
-Once `docker ps` shows Splunk mapped to port `8000`, open Splunk Web:
-
-- On the same host: `http://localhost:8000`
-- From another machine: `http://<docker-host-ip>:8000`
-
-Login with the default lab credentials from above (`admin` / `Cisco123`), then proceed to dashboard validation.
-
-If your environment requires forwarded access, use the forwarded `8001` URL instead.
-
-## Step 3: (Optional but Recommended) Pull IOS XE YANG Models
-
-The receiver works without downloaded models, but model files improve metadata quality and key propagation for broader path coverage.
-
-```bash
-./scripts/fetch-yang-models.sh
-```
-
-To target a specific IOS XE release, use the script argument shown in the upstream README.
-
-## Step 4: Configure IOS XE Telemetry to OTel Collector
-
-Set subscriptions to push to collector `10.1.1.3:57500` using `grpc-tcp` (or `grpc-tls` if TLS is enabled in collector config).
-
-### Minimal example subscription
+This is one of the subscriptions already configured on the switch. Read it to
+see the shape of model-driven telemetry config:
 
 ```text
 telemetry ietf subscription 101
@@ -227,28 +104,97 @@ telemetry ietf subscription 101
  receiver ip address 10.1.1.3 57500 protocol grpc-tcp
 ```
 
-### Full subscription set (already enabled for students)
+What to notice:
 
-For richer dashboards, this lab uses the predefined subscription bundle:
+- `encode-kvgpb` is Key-Value Google Protocol Buffers — the wire format the OTel `cisco_telemetry` receiver decodes.
+- `stream yang-push` + `update-policy periodic 30000` = push every 30 seconds.
+- The `receiver` line is where the switch dials out to the OTel collector at `10.1.1.3:57500`.
 
-- `c9300x-mdt-subscriptions.cfg`
+### Same Subscription, Two Interfaces (from TECOPS-2314)
 
-The automation script used to apply that full set is:
+The TECOPS-2314 deck shows that every telemetry subscription has both a CLI and
+a YANG (NETCONF/RESTCONF/gNMI) representation — they configure the exact same
+`Cisco-IOS-XE-mdt-cfg` operational data:
 
-- `configure-mdt.py`
+| Via CLI | Via YANG (`Cisco-IOS-XE-mdt-cfg`) |
+|---|---|
+| `telemetry ietf subscription 101` | `mdt-config-data` → `mdt-subscription` → `subscription-id: 101` |
+| `encoding encode-kvgpb` | `base.encoding: encode-kvgpb` |
+| `stream yang-push` | `base.stream: yang-push` |
+| `update-policy periodic 6000` | `base.period: 6000` |
+| `filter xpath /memory-ios-xe-oper:memory-statistics/...` | `base.xpath: /memory-ios-xe-oper:memory-statistics/...` |
+| `receiver ip address 10.1.1.3 57500 protocol grpc-tcp` | `mdt-receivers.address: 10.1.1.3`, `port: 57500` |
 
-This step has already been completed for students before lab start.
+This is why the same lab works whether subscriptions are pushed via raw CLI,
+NETCONF (the atomic-config Day 1 module), Ansible, Terraform, or gNMI — the
+device stores it once and streams identically to the OTel collector.
 
-If you need to re-run it for troubleshooting, use:
+### Advanced Pattern: EEM-Driven On-Change Telemetry
 
-```bash
-pip install netmiko
-python3 configure-mdt.py --host 10.1.1.15 --collector 10.1.1.3
+Beyond periodic `yang-push`, IOS XE can stream **event-driven** telemetry via
+the `Cisco-IOS-XE-ios-events-oper` model. An EEM applet calls
+`action export-to-telemetry`, which publishes a YANG notification on the
+`yang-notif-native` stream — same OTel pipeline, but on-change instead of
+periodic:
+
+```text
+telemetry ietf subscription 12123
+ encoding encode-kvgpb
+ filter xpath /ios-events-ios-xe-oper:eem-event-publish
+ stream yang-notif-native
+ update-policy on-change
+ receiver ip address 10.1.1.3 57500 protocol grpc-tcp
+!
+event manager applet catchall
+ event cli pattern ".*" sync no skip no
+ action 1 syslog msg "$_cli_msg"
+ action 2 export-to-telemetry $_cli_msg
 ```
 
-## Step 5: Verify Data Flow
+Use case from the deck: capture every CLI typed on a VTY and stream it as a
+structured telemetry event to Splunk for audit and change-tracking — no SNMP
+trap, no syslog parser, no polling.
 
-## On the switch
+## Splunk Dashboards (The Main Event)
+
+Open Splunk Web and browse the Cisco MDT app. These dashboard categories are
+pre-populated from the live subscription bundle:
+
+- Overview
+- Infrastructure
+- Network
+- Routing
+- Power and PoE
+- Security
+- Telemetry Health
+
+### Subscription → Dashboard Mapping
+
+| Subscription Source | Example Path / Scope | Dashboard Area |
+|---|---|---|
+| Single sample subscription (`101`) | `/interfaces-ios-xe-oper:interfaces/interface/statistics` | Network, Infrastructure, Overview |
+| Full bundle (`c9300x-mdt-subscriptions.cfg`) | Multiple platform and interface paths | Overview, Network, Routing, Power and PoE, Security, Telemetry Health |
+
+### Port-Forwarding Note for Remote Lab Environments
+
+If your pod runs in a remote workspace with forwarded ports:
+
+1. At the top of the terminal window, click the **PORTS** tab.
+2. Delete all existing forwarded ports.
+3. Click **Forward a Port**, enter `8000`, press Enter.
+4. The environment auto-generates a localhost URL (typically `localhost:8001`).
+5. Open it in a browser (you may need `Cmd+Click`).
+6. Sign in as `admin` / `Cisco123`.
+
+![Forward Splunk port from PORTS tab](../images/day2/day2-add-splunk-port.png)
+
+## Reference Verification Commands (For Your Notes)
+
+These are the commands the lab builders use to confirm the pipeline is healthy.
+You don't need to run them — they're here so you recognize them when you see
+them in the slide deck or the upstream repo.
+
+On the switch:
 
 ```text
 show telemetry ietf subscription all
@@ -256,19 +202,13 @@ show telemetry ietf subscription 101 detail
 show telemetry ietf subscription 101 receiver
 ```
 
-Confirm subscriptions are valid and receiver state is healthy.
-
-## On the collector host
-
-Check collector self-metrics for receiver activity:
+On the collector host:
 
 ```bash
 curl -s http://localhost:8888/metrics | grep cisco_telemetry
 ```
 
-You should see counters increasing (messages/bytes/connections).
-
-## Against Splunk search API
+Against the Splunk search API:
 
 ```bash
 curl -sk -u admin:Cisco123 \
@@ -277,103 +217,25 @@ curl -sk -u admin:Cisco123 \
   -d output_mode=json -d exec_mode=oneshot
 ```
 
-A non-zero count indicates metrics are indexed.
+## Model Coverage Notes (Why Dashboards Populate)
 
-## Step 6: Use Splunk Dashboards
+The link between model-driven telemetry and ready-to-use dashboards depends on
+four things, all already in place in this lab:
 
-1. Open Splunk Web.
-2. Confirm dashboards are imported (or run `./scripts/import-dashboards.sh`).
-3. Confirm Splunk TA content is available (Cisco MDT app/context).
-4. Validate key dashboard categories:
-   - Overview
-   - Infrastructure
-   - Network
-   - Routing
-   - Power and PoE
-   - Security
-   - Telemetry Health
-
-## Telemetry Subscription to Dashboard Mapping
-
-Use this mapping to connect subscription intent to Splunk dashboard outcomes.
-
-| Subscription Source | Example Path / Scope | Expected Dashboard Area | Quick Verification |
-|---|---|---|---|
-| `telemetry ietf subscription 101` (sample in this guide) | `/interfaces-ios-xe-oper:interfaces/interface/statistics` | Network, Infrastructure, Overview | `show telemetry ietf subscription 101 detail` + Splunk metric search count in `cisco_mdt` |
-| Full bundle from `c9300x-mdt-subscriptions.cfg` | Multiple platform and interface paths | Overview, Network, Routing, Power and PoE, Security, Telemetry Health | `show telemetry ietf subscription all` + dashboard panels populated across categories |
-| Script-applied full set via `configure-mdt.py` | Same as bundle above, programmatically applied | Same as bundle above | Re-run dashboard checks after script confirms apply success |
-
-Interpretation guidance:
-
-1. If subscriptions are healthy on-device but dashboards are sparse, validate receiver/exporter counters and YANG model availability.
-2. If only interface charts populate, the full bundle may not be fully applied.
-3. Use this mapping during demos to explain why specific dashboard panels are populated.
-
-## Model Coverage Notes (for Dashboard Value)
-
-To highlight YANG model innovation and why dashboards populate correctly:
-
-1. Ensure full subscription coverage is enabled (not just a single sample path).
-2. Pull YANG models with `./scripts/fetch-yang-models.sh` when possible.
-3. Verify collector metrics include active receiver processing.
-4. Verify Splunk index `cisco_mdt` has current metric names and values.
-
-This is the practical link between model-driven telemetry and ready-to-use dashboards.
-
-## Troubleshooting (OTel + Splunk Only)
-
-### No telemetry reaching collector
-
-1. Verify switch receiver IP/port/protocol in subscription config.
-2. Confirm collector is listening on `57500`.
-3. Validate routing/firewall between switch and collector host.
-
-### Collector sees traffic but Splunk is empty
-
-1. Verify `splunk_hec` endpoint/token/index in collector config.
-2. Confirm Splunk HEC service is enabled.
-3. Check collector logs for exporter retry/drop messages.
-
-### Dashboard panels show sparse dimensions
-
-1. Add/download YANG models and point `models_dir` appropriately.
-2. Re-check configured subscription paths versus dashboard expectations.
-
-### TLS/mTLS issues
-
-1. Use `grpc-tls` on switch only when collector TLS is configured.
-2. Validate certificate chain/trustpoint setup.
-3. Align switch trust settings with collector `tls` server settings.
-
-## Recommended Operational Checks
-
-Run these checks each time you update subscriptions:
-
-1. `show telemetry ietf subscription all` on switch.
-2. `curl http://localhost:8888/metrics | grep cisco_telemetry` on collector.
-3. Splunk search proving metric name cardinality in `cisco_mdt` index.
-4. Dashboard panel refresh with current time range.
+1. Full subscription coverage (the bundle, not just a single sample path).
+2. YANG models cached locally on the collector for metadata enrichment.
+3. Active receiver processing visible in collector self-metrics.
+4. Current metric names and values in the Splunk `cisco_mdt` index.
 
 ## References
 
-- OTel Cisco telemetry receiver project:
-  - https://github.com/jeremycohoe/otel-grpc-cisco-receiver
-- Splunk setup details in upstream repo:
-  - https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/SPLUNK-SETUP.md
-- OTel collector config reference in upstream repo:
-  - https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/CONFIG.md
-- Security and TLS reference in upstream repo:
-  - https://github.com/jeremycohoe/otel-grpc-cisco-receiver/blob/main/docs/SECURITY.md
-
----
-
-## Lab Transition
-
-Wrapping up Day 2:
-
-1. Return to your lab VM terminal and keep Splunk/collector status noted.
-2. If port forwarding was enabled, close it when no longer needed.
-3. Confirm telemetry verification commands completed successfully before switching modules.
+- OTel contrib YANG gRPC receiver (decodes IOS XE kvGPB MDT): <https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/yanggrpcreceiver>
+- Splunk distribution of the OpenTelemetry collector: <https://github.com/signalfx/splunk-otel-collector>
+- Splunk HEC exporter (used in this pipeline): <https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/splunkhecexporter>
+- Splunk Add-On for OpenTelemetry Collector: <https://splunkbase.splunk.com/app/7125>
+- Cisco IOS XE Model-Driven Telemetry reference: <https://github.com/jeremycohoe/cisco-ios-xe-mdt>
+- Cisco IOS XE Programmability Configuration Guide (26.x): <https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/26x/26x-programmability-cg.html>
+- TECOPS-2314 Cisco Live deck — *Programmability and Automation with Cisco IOS XE* (MDT subscription CLI↔YANG mapping, EEM event-publish telemetry): [TECOPS-2314 slides (PDF)](../resources/slides/TECOPS-2314-Programmability-and-Automation-with-Cisco-IOS-XE.pdf)
 
 ## Next Step
 
