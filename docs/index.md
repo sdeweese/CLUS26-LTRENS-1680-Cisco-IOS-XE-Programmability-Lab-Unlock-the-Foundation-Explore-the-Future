@@ -6,8 +6,6 @@
 
 This lab guide serves as the comprehensive resource for the Cisco Live US (Las Vegas) **Programmability and Automation Lab with Catalyst IOS XE Platforms** - Session **LTRENS-1680**.
 
----
-
 ## Lab Introduction
 
 Welcome to the IOS XE Programmability Lab! This hands-on lab takes you through the complete lifecycle of modern network device management, from initial onboarding through ongoing operations and optimization.
@@ -90,8 +88,6 @@ flowchart LR
    Credentials: `admin` / `Cisco123`
 
 5. **You're ready!** Once connected via SSH and telnet, you can proceed with the lab modules.
-
----
 
 ## Learning Path
 

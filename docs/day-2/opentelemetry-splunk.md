@@ -188,7 +188,9 @@ If your pod runs in a remote workspace with forwarded ports:
 
 ![Forward Splunk port from PORTS tab](../images/day2/day2-add-splunk-port.png)
 
-## Reference Verification Commands (For Your Notes)
+Explore the dashboards in Splunk!
+
+## Reference Verification Commands 
 
 These are the commands the lab builders use to confirm the pipeline is healthy.
 You don't need to run them — they're here so you recognize them when you see

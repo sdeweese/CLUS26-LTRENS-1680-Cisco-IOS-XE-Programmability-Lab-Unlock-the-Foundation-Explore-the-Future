@@ -230,8 +230,8 @@ Ensure you are in the correct directory and make the script executable.
 
 ```bash
 cd ~/DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace/atomic-netconf-ansible/
-# Make the script executable (this has been done for you)
-# chmod +x apply-config-day.sh
+# Make the script executable
+chmod +x apply-config-day.sh
 ```
 
 ### What you'll see when you run it
