@@ -1,1 +1,0 @@
-scp auto@128.107.223.248:/home/auto/powershell_scripts/2026/masa/{README.md,run_bulk_vouchers.sh,masa_get_voucher.py,serials.txt,pod-devices-table.md} /Users/sdeweese/github/CLUS26-LTRENS-1680-Cisco-IOS-XE-Programmability-Lab-Unlock-the-Foundation-Explore-the-Future/sztp
