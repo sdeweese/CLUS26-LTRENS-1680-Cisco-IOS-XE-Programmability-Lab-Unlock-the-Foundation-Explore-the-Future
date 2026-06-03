@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://sdeweese.github.io/CLUS26-LTRENS-1680/day-1/atomic-operations/">
       
       
-        <link rel="prev" href="../pyats-testing/">
+        <link rel="prev" href="../terraform-netconf/">
       
       
         <link rel="next" href="../../day-2/">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#atomic-config-replace-acr-with-ansible" class="md-skip">
+        <a href="#the-atomic-shift-modernizing-your-network-management-using-atomic-configuration-replace-acr" class="md-skip">
           Skip to content
         </a>
       
@@ -757,34 +757,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../pyats-testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    PyATS Testing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -848,72 +820,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Introduction
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Introduction">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-ansible-netconf" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why Ansible + NETCONF?
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#two-parallel-workflows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Two Parallel Workflows
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#start-here-pick-one-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Start Here: Pick One Workflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture-overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture Overview
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Architecture Overview">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
         How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
       
     </span>
   </a>
@@ -924,7 +846,7 @@
   <a href="#atomic-workflow-step-by-step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Atomic Workflow — Step by Step
+        Atomic Workflow Step by Step
       
     </span>
   </a>
@@ -982,38 +904,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#lab-environment" class="md-nav__link">
+  <a href="#lab-environment-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Lab Environment
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-change-to-the-acr-lab-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Change to the ACR Lab Directory
+        Lab Environment Setup
       
     </span>
   </a>
@@ -1021,32 +915,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-verify-ansible" class="md-nav__link">
+  <a href="#network-connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Verify Ansible
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-install-required-ansible-collections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Install Required Ansible Collections
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-verify-python-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Verify Python Dependencies
+        Network Connectivity
       
     </span>
   </a>
@@ -1070,22 +942,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start-guide" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start Guide
+        Quick Start
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Quick Start Guide">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#day-0-day-1-day-2-day-0-cycle-with-apply-config-daysh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Day 0 → Day 1 → Day 2 → Day 0 Cycle with apply-config-day.sh
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Day 0 → Day 1 → Day 2 → Day 0 Cycle with apply-config-day.sh">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-0-review-inventory-and-precheck-files" class="md-nav__link">
+  <a href="#one-time-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 0: Review Inventory and Precheck Files
+        One-time setup
       
     </span>
   </a>
@@ -1093,10 +976,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-1-verify-device-readiness" class="md-nav__link">
+  <a href="#what-youll-see-when-you-run-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Verify Device Readiness
+        What you'll see when you run it
       
     </span>
   </a>
@@ -1104,10 +987,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-capture-baseline-configuration" class="md-nav__link">
+  <a href="#walk-the-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Capture Baseline Configuration
+        Walk the lifecycle
       
     </span>
   </a>
@@ -1115,10 +998,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-edit-desired-configuration" class="md-nav__link">
+  <a href="#useful-flags" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Edit Desired Configuration
+        Useful flags
       
     </span>
   </a>
@@ -1126,10 +1009,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-4-preview-changes-safe-dry-run" class="md-nav__link">
+  <a href="#verify-between-stages-optional-but-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Preview Changes (Safe Dry Run)
+        Verify between stages (optional but recommended)
       
     </span>
   </a>
@@ -1137,10 +1020,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-5-test-push-with-dry-run" class="md-nav__link">
+  <a href="#if-something-goes-wrong" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 5: Test Push with Dry Run
+        If something goes wrong
       
     </span>
   </a>
@@ -1148,21 +1031,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-6-live-push-commit-changes" class="md-nav__link">
+  <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 6: Live Push (Commit Changes)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-7-verify-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 7: Verify Changes
+        Tips
       
     </span>
   </a>
@@ -1197,67 +1069,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#yangxml-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        YANG/XML Workflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-device-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multi-Device Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Technical Details
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Technical Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#how-config-ios-cli-trans-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How config-ios-cli-trans Works
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ios-xe-2611-benefits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IOS XE 26.1.1+ Benefits
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1275,154 +1086,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#additional-exercises" class="md-nav__link">
+  <a href="#reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Additional Exercises
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Additional Exercises">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#exercise-1-multi-interface-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exercise 1: Multi-Interface Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exercise-2-vlan-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exercise 2: VLAN Management
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exercise-3-rollback-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exercise 3: Rollback Test
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#exercise-4-error-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exercise 4: Error Handling
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reference-links" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reference Links
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Reference Links">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#official-documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Official Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#github-repositories" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GitHub Repositories
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#alternative-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternative Approaches
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pyats-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PyATS Resources
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lab-transition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lab Transition
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Reference
       
     </span>
   </a>
@@ -1914,70 +1581,20 @@
   
 
 
-<h1 id="atomic-config-replace-acr-with-ansible">Atomic Config Replace (ACR) with Ansible<a class="headerlink" href="#atomic-config-replace-acr-with-ansible" title="Permanent link">&para;</a></h1>
-<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
-<p>Atomic Config Replace (ACR) is a powerful configuration management approach that replaces the entire device configuration in a single atomic transaction. This lab uses an <strong>Ansible-based framework</strong> that runs over NETCONF to provide safe, repeatable, and auditable configuration management for Cisco IOS XE devices.</p>
-<h3 id="why-ansible-netconf">Why Ansible + NETCONF?<a class="headerlink" href="#why-ansible-netconf" title="Permanent link">&para;</a></h3>
-<p>Unlike traditional CLI-based configuration methods that apply changes line-by-line, this framework provides:</p>
+<h1 id="the-atomic-shift-modernizing-your-network-management-using-atomic-configuration-replace-acr">The Atomic Shift: Modernizing Your Network Management using Atomic Configuration Replace (ACR)<a class="headerlink" href="#the-atomic-shift-modernizing-your-network-management-using-atomic-configuration-replace-acr" title="Permanent link">&para;</a></h1>
+<p>This workshop is designed for the Cisco Live Las Vegas 2026 DEVWKS-2810 workshop!</p>
+<p>To learn more about Atomic Configuration replace and for the device credentials to access this lab environment, please see your instructor.</p>
+<p>Ansible playbooks for performing <strong>atomic config replace</strong> on Cisco IOS XE devices running <strong>26.1.1+</strong>. Supports two parallel workflows that both run over NETCONF:</p>
 <ul>
-<li><strong>Atomic operations</strong>: All changes succeed together or fail together (no partial configs)</li>
-<li><strong>Safe preview</strong>: Stage changes to candidate datastore, review diffs, then commit or discard</li>
-<li><strong>Automated backups</strong>: Before/after configs captured automatically</li>
-<li><strong>Idempotent workflows</strong>: Safe to run multiple times without side effects</li>
-<li><strong>Version control ready</strong>: Configuration files tracked in Git</li>
-<li><strong>No SSH/CLI required</strong>: All operations use NETCONF for structured, reliable communication</li>
+<li><strong>CLI-RPC workflow</strong> (recommended): send IOS CLI text via the <code>Cisco-IOS-XE-cli-rpc</code> YANG model (<code>config-ios-cli-trans</code> / <code>get-modelled-config-clis</code>).</li>
+<li><strong>YANG/XML workflow</strong>: send native YANG/XML via standard NETCONF <code>edit-config</code> with <code>operation="replace"</code>.</li>
 </ul>
-<h3 id="two-parallel-workflows">Two Parallel Workflows<a class="headerlink" href="#two-parallel-workflows" title="Permanent link">&para;</a></h3>
-<p>This framework supports two approaches (both over NETCONF):</p>
-<ol>
-<li><strong>CLI-RPC workflow</strong> (recommended) — Work with familiar IOS CLI text, delivered via the <code>Cisco-IOS-XE-cli-rpc</code> YANG model</li>
-<li><strong>YANG/XML workflow</strong> — Use native YANG/XML payloads with standard NETCONF <code>edit-config</code></li>
-</ol>
-<p>Both workflows use the <strong>candidate datastore</strong> and <strong>atomic commit</strong> for safe, all-or-nothing configuration replacement.</p>
-<h3 id="start-here-pick-one-workflow">Start Here: Pick One Workflow<a class="headerlink" href="#start-here-pick-one-workflow" title="Permanent link">&para;</a></h3>
-<p>Use <strong>one</strong> workflow path for a given run. Do not mix CLI and XML playbooks in the same change cycle.</p>
-<table>
-<thead>
-<tr>
-<th>Workflow</th>
-<th>Primary Config Format</th>
-<th>Core Playbooks</th>
-<th>Best For</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CLI-RPC</td>
-<td>CLI text files (<code>.cfg</code>)</td>
-<td><code>01 -&gt; 05 -&gt; 07 -&gt; 06</code></td>
-<td>Fast operator-friendly changes using familiar IOS CLI syntax</td>
-</tr>
-<tr>
-<td>YANG/XML</td>
-<td>XML/YANG payloads</td>
-<td><code>01 -&gt; 02 -&gt; 04 -&gt; 03</code></td>
-<td>Model-driven workflows and strict data-model alignment</td>
-</tr>
-</tbody>
-</table>
-<p>Quick decision rule:</p>
-<ul>
-<li>If you want to edit a CLI file like <code>configs/desired/&lt;hostname&gt;.cfg</code>, use the <strong>CLI-RPC</strong> path.</li>
-<li>If you want to work with model-native XML payloads, use the <strong>YANG/XML</strong> path.</li>
-</ul>
-<p>In this lab, we will focus on full config replace operations using the CLI-RPC workflow.</p>
-<hr />
-<blockquote>
-<p><strong>📦 Lab Framework Source</strong></p>
-<p>This lab follows the <strong>IOS XE Atomic Config Replace — Ansible Framework</strong> developed by Jeremy Cohoe.</p>
-<p><strong>GitHub Repository</strong>: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible">jeremycohoe/iosxe-atomic-netconf-ansible</a></p>
-<p>The repository provides production-ready Ansible playbooks, inventory templates, and comprehensive documentation for atomic configuration management on Cisco IOS XE devices. We'll clone this repository and use its playbooks throughout this lab module.</p>
-</blockquote>
-<hr />
-<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
-<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<p>Both workflows use the candidate datastore and atomic commit, with no SSH/CLI pushes involved. This lab focuses on the first (CLI RPC). For full details, see the GitHub Repository for this project: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible">https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible</a></p>
+<p>This toolkit (<code>atomic-netconf-ansible</code>) replaces the entire device configuration atomically. It either fully succeeds or keeps the current config on the device. No partial config states. No risk of half-applied changes.</p>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                        Your Lab Pod VM                          │
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                        Your Workstation                         │
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                                 │
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  configs/desired/           Ansible            NETCONF (830)    │
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌──────────────┐      ┌────────────┐      ┌────────────────┐  │
@@ -1993,68 +1610,67 @@
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                              │               commit (atomic)    │
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  configs/backups/            │                     │            │
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  ┌──────────────┐            │              ┌──────┴──────┐     │
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │ pre_atomic_*.cfg │◀───────┘              │   Running   │     │
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │ pre_atomic_*.cfg │◀──────────┘              │   Running   │     │
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │ (auto backup) │                          │   Config    │     │
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  └──────────────┘                           └─────────────┘     │
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└─────────────────────────────────────────────────────────────────┘
 </span></code></pre></div>
-<h3 id="atomic-workflow-step-by-step">Atomic Workflow — Step by Step<a class="headerlink" href="#atomic-workflow-step-by-step" title="Permanent link">&para;</a></h3>
+<h3 id="atomic-workflow-step-by-step">Atomic Workflow Step by Step<a class="headerlink" href="#atomic-workflow-step-by-step" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│ Precheck │────▶│ Baseline │────▶│   Edit   │────▶│ Preview  │────▶│   Push   │
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│          │     │ Capture  │     │ Desired  │     │  (diff)  │     │  (atomic)│
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│          │     │ Capture  │     │ Desired  │     │  (diff)  │     │  (atomic)   │
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│ 01       │     │ 05       │     │ .cfg     │     │ 07       │     │ 06       │
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>└──────────┘     └──────────┘     └──────────┘     └──────────┘     └──────────┘
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Verify           Pull              Make            Stage to         Stage to
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  NETCONF,         running           your            candidate,       candidate,
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  candidate,       config as         changes         diff vs          diff, then
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  candidate,       config as         changes          diff vs         diff, then
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  atomic-cfg       CLI text                          running,         COMMIT +
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                                                     discard          save
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                                                     (safe)           (atomic)
 </span></code></pre></div>
 <h3 id="what-happens-on-the-device">What Happens on the Device<a class="headerlink" href="#what-happens-on-the-device" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Stage</strong> — Desired config is pushed to the candidate datastore using <code>config-ios-cli-trans</code> with <code>&lt;do-commit&gt;false&lt;/do-commit&gt;</code>. Running config is untouched.</li>
-<li><strong>Diff</strong> — Candidate is compared against running using <code>get-modelled-config-clis</code> on both datastores. You see exactly what will change.</li>
-<li><strong>Commit</strong> (live push only) — Candidate is atomically committed to running. All-or-nothing — if any part fails, the entire transaction rolls back.</li>
-<li><strong>Save</strong> — Running config is written to startup.</li>
+<li><strong>Stage</strong>: Desired config is pushed to the <strong>candidate datastore</strong> using <code>config-ios-cli-trans</code> with <code>&lt;do-commit&gt;false&lt;/do-commit&gt;</code>. Running config is untouched.</li>
+<li><strong>Diff</strong>: Candidate is compared against running using <code>get-modelled-config-clis</code> on both datastores. You see exactly what will change.</li>
+<li><strong>Commit</strong> (live push only): Candidate is atomically committed to running. All-or-nothing behavior applies. If any part fails, the entire transaction rolls back.</li>
+<li><strong>Save</strong>: Running config is written to startup.</li>
 </ol>
 <blockquote>
-<p><strong>Dry run (default)</strong>: Steps 1–2 only, then discard. The device is never modified.</p>
+<p><strong>Dry run</strong> (default): Steps 1 and 2 only, then discard. The device is never modified.</p>
 </blockquote>
-<hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <h3 id="ios-xe-device-requirements">IOS XE Device Requirements<a class="headerlink" href="#ios-xe-device-requirements" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Requirement</th>
-<th>Value</th>
+<th>Detail</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>IOS XE version</td>
+<td><strong>IOS XE version</strong></td>
 <td>26.1.1 or later</td>
 </tr>
 <tr>
-<td>NETCONF</td>
+<td><strong>NETCONF</strong></td>
 <td>Enabled and reachable on port 830</td>
 </tr>
 <tr>
-<td>Candidate datastore</td>
+<td><strong>Candidate datastore</strong></td>
 <td>Explicitly enabled (not on by default)</td>
 </tr>
 <tr>
-<td>Atomic config</td>
+<td><strong>Atomic config</strong></td>
 <td>Feature flag enabled</td>
 </tr>
 <tr>
-<td>Credentials</td>
+<td><strong>Credentials</strong></td>
 <td>Local user with privilege 15</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Enable on the lab switch (<code>c9300x-lab</code>, <code>10.1.1.5</code>):</strong></p>
+<p>Enable on each device:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conf t
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  netconf-yang
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  netconf-yang feature candidate-datastore
@@ -2062,14 +1678,12 @@
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>end
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>write memory
 </span></code></pre></div>
-<blockquote>
-<p><strong>Note</strong>: After enabling candidate datastore, NETCONF restarts automatically (~60 seconds). Wait before testing connectivity.</p>
-</blockquote>
+<p>After enabling candidate datastore, NETCONF restarts automatically (~60 seconds). Wait before testing connectivity.</p>
 <h3 id="workstation-requirements">Workstation Requirements<a class="headerlink" href="#workstation-requirements" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Software</th>
+<th>Component</th>
 <th>Version</th>
 <th>Purpose</th>
 </tr>
@@ -2107,203 +1721,267 @@
 </tr>
 </tbody>
 </table>
-<h3 id="lab-environment">Lab Environment<a class="headerlink" href="#lab-environment" title="Permanent link">&para;</a></h3>
-<p>The lab pod VM is pre-configured to access:</p>
-<ul>
-<li><strong>Lab switch</strong>: <code>10.1.1.5:830</code> (hostname: <code>c9300x-lab</code>)</li>
-<li><strong>Credentials</strong>: <code>admin</code> / <code>Cisco123</code></li>
-</ul>
-<p>These values are already set in the inventory files—no changes needed.</p>
-<hr />
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<h3 id="step-1-change-to-the-acr-lab-directory">Step 1: Change to the ACR Lab Directory<a class="headerlink" href="#step-1-change-to-the-acr-lab-directory" title="Permanent link">&para;</a></h3>
-<p>From your SSH session on the lab pod VM:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>~/iosxe-atomic-netconf-ansible/atomic-netconf-ansible
+<h3 id="lab-environment-setup">Lab Environment Setup<a class="headerlink" href="#lab-environment-setup" title="Permanent link">&para;</a></h3>
+<!-- for DevNet Workshop only
+
+Note: Your instructor will give you a unique pod number, IP, and credentials to complete this lab.
+
+1. On the laptop provided, use password 'cisco' to login.
+
+2. Open Visual Studio Code. Open a new Terminal Window.
+Type
+
+`ssh –p 443 auto@pod##-xelab.cisco.com`
+
+Relace ## is pod number on your desk.
+Ex) Pod 5 will be: `ssh –p 443 auto@pod05-xelab.cisco.com`
+If asked about adding a fingerprint, type yes
+Password for your pod is
+`pandalab2026!`
+
+-->
+
+<p>SSH to your unique pod using the credentials provided by your instructor. Open a new terminal tab (pro tip, split the terminal window within Visual Studio Code to see the Cisco IOS XE device on one side and the workspace for running scripts on the other side using</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh admin@10.1.1.5
 </span></code></pre></div>
-<h3 id="step-2-verify-ansible">Step 2: Verify Ansible<a class="headerlink" href="#step-2-verify-ansible" title="Permanent link">&para;</a></h3>
-<p>Lab pods typically ship with Ansible pre-installed:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ansible<span class="w"> </span>--version
+<p>and password:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Cisco123
 </span></code></pre></div>
-<p>Expected output: Ansible 2.15 or later</p>
-<h3 id="step-3-install-required-ansible-collections">Step 3: Install Required Ansible Collections<a class="headerlink" href="#step-3-install-required-ansible-collections" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
+<p>Recommended: once you're connected to your switch, type <code>terminal monitor</code> to see real-time logs.</p>
+<!-- ![Connect to your switch](../images/acr-split-screen.png) -->
+
+<p>Navigate to the <code>DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace</code> directory.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Clone the repository (this has already been done for you in the lab pod)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">#git clone https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible.git</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">cd</span><span class="w"> </span>DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace/atomic-netconf-ansible
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># 2. Confirm Ansible is available (lab pods normally ship with it)</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>ansible<span class="w"> </span>--version
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># 3. Install the required Ansible collections (this has already been done for you in the lab pod)</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1">#ansible-galaxy collection install -r requirements.yml</span>
 </span></code></pre></div>
-<p>This installs:</p>
-<ul>
-<li><code>ansible.netcommon</code></li>
-<li><code>ansible.utils</code></li>
-<li><code>community.general</code></li>
-</ul>
-<h3 id="step-4-verify-python-dependencies">Step 4: Verify Python Dependencies<a class="headerlink" href="#step-4-verify-python-dependencies" title="Permanent link">&para;</a></h3>
-<p>If you encounter errors about missing Python libraries, install them:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>ansible<span class="w"> </span>ncclient<span class="w"> </span>lxml<span class="w"> </span>xmltodict<span class="w"> </span>paramiko
-</span></code></pre></div>
-<hr />
-<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>atomic-netconf-ansible/
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── ansible.cfg                              # Ansible settings (YAML output, timeouts)
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>├── requirements.yml                         # Ansible Galaxy dependencies
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>├── README.md                                # GitHub repository documentation
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>├── inventory/
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│   ├── hosts.yml                            # Pre-configured: c9300x-lab @ 10.1.1.5
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│   └── group_vars/
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│       ├── all/
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│       │   ├── vars.yml                     # Connection settings, config paths
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│       │   └── vault.yml                    # Credentials (admin/Cisco123)
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│       └── access_switches/
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│           └── vars.yml                     # Group-specific overrides
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>├── playbooks/
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│   ├── 01_precheck.yml                      # Verify device readiness
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│   ├── 02_baseline_capture.yml              # Capture running config (YANG/XML)
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│   ├── 03_atomic_push.yml                   # Atomic push (YANG/XML)
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│   ├── 04_diff_preview.yml                  # Diff preview (YANG/XML)
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│   ├── 05_baseline_capture_cli.yml          # Capture running config (CLI-RPC)
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│   ├── 06_atomic_push_cli.yml               # Atomic push (CLI-RPC) — includes before/after
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│   └── 07_diff_preview_cli.yml              # Diff preview (CLI-RPC)
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>├── configs/
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│   ├── baseline/&lt;hostname&gt;/baseline.cfg     # Reference configs (auto-generated)
-</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│   ├── desired/&lt;hostname&gt;.cfg               # Desired configs (EDIT THESE)
-</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│   └── backups/&lt;hostname&gt;/                  # Pre/post-commit backups
-</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│       ├── pre_atomic_*.cfg                 #   Before commit snapshot
-</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>│       └── post_atomic_*.cfg                #   After commit snapshot
-</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>│
-</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>└── docs/
-</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>    └── quickstart.md                        # Detailed step-by-step walkthrough
-</span></code></pre></div>
-<hr />
-<h2 id="quick-start-guide">Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permanent link">&para;</a></h2>
-<p>All commands are run from inside the <code>atomic-netconf-ansible/</code> directory.</p>
-<h3 id="step-0-review-inventory-and-precheck-files">Step 0: Review Inventory and Precheck Files<a class="headerlink" href="#step-0-review-inventory-and-precheck-files" title="Permanent link">&para;</a></h3>
-<p>Before running any playbook, inspect the target inventory:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cat<span class="w"> </span>inventory/hosts.yml
-</span></code></pre></div>
-<p>Next, review the precheck tasks:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>cat<span class="w"> </span>playbooks/01_precheck.yml
-</span></code></pre></div>
-<p>Confirm the device host/IP and connection variables are correct for your lab pod.</p>
-<h3 id="step-1-verify-device-readiness">Step 1: Verify Device Readiness<a class="headerlink" href="#step-1-verify-device-readiness" title="Permanent link">&para;</a></h3>
-<p>Run the precheck playbook to verify NETCONF connectivity, candidate datastore support, and atomic config capability:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/01_precheck.yml
-</span></code></pre></div>
-<p><strong>What it checks:</strong></p>
-<ul>
-<li>NETCONF connectivity on port 830</li>
-<li>Candidate datastore enabled</li>
-<li>Atomic config feature enabled</li>
-<li>IOS XE version 26.1.1+</li>
-</ul>
-<p>Expected output: All checks passed (green)</p>
-<h3 id="step-2-capture-baseline-configuration">Step 2: Capture Baseline Configuration<a class="headerlink" href="#step-2-capture-baseline-configuration" title="Permanent link">&para;</a></h3>
-<p>Pull the current running configuration from the device and save it as your baseline:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/05_baseline_capture_cli.yml
-</span></code></pre></div>
-<p><strong>What it creates:</strong></p>
-<ul>
-<li><code>configs/baseline/c9300x-lab/baseline.cfg</code> — Reference copy (don't edit)</li>
-<li><code>configs/desired/c9300x-lab.cfg</code> — Your working copy (edit this)</li>
-</ul>
-<p>Both files contain the complete device configuration in IOS CLI format.</p>
-<h3 id="step-3-edit-desired-configuration">Step 3: Edit Desired Configuration<a class="headerlink" href="#step-3-edit-desired-configuration" title="Permanent link">&para;</a></h3>
-<p>Open the desired configuration file and make your changes: configs/desired/c9300x-lab.cfg</p>
-<p><strong>Example changes:</strong></p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="w"> </span>interface TenGigabitEthernet1/0/1
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="gd">- description Uplink Port</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="gi">+ description UPLINK-TO-DIST-SW</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w"> </span> shutdown
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w"> </span> switchport access vlan 30
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w"> </span>exit
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="gi">+interface TenGigabitEthernet1/0/2</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="gi">+ description TEST-PORT-FOR-DEMO</span>
-</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="gi">+ switchport access vlan 100</span>
-</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="gi">+ no shutdown</span>
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="gi">+exit</span>
-</span></code></pre></div>
-<blockquote>
-<p><strong>Important</strong>: This file contains the <strong>complete</strong> device configuration. Atomic config replace performs a full replace — anything you remove from this file will be removed from the device. Keep all physical interfaces defined.</p>
-</blockquote>
-<p>Save file.</p>
-<h3 id="step-4-preview-changes-safe-dry-run">Step 4: Preview Changes (Safe Dry Run)<a class="headerlink" href="#step-4-preview-changes-safe-dry-run" title="Permanent link">&para;</a></h3>
-<p>Stage your desired config to the candidate datastore, generate a diff against running config, then discard. The device is never modified:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/07_diff_preview_cli.yml
-</span></code></pre></div>
-<p><strong>What you'll see:</strong></p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>DIFF: c9300x-lab
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="gd">- description Uplink Port</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="gi">+ description UPLINK-TO-DIST-SW</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="gi">+interface TenGigabitEthernet1/0/2</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="gi">+ description TEST-PORT-FOR-DEMO</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="gi">+ switchport access vlan 100</span>
-</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="gi">+ no shutdown</span>
-</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="gi">+exit</span>
-</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
-</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>Lines added: 5
-</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>Lines removed: 1
-</span></code></pre></div>
-<p><strong>Diff symbols:</strong></p>
-<ul>
-<li><code>+</code> = Lines being added</li>
-<li><code>-</code> = Lines being removed</li>
-<li><code></code> = Unchanged context</li>
-</ul>
-<p>If the diff looks incorrect or you see unexpected changes, <strong>do not proceed to Step 5</strong>. Go back to Step 3 and fix your desired config file.</p>
-<h3 id="step-5-test-push-with-dry-run">Step 5: Test Push with Dry Run<a class="headerlink" href="#step-5-test-push-with-dry-run" title="Permanent link">&para;</a></h3>
-<p>Perform a complete dry run that stages the config, shows the diff, and creates a backup — but does <strong>not</strong> commit to running:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml
-</span></code></pre></div>
-<p><strong>What happens:</strong></p>
-<ol>
-<li>Captures current running config (pre-backup)</li>
-<li>Stages desired config to candidate datastore</li>
-<li>Shows diff (same as Step 4)</li>
-<li><strong>Discards</strong> candidate (device unchanged)</li>
-<li>Saves pre-backup to <code>configs/backups/c9300x-lab/pre_atomic_&lt;timestamp&gt;.cfg</code></li>
-</ol>
-<p>This is your final safety check before the live push.</p>
-<h3 id="step-6-live-push-commit-changes">Step 6: Live Push (Commit Changes)<a class="headerlink" href="#step-6-live-push-commit-changes" title="Permanent link">&para;</a></h3>
-<p>When you're confident the changes are correct, run the live push:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>-e<span class="w"> </span><span class="nv">dry_run</span><span class="o">=</span><span class="nb">false</span>
-</span></code></pre></div>
-<p><strong>What happens:</strong></p>
-<ol>
-<li>Captures BEFORE snapshot</li>
-<li>Stages config to candidate</li>
-<li>Shows diff</li>
-<li><strong>Commits atomically</strong> to running config</li>
-<li>Saves running config to startup</li>
-<li>Captures AFTER snapshot</li>
-<li>Saves both snapshots to <code>configs/backups/c9300x-lab/</code></li>
-</ol>
-<p><strong>Atomic guarantee</strong>: If any part of the commit fails (syntax error, dependency issue, etc.), the <strong>entire transaction rolls back</strong> automatically. Running config is never left in a partial state.</p>
-<h3 id="step-7-verify-changes">Step 7: Verify Changes<a class="headerlink" href="#step-7-verify-changes" title="Permanent link">&para;</a></h3>
-<p>Re-run the preview playbook to confirm no diff remains:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/07_diff_preview_cli.yml
-</span></code></pre></div>
-<p>Expected output: <code>Desired matches running (no diff)</code></p>
-<p>You can also verify from the device CLI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># SSH to the C9300X lab switch (10.1.1.5)</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>ssh<span class="w"> </span>admin@10.1.1.5
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Check the changes</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>show<span class="w"> </span>run<span class="w"> </span>interface<span class="w"> </span>TenGigabitEthernet1/0/1
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>show<span class="w"> </span>run<span class="w"> </span>interface<span class="w"> </span>TenGigabitEthernet1/0/2
-</span></code></pre></div>
-<hr />
-<h2 id="playbook-reference">Playbook Reference<a class="headerlink" href="#playbook-reference" title="Permanent link">&para;</a></h2>
-<h3 id="cli-rpc-workflow-recommended">CLI-RPC Workflow (Recommended)<a class="headerlink" href="#cli-rpc-workflow-recommended" title="Permanent link">&para;</a></h3>
-<p>Work with familiar IOS CLI text—but the payload is delivered over NETCONF using the <code>Cisco-IOS-XE-cli-rpc</code> YANG model. No SSH/CLI session is opened.</p>
+<h3 id="network-connectivity">Network Connectivity<a class="headerlink" href="#network-connectivity" title="Permanent link">&para;</a></h3>
+<p>The workstation (your pod VM) must reach the lab switch on <strong>TCP port 830</strong> (NETCONF over SSH). In the standard lab pod environment the switch is directly reachable at <code>10.1.1.5</code>, and the inventory is already configured for this.</p>
 <table>
 <thead>
 <tr>
-<th>Order</th>
+<th>Scenario</th>
+<th>Setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>In-pod (default)</strong></td>
+<td>Inventory already points at <code>10.1.1.5:830</code>, so no changes are needed</td>
+</tr>
+<tr>
+<td><strong>Direct access (other)</strong></td>
+<td>Edit <code>inventory/hosts.yml</code> and set <code>ansible_host</code> to the device management IP</td>
+</tr>
+<tr>
+<td><strong>Via VPN</strong></td>
+<td>No special config is required; ensure port 830 is reachable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>atomic-netconf-ansible/
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── ansible.cfg                              # Ansible settings (YAML output, timeouts)
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├── requirements.yml                         # Ansible Galaxy dependencies
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>├── README.md                                # This file
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>├── inventory/
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│   ├── hosts.yml                            # Pre-configured: c9300x-lab @ 10.1.1.5
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│   └── group_vars/
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│       ├── all/
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│       │   ├── vars.yml                     # Connection settings, config paths
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│       │   └── vault.yml                    # Credentials (admin/Cisco123 by default)
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│       └── access_switches/
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│           └── vars.yml                     # Group-specific overrides
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>├── playbooks/
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│   ├── 01_precheck.yml                      # Verify device readiness
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│   ├── 02_baseline_capture.yml              # Capture running config (YANG/XML)
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│   ├── 03_atomic_push.yml                   # atomic push (YANG/XML)
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│   ├── 04_diff_preview.yml                  # Diff preview (YANG/XML)
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│   ├── 05_baseline_capture_cli.yml          # Capture running config (CLI-RPC: get-modelled-config-clis)
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>│   ├── 06_atomic_push_cli.yml               # Atomic push (CLI-RPC: config-ios-cli-trans), includes before/after capture
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│   └── 07_diff_preview_cli.yml              # Diff preview (CLI-RPC)
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>│
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>├── configs/
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>│   ├── baseline/&lt;hostname&gt;/baseline.cfg     # Reference configs (auto-generated, don&#39;t edit)
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>│   ├── desired/&lt;hostname&gt;.cfg               # Desired configs (EDIT THESE)
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>│   └── backups/&lt;hostname&gt;/                  # Pre/post-commit backups (auto-generated)
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>│       ├── pre_atomic_*.cfg                 #   Running config before commit
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>│       └── post_atomic_*.cfg                #   Running config after commit
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>│
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>└── docs/
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>    └── quickstart.md                        # Detailed step-by-step walkthrough
+</span></code></pre></div>
+<hr />
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<p>All commands are run from inside the extracted <code>DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace/atomic-netconf-ansible/</code> directory.</p>
+<h2 id="day-0-day-1-day-2-day-0-cycle-with-apply-config-daysh">Day 0 → Day 1 → Day 2 → Day 0 Cycle with <code>apply-config-day.sh</code><a class="headerlink" href="#day-0-day-1-day-2-day-0-cycle-with-apply-config-daysh" title="Permanent link">&para;</a></h2>
+<p>Once your baseline is captured and you're comfortable with the preview/push flow, the lab includes a helper that rotates the active desired config between three checkpoint files and runs the live atomic push for you:</p>
+<ul>
+<li><code>configs/desired/POD-&lt;id&gt;-day0.cfg</code> — clean baseline (starting state). Hostname <code>cat9300x-pod&lt;id&gt;a-sztp</code>, single user VLAN (pod# + 20).</li>
+<li><code>configs/desired/POD-&lt;id&gt;-day1.cfg</code> — access-layer additions. Hostname becomes <code>cat9300x-pod&lt;id&gt;-day1</code>; adds VLANs <code>311</code> and <code>700</code> to the VLAN list; moves a block of access ports to <code>switchport access vlan 311</code> with <code>switchport mode access</code>; adds two <code>description setting for vlan ...</code> comments on selected interfaces.</li>
+<li><code>configs/desired/POD-&lt;id&gt;-day2.cfg</code> — routing + time additions on top of day1. Hostname becomes <code>cat9300x-pod&lt;id&gt;-day2</code>; adds <code>router ospf 1</code> with <code>network 10.10.10.0 0.0.0.255 area 0</code>; sets <code>ntp source Vlan&lt;pod#+20&gt;</code>; adds NTP servers <code>10.1.7.2</code> and <code>10.11.13.10</code>.</li>
+</ul>
+<p>Each pod has slightly different configs (the pod VLAN = pod# + 20) to support the lab flow. Your POD id comes from <code>cat ~/PODID</code> (e.g. <code>POD-13</code>). The script:</p>
+<ol>
+<li>Repoints the symlink <code>configs/desired/c9300x-lab.cfg</code> → <code>POD-&lt;id&gt;-day&lt;N&gt;.cfg</code></li>
+<li>Runs <code>ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false</code></li>
+</ol>
+<p>Run <code>apply-config-day.sh --help</code> for full options (<code>--list</code>, <code>--no-run</code>).</p>
+<h3 id="one-time-setup">One-time setup<a class="headerlink" href="#one-time-setup" title="Permanent link">&para;</a></h3>
+<p>Ensure you are in the correct directory and make the script executable.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">cd</span><span class="w"> </span>~/DEVWKS-2810-The-Atomic-Shift-Modernizing-Your-Network-Management-using-Atomic-Configuration-Replace/atomic-netconf-ansible/
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Make the script executable (this has been done for you)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># chmod +x apply-config-day.sh</span>
+</span></code></pre></div>
+<h3 id="what-youll-see-when-you-run-it">What you'll see when you run it<a class="headerlink" href="#what-youll-see-when-you-run-it" title="Permanent link">&para;</a></h3>
+<p>The script prints the symlink update, then streams the full <code>ansible-playbook</code> output (the same output you'd see running the playbook by hand):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>./apply-config-day.sh
+</span></code></pre></div>
+<p>You should see an output similar to this</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Detected PODID: POD-13
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Which day would you like to rotate to? (Simply type the number and then press ENTER)
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>For Day0, type 0
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>For Day1, type 1
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>For Day2, type 2
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>Please Enter 0, 1, or 2: 1
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Starting config replace for Day 1...
+</span></code></pre></div>
+<!-- Updated: c9300x-lab.cfg -> POD-13-day1.cfg
+Running Ansible full-replace playbook...
+Command: ansible-playbook -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false
+
+PLAY [Atomic config push (CLI-RPC)] ********************************************
+TASK [Gathering Facts] *********************************************************
+...
+TASK [Show diff] ***************************************************************
+...
+TASK [Commit candidate to running] *********************************************
+changed: [c9300x-lab]
+
+PLAY RECAP *********************************************************************
+c9300x-lab : ok=12   changed=1    unreachable=0    failed=0    skipped=0
+-->
+
+<p>If you face an error, check the Ansible output for the specific error message. Common issues include syntax errors in the desired config or missing required configuration elements. Use the error message to debug the issue.</p>
+<p>If the <code>PLAY RECAP</code> line shows <code>failed=0</code>, the atomic commit succeeded and the device's running config now matches <code>POD-13-day1.cfg</code>.</p>
+<h3 id="walk-the-lifecycle">Walk the lifecycle<a class="headerlink" href="#walk-the-lifecycle" title="Permanent link">&para;</a></h3>
+<p>Run the script once per stage and pick the day at the prompt. After each commit, optionally re-run the diff preview to confirm the device matches the new desired state.</p>
+<p><strong>Stage 1 — Apply Day 0 (baseline)</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>./apply-config-day.sh
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># When prompted, enter: 0</span>
+</span></code></pre></div>
+<p>Result: device is reset to the clean POD baseline. Hostname becomes <code>cat9300x-pod&lt;id&gt;a-sztp</code>.</p>
+<p><strong>Stage 2 — Apply Day 1 (access-layer VLAN/interface adds)</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>./apply-config-day.sh
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># When prompted, enter: 1</span>
+</span></code></pre></div>
+<p>Watch the <code>PLAY RECAP</code>. If it shows <code>failed=0</code>, the day-1 deltas committed cleanly:
+hostname is now <code>cat9300x-pod&lt;id&gt;-day1</code>, VLANs <code>311</code> and <code>700</code> are in the VLAN database, and
+a block of access ports moved to <code>switchport access vlan 311</code> /
+<code>switchport mode access</code>. Verify on the device:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>show vlan brief | include 311|700
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>show running-config | section interface TenGigabit
+</span></code></pre></div>
+<h4 id="if-stage-2-fails">If Stage 2 fails<a class="headerlink" href="#if-stage-2-fails" title="Permanent link">&para;</a></h4>
+<p>If the <code>PLAY RECAP</code> instead shows <code>failed=1</code>, <strong>the device did not change</strong> — that is
+the atomic guarantee. The candidate config was validated, IOS XE rejected one of the
+lines, and the entire transaction was rolled back before anything touched the running
+config.</p>
+<p>Prove it for yourself:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>show running-config | include hostname
+</span></code></pre></div>
+<p>The hostname is still the day-0 hostname (<code>cat9300x-pod&lt;id&gt;a-sztp</code>), not
+<code>cat9300x-pod&lt;id&gt;-day1</code>. No VLANs were added, no ports were moved. Nothing landed.</p>
+<p><strong>Read the Ansible failure output</strong> — the error message will quote the exact CLI line
+the device refused, typically with an <code>% Invalid input</code> marker or a parser error
+pointing at the bad keyword.</p>
+<p><strong>Fix the desired config:</strong> open <code>configs/pod-targets/POD-&lt;id&gt;-day1.cfg</code> (or follow
+the symlink at <code>configs/desired/c9300x-lab.cfg</code>), locate the offending line, correct
+or remove it, and save.</p>
+<blockquote>
+<p>Tip: a quick way to spot what changed in day-1 is to diff against day-0:
+<code>diff configs/pod-targets/POD-&lt;id&gt;-day0.cfg configs/pod-targets/POD-&lt;id&gt;-day1.cfg</code>.
+One of the new lines is the culprit.</p>
+</blockquote>
+<p>Re-run the push:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>./apply-config-day.sh
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># When prompted, enter: 1</span>
+</span></code></pre></div>
+<p>This time <code>PLAY RECAP</code> should show <code>failed=0</code>. Re-run the verify commands above to
+confirm the day-1 state is live.</p>
+<p><strong>Stage 3 — Apply Day 2 (add OSPF routing + NTP)</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>./apply-config-day.sh
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># When prompted, enter: 2</span>
+</span></code></pre></div>
+<p>Result: a single atomic transaction layers the day-2 deltas on top of day-1:</p>
+<ul>
+<li>Hostname changes to <code>cat9300x-pod&lt;id&gt;-day2</code>.</li>
+<li><code>router ospf 1</code> is enabled</li>
+<li>NTP sourcing is pinned to the pod SVI: <code>ntp source Vlan&lt;pod#+20&gt;</code> (e.g. <code>Vlan33</code> for POD-13, <code>Vlan27</code> for POD-7).</li>
+</ul>
+<p>Verify on the device after the commit:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>sh run | s ospf
+</span></code></pre></div>
+<p>Should return</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>router ospf 1
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a> network 10.10.10.0 0.0.0.255 area 0
+</span></code></pre></div>
+<p><strong>Stage 4 — Roll back to Day 0</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>./apply-config-day.sh
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># When prompted, enter: 0</span>
+</span></code></pre></div>
+<p>Result: full atomic replace back to the clean baseline. Day-1 (access-port/VLAN) and Day-2 (OSPF + NTP) additions are removed in a single transaction — no partial state, no reboot. Hostname returns to <code>cat9300x-pod&lt;id&gt;a-sztp</code> and <code>show ip protocols</code> no longer lists OSPF.</p>
+<h3 id="useful-flags">Useful flags<a class="headerlink" href="#useful-flags" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>./apply-config-day.sh<span class="w"> </span>--list<span class="w">      </span><span class="c1"># show all available POD-*-day*.cfg targets</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>./apply-config-day.sh<span class="w"> </span>--no-run<span class="w">    </span><span class="c1"># repoint the symlink only; skip the Ansible push</span>
+</span></code></pre></div>
+<h3 id="verify-between-stages-optional-but-recommended">Verify between stages (optional but recommended)<a class="headerlink" href="#verify-between-stages-optional-but-recommended" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/07_diff_preview_cli.yml
+</span></code></pre></div>
+<p>Expected after each <code>apply-config-day.sh</code> run: <code>Desired matches running (no diff)</code>.</p>
+<h3 id="if-something-goes-wrong">If something goes wrong<a class="headerlink" href="#if-something-goes-wrong" title="Permanent link">&para;</a></h3>
+<p>Ansible reports the failure in its standard <code>PLAY RECAP</code> (<code>failed=1</code>) and the script exits non-zero. Because this is an <strong>atomic</strong> replace, a failed push leaves the device on its previous running config — you'll never end up in a half-applied state.</p>
+<p>Troubleshooting checklist:</p>
+<ol>
+<li>Confirm POD id: <code>cat ~/PODID</code></li>
+<li>Confirm target exists: <code>ls configs/desired/POD-*-day*.cfg</code></li>
+<li>Check device reachability: <code>ansible-playbook -i inventory/hosts.yml playbooks/01_precheck.yml</code></li>
+<li>Preview the diff: <code>ansible-playbook -i inventory/hosts.yml playbooks/07_diff_preview_cli.yml</code></li>
+<li>Re-run verbosely: <code>ansible-playbook -vvv -i inventory/hosts.yml playbooks/06_atomic_push_cli.yml -e dry_run=false</code></li>
+<li>Common payload issues in <code>configs/desired/POD-*-dayN.cfg</code>:<ul>
+<li>close blocks with <code>exit</code>, <strong>not</strong> <code>end</code></li>
+<li>do <strong>not</strong> include <code>netconf-yang</code> or <code>restconf</code> (those are day-0 bootstrap, already on the device)</li>
+</ul>
+</li>
+</ol>
+<h3 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Payload files (<code>POD-*-dayN.cfg</code>) must use <code>exit</code> to close every config block. <code>end</code> is rejected by the NETCONF CLI-RPC parser.</li>
+<li>Do <strong>not</strong> put <code>netconf-yang</code> or <code>restconf</code> inside these payloads. Those are day-0 bootstrap commands and are already enabled on the device.</li>
+<li>Each run produces <code>pre_atomic_*.cfg</code> and <code>post_atomic_*.cfg</code> snapshots under <code>configs/backups/c9300x-lab/</code> for audit.</li>
+<li>If the device ever drifts, just <code>./apply-config-day.sh</code> → <code>0</code> to snap it back to baseline in a single transaction.</li>
+</ul>
+<h2 id="playbook-reference">Playbook Reference<a class="headerlink" href="#playbook-reference" title="Permanent link">&para;</a></h2>
+<h3 id="cli-rpc-workflow-recommended">CLI-RPC Workflow (Recommended)<a class="headerlink" href="#cli-rpc-workflow-recommended" title="Permanent link">&para;</a></h3>
+<p>Work with familiar IOS CLI text. The payload is delivered over NETCONF using the <code>Cisco-IOS-XE-cli-rpc</code> YANG model (<code>config-ios-cli-trans</code> to push, <code>get-modelled-config-clis</code> to read). No SSH/CLI session is opened against the device.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
 <th>Playbook</th>
 <th>Purpose</th>
-<th>Device Modified?</th>
+<th>Modifies Device?</th>
 </tr>
 </thead>
 <tbody>
@@ -2322,145 +2000,22 @@
 <tr>
 <td>07</td>
 <td><code>07_diff_preview_cli.yml</code></td>
-<td>Stage to candidate, diff, discard</td>
+<td>Stage to candidate via CLI-RPC, diff, discard</td>
 <td>No</td>
 </tr>
 <tr>
 <td>06</td>
 <td><code>06_atomic_push_cli.yml</code></td>
 <td>Full config replace via CLI-RPC</td>
-<td>Dry run: No<br>Live: Yes</td>
+<td><strong>Dry run: No</strong> / Live: <strong>Yes</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Usage examples:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Precheck</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/01_precheck.yml
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Capture baseline</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/05_baseline_capture_cli.yml
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Preview (safe dry run)</span>
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/07_diff_preview_cli.yml
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Push (dry run - default)</span>
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml
-</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>
-</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="c1"># Push (live commit)</span>
-</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>-e<span class="w"> </span><span class="nv">dry_run</span><span class="o">=</span><span class="nb">false</span>
-</span></code></pre></div>
-<h3 id="yangxml-workflow">YANG/XML Workflow<a class="headerlink" href="#yangxml-workflow" title="Permanent link">&para;</a></h3>
-<p>Work with native YANG/XML config payloads using standard NETCONF <code>edit-config</code> with <code>operation="replace"</code>. No CLI-RPC involvement.</p>
-<table>
-<thead>
-<tr>
-<th>Order</th>
-<th>Playbook</th>
-<th>Purpose</th>
-<th>Device Modified?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>01</td>
-<td><code>01_precheck.yml</code></td>
-<td>Verify NETCONF, candidate, atomic support</td>
-<td>No</td>
-</tr>
-<tr>
-<td>02</td>
-<td><code>02_baseline_capture.yml</code></td>
-<td>Pull running config as XML</td>
-<td>No</td>
-</tr>
-<tr>
-<td>04</td>
-<td><code>04_diff_preview.yml</code></td>
-<td>Stage to candidate, preview, discard</td>
-<td>No</td>
-</tr>
-<tr>
-<td>03</td>
-<td><code>03_atomic_push.yml</code></td>
-<td>Full config replace via edit-config</td>
-<td>Dry run: No<br>Live: Yes</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Usage examples:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Precheck</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/01_precheck.yml
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Capture baseline (XML)</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/02_baseline_capture.yml
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Preview (safe dry run)</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/04_diff_preview.yml
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="c1"># Push (dry run - default)</span>
-</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/03_atomic_push.yml
-</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
-</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="c1"># Push (live commit)</span>
-</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/03_atomic_push.yml<span class="w"> </span>-e<span class="w"> </span><span class="nv">dry_run</span><span class="o">=</span><span class="nb">false</span>
-</span></code></pre></div>
-<hr />
-<h2 id="multi-device-usage">Multi-Device Usage<a class="headerlink" href="#multi-device-usage" title="Permanent link">&para;</a></h2>
-<p>The default lab pod inventory contains a single switch (<code>c9300x-lab</code>), so playbooks automatically run against that host. If you extend the inventory with additional devices, target a subset with <code>--limit</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Single device</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>--limit<span class="w"> </span>c9300x-lab
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Device group</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>--limit<span class="w"> </span>access_switches
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Multiple specific devices</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory/hosts.yml<span class="w"> </span>playbooks/06_atomic_push_cli.yml<span class="w"> </span>--limit<span class="w"> </span><span class="s2">&quot;c9300x-lab,switch-02&quot;</span>
-</span></code></pre></div>
-<p>Without <code>--limit</code>, playbooks run against all devices in the <code>iosxe</code> group.</p>
-<hr />
-<h2 id="technical-details">Technical Details<a class="headerlink" href="#technical-details" title="Permanent link">&para;</a></h2>
-<h3 id="how-config-ios-cli-trans-works">How config-ios-cli-trans Works<a class="headerlink" href="#how-config-ios-cli-trans-works" title="Permanent link">&para;</a></h3>
-<p>The <code>config-ios-cli-trans</code> RPC from the <code>Cisco-IOS-XE-cli-rpc</code> YANG model accepts a <code>&lt;do-commit&gt;</code> leaf that controls whether the RPC auto-commits to running:</p>
-<table>
-<thead>
-<tr>
-<th><code>&lt;do-commit&gt;</code> Value</th>
-<th>Candidate Datastore</th>
-<th>Running Config</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>true</code> (default if omitted)</td>
-<td>Written</td>
-<td>Also written</td>
-<td>Quick one-shot apply</td>
-</tr>
-<tr>
-<td><code>false</code></td>
-<td>Written</td>
-<td>Untouched</td>
-<td>Safe stage → diff → commit pattern</td>
-</tr>
-</tbody>
-</table>
-<p>All playbooks in this toolkit use <code>&lt;do-commit&gt;false&lt;/do-commit&gt;</code> so that:</p>
-<ul>
-<li>Preview and dry-run can safely stage → diff → discard</li>
-<li>Live push explicitly commits only after showing the diff</li>
-</ul>
-<h3 id="ios-xe-2611-benefits">IOS XE 26.1.1+ Benefits<a class="headerlink" href="#ios-xe-2611-benefits" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Crypto certificates abstracted</strong> — No filtering or special handling needed during baseline capture</li>
-<li><strong>Candidate datastore</strong> — Enables safe stage-then-commit workflows</li>
-<li><strong>Atomic config</strong> — Ensures all-or-nothing config replacement with automatic rollback on failure</li>
-</ul>
-<hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Issue</th>
+<th>Problem</th>
 <th>Solution</th>
 </tr>
 </thead>
@@ -2471,7 +2026,7 @@
 </tr>
 <tr>
 <td>NETCONF connection timeout</td>
-<td>Increase <code>command_timeout</code> in ansible.cfg; verify network path to the switch</td>
+<td>Increase <code>command_timeout</code> in <code>ansible.cfg</code>; verify network path to the switch</td>
 </tr>
 <tr>
 <td>Precheck fails on candidate</td>
@@ -2483,15 +2038,15 @@
 </tr>
 <tr>
 <td>"Sync is in progress" error</td>
-<td>Device busy with previous RPC — wait 30s and retry</td>
+<td>Device busy with previous RPC. Wait 30s and retry</td>
 </tr>
 <tr>
 <td><code>get-modelled-config-clis</code> slow</td>
-<td>Normal — this RPC is heavy. Allow 30–60s per device</td>
+<td>Normal. This RPC is heavy. Allow 30-60s per device</td>
 </tr>
 <tr>
 <td>Diff shows unexpected reordering</td>
-<td>YANG normalization reorders some CLI — focus on &plusmn; lines</td>
+<td>YANG normalization reorders some CLI. Focus on <code>+</code>/<code>-</code> lines</td>
 </tr>
 <tr>
 <td>Diff shows no changes</td>
@@ -2503,71 +2058,14 @@
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="additional-exercises">Additional Exercises<a class="headerlink" href="#additional-exercises" title="Permanent link">&para;</a></h2>
-<h3 id="exercise-1-multi-interface-configuration">Exercise 1: Multi-Interface Configuration<a class="headerlink" href="#exercise-1-multi-interface-configuration" title="Permanent link">&para;</a></h3>
-<p>Edit your desired config to add descriptions and VLANs to multiple interfaces, then preview and push the changes.</p>
-<h3 id="exercise-2-vlan-management">Exercise 2: VLAN Management<a class="headerlink" href="#exercise-2-vlan-management" title="Permanent link">&para;</a></h3>
-<p>Add new VLANs (e.g., VLAN 200, 300) to the desired config. Preview to see them staged, then commit.</p>
-<h3 id="exercise-3-rollback-test">Exercise 3: Rollback Test<a class="headerlink" href="#exercise-3-rollback-test" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Capture a baseline</li>
-<li>Make and commit changes</li>
-<li>Restore the baseline by copying <code>baseline.cfg</code> over <code>desired/&lt;hostname&gt;.cfg</code></li>
-<li>Preview and push to roll back</li>
-</ol>
-<h3 id="exercise-4-error-handling">Exercise 4: Error Handling<a class="headerlink" href="#exercise-4-error-handling" title="Permanent link">&para;</a></h3>
-<p>Intentionally create an invalid configuration (e.g., reference a non-existent VLAN in an interface config). Attempt to push and observe the atomic rollback behavior.</p>
-<hr />
-<h2 id="reference-links">Reference Links<a class="headerlink" href="#reference-links" title="Permanent link">&para;</a></h2>
-<h3 id="official-documentation">Official Documentation<a class="headerlink" href="#official-documentation" title="Permanent link">&para;</a></h3>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/xe-26/prog-xe-26-book.html">Cisco IOS XE Programmability Guide — Atomic Config Replace</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/26x/26x-programmability-cg.html">Cisco IOS XE 26.1 Programmability Guide</a></li>
 <li>YANG model: <code>Cisco-IOS-XE-cli-rpc</code> (revision 2026-02-01, v1.3.0)</li>
+<li>Detailed walkthrough: <code>docs/quickstart.md</code> (in the lab repo)</li>
+<li>Jinja pod generation workflow: <code>docs/jinja-pod-workflow.md</code> (in the lab repo)</li>
 </ul>
-<h3 id="github-repositories">GitHub Repositories<a class="headerlink" href="#github-repositories" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>This Ansible framework</strong>: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible">jeremycohoe/iosxe-atomic-netconf-ansible</a></li>
-<li><strong>Detailed walkthrough</strong>: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible/blob/main/atomic-netconf-ansible/docs/quickstart.md">docs/quickstart.md</a></li>
-<li><strong>Python-based ACR examples</strong>: <a href="https://github.com/jeremycohoe/cisco-ios-xe-atomic-config-replace">jeremycohoe/cisco-ios-xe-atomic-config-replace</a></li>
-</ul>
-<h3 id="alternative-approaches">Alternative Approaches<a class="headerlink" href="#alternative-approaches" title="Permanent link">&para;</a></h3>
-<p>If you prefer Python-based workflows, see the older Python ACR examples preserved in this repository:</p>
-<ul>
-<li><a href="../../atomic-operations/old-python-based-content/">atomic-operations/old-python-based-content/</a></li>
-</ul>
-<h3 id="pyats-resources">PyATS Resources<a class="headerlink" href="#pyats-resources" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="https://developer.cisco.com/docs/pyats/hands-on-learning/">PyATS Hands-On Learning</a></li>
-</ul>
-<hr />
-<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p>In this module, you've learned how to:</p>
-<p>✅ Use Ansible + NETCONF for atomic configuration replacement<br />
-✅ Stage configurations to candidate datastore for safe preview<br />
-✅ Generate diffs to see exactly what will change before committing<br />
-✅ Perform atomic commits with automatic rollback on failure<br />
-✅ Capture before/after snapshots for audit trails<br />
-✅ Work with both CLI-RPC and YANG/XML workflows  </p>
-<p>This Ansible-based approach provides a production-ready framework for managing IOS XE device configurations at scale with safety, auditability, and repeatability.</p>
-<hr />
-<h2 id="lab-transition">Lab Transition<a class="headerlink" href="#lab-transition" title="Permanent link">&para;</a></h2>
-<p>Before moving to the next Day 1 module:</p>
-<ol>
-<li>Return to your lab VM shell if you are still on switch CLI.</li>
-<li>Keep your Ansible working directory note handy for later reuse.</li>
-<li>Confirm any long-running terminal output is stopped before opening the next workflow.</li>
-</ol>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<p>✅ Completed: Day 1 - Atomic Config Replace</p>
-<p><strong>Continue with Day 1:</strong></p>
-<p>➡️ <a href="../../day-2/">Day 2: Device Monitoring</a> - OpenTelemetry + Splunk</p>
-<p><strong>Or return to:</strong></p>
-<ul>
-<li><a href="../terraform-netconf/">Terraform + NETCONF</a></li>
-<li><a href="../pyats-testing/">PyATS Testing</a></li>
-<li><a href="../">Day 1 Overview</a></li>
-</ul>
+<p>Congrats! You've completed the Atomic Config Replace Workshop!</p>
 
 
 
@@ -2605,7 +2103,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../pyats-testing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: PyATS Testing">
+          <a href="../terraform-netconf/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Terraform + NETCONF">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2615,7 +2113,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                PyATS Testing
+                Terraform + NETCONF
               </div>
             </div>
           </a>

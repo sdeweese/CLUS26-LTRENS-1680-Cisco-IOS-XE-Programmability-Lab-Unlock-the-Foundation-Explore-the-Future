@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-the-cisco-live-26-ios-xe-programmability-lab" class="md-skip">
+        <a href="#welcome-to-the-cisco-live-26-cisco-ios-xe-programmability-lab" class="md-skip">
           Skip to content
         </a>
       
@@ -479,12 +479,12 @@
   <a href="#unlock-the-foundation-explore-the-future" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Unlock the Foundation, Explore the Future
+        Unlock the Foundation, Explore the Future!
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Unlock the Foundation, Explore the Future">
+    <nav class="md-nav" aria-label="Unlock the Foundation, Explore the Future!">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -531,6 +531,17 @@
     <span class="md-ellipsis">
       
         Lab Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pod-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pod Topology
       
     </span>
   </a>
@@ -1050,34 +1061,6 @@
   
   
     <li class="md-nav__item">
-      <a href="day-1/pyats-testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    PyATS Testing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="day-1/atomic-operations/" class="md-nav__link">
         
   
@@ -1535,8 +1518,8 @@
   
 
 
-<h1 id="welcome-to-the-cisco-live-26-ios-xe-programmability-lab">Welcome to the Cisco Live 26 IOS XE Programmability Lab<a class="headerlink" href="#welcome-to-the-cisco-live-26-ios-xe-programmability-lab" title="Permanent link">&para;</a></h1>
-<h2 id="unlock-the-foundation-explore-the-future">Unlock the Foundation, Explore the Future<a class="headerlink" href="#unlock-the-foundation-explore-the-future" title="Permanent link">&para;</a></h2>
+<h1 id="welcome-to-the-cisco-live-26-cisco-ios-xe-programmability-lab">Welcome to the Cisco Live 26 Cisco IOS XE Programmability Lab<a class="headerlink" href="#welcome-to-the-cisco-live-26-cisco-ios-xe-programmability-lab" title="Permanent link">&para;</a></h1>
+<h2 id="unlock-the-foundation-explore-the-future">Unlock the Foundation, Explore the Future!<a class="headerlink" href="#unlock-the-foundation-explore-the-future" title="Permanent link">&para;</a></h2>
 <h3 id="cisco-ios-xe-version-261">Cisco IOS XE Version 26.1<a class="headerlink" href="#cisco-ios-xe-version-261" title="Permanent link">&para;</a></h3>
 <p>This lab guide serves as the comprehensive resource for the Cisco Live US (Las Vegas) <strong>Programmability and Automation Lab with Catalyst IOS XE Platforms</strong> - Session <strong>LTRENS-1680</strong>.</p>
 <hr />
@@ -1549,6 +1532,49 @@
 <h3 id="lab-access">Lab Access<a class="headerlink" href="#lab-access" title="Permanent link">&para;</a></h3>
 <p>To access the lab, you will need to SSH to your assigned VM host. From the VM, you will have access to the switch and all required software dependencies.</p>
 <p><strong>See lab environment access information provided by instructors.</strong></p>
+<h3 id="pod-topology">Pod Topology<a class="headerlink" href="#pod-topology" title="Permanent link">&para;</a></h3>
+<p>All three lab switches share the <code>10.1.1.0/24</code> management network with your Ubuntu VM:</p>
+<pre class="mermaid"><code>flowchart LR
+  VM["Ubuntu VM&lt;br/&gt;10.1.1.3&lt;br/&gt;(automation host)"]
+  SW1["Catalyst 9350&lt;br/&gt;10.1.1.15"]
+  SW2["Catalyst 9300&lt;br/&gt;10.1.1.55"]
+  SW3["Catalyst 9300X&lt;br/&gt;10.1.1.5"]
+  NET(("10.1.1.0/24&lt;br/&gt;management network"))
+  VM --- NET
+  SW1 --- NET
+  SW2 --- NET
+  SW3 --- NET</code></pre>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>IP</th>
+<th>Role in the lab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ubuntu VM</td>
+<td><code>10.1.1.3</code></td>
+<td>SSH jump host, automation tooling, OTel collector, Splunk</td>
+</tr>
+<tr>
+<td>Catalyst 9350</td>
+<td><code>10.1.1.15</code></td>
+<td>Primary device for most Day 0–2 modules (telnet target)</td>
+</tr>
+<tr>
+<td>Catalyst 9300</td>
+<td><code>10.1.1.55</code></td>
+<td>Terraform / Ansible target</td>
+</tr>
+<tr>
+<td>Catalyst 9300X</td>
+<td><code>10.1.1.5</code></td>
+<td>DEVWKS-2810 atomic-config / ACR target</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="lab-environment-access">Lab Environment &amp; Access<a class="headerlink" href="#lab-environment-access" title="Permanent link">&para;</a></h2>
 <h3 id="accessing-your-lab-pod">Accessing Your Lab Pod<a class="headerlink" href="#accessing-your-lab-pod" title="Permanent link">&para;</a></h3>
@@ -1605,7 +1631,6 @@
 <h3 id="day-1-device-configuration"><a href="day-1/">Day 1 - Device Configuration</a><a class="headerlink" href="#day-1-device-configuration" title="Permanent link">&para;</a></h3>
 <p><strong>Configuration Management &amp; Automation</strong>
 - Terraform + NETCONF (Infrastructure as Code)
-- PyATS (Automated Testing)
 - Atomic Config Replace (NETCONF)</p>
 <h3 id="day-2-device-monitoring"><a href="day-2/">Day 2 - Device Monitoring</a><a class="headerlink" href="#day-2-device-monitoring" title="Permanent link">&para;</a></h3>
 <p><strong>Observability &amp; Telemetry</strong>
@@ -1637,7 +1662,6 @@
 <p>Prefer to explore specific topics? Jump directly to:</p>
 <ul>
 <li><strong>Configuration Management</strong>: <a href="day-1/terraform-netconf/">Terraform + NETCONF</a></li>
-<li><strong>Testing</strong>: <a href="day-1/pyats-testing/">PyATS</a></li>
 <li><strong>Atomic Config Replace</strong>: <a href="day-1/atomic-operations/">ACR</a></li>
 <li><strong>Monitoring</strong>: <a href="day-2/opentelemetry-splunk/">OpenTelemetry + Splunk</a></li>
 <li><strong>Edge Computing</strong>: <a href="day-n/app-hosting/">Application Hosting</a></li>

@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Toggle NETCONF candidate datastore and atomic config on IOS XE via pyATS.
+"""Ensure NETCONF candidate datastore and atomic config are enabled on IOS XE via pyATS.
 
-Behavior:
-- If all required lines are missing or partially missing, the script applies missing lines.
-- If all required lines are already present, the script unconfigures all feature lines.
+Default behavior (idempotent APPLY):
+- If any required lines are missing, apply the missing ones.
+- If all required lines are already present, make no changes.
+
+Destructive opt-in:
+- Pass --remove to unconfigure all feature lines. Use with care: this disables
+  NETCONF and will break Terraform, Ansible ACR, gNMI, and other tools that rely
+  on it.
 """
 
 import argparse
@@ -27,7 +32,7 @@ REMOVE_LINES = [
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Configure NETCONF candidate and atomic config features using pyATS"
+        description="Ensure NETCONF candidate and atomic config features are enabled (idempotent APPLY by default)"
     )
     parser.add_argument(
         "--testbed",
@@ -43,6 +48,11 @@ def parse_args() -> argparse.Namespace:
         "--write-memory",
         action="store_true",
         help="Save running-config to startup-config after applying changes",
+    )
+    parser.add_argument(
+        "--remove",
+        action="store_true",
+        help="Destructive: unconfigure all feature lines (disables NETCONF; breaks Terraform/Ansible/gNMI)",
     )
     return parser.parse_args()
 
@@ -73,16 +83,26 @@ def main() -> int:
 
         all_present = all(line_state.values())
 
-        if all_present:
-            print("[OPERATION] UNCONFIGURE: all required lines are present.")
-            result = device.configure(REMOVE_LINES)
+        if args.remove:
+            if not all_present:
+                print("[OPERATION] SKIP: --remove requested but not all lines are present; nothing to remove.")
+                result = ""
+            else:
+                print("[OPERATION] UNCONFIGURE (--remove): removing all feature lines.")
+                print("[WARNING] This disables NETCONF and will break Terraform/Ansible/gNMI workflows.")
+                result = device.configure(REMOVE_LINES)
+        elif all_present:
+            print("[OPERATION] NOOP: all required lines already present. No changes made.")
+            print("           (Pass --remove to explicitly unconfigure.)")
+            result = ""
         else:
             missing_lines = [line for line, present in line_state.items() if not present]
             print("[OPERATION] APPLY: one or more required lines are missing.")
             print(f"[OPERATION] Applying {len(missing_lines)} line(s).")
             result = device.configure(missing_lines)
 
-        print(result)
+        if result:
+            print(result)
 
         if args.write_memory:
             print("Saving configuration (write memory)...")
