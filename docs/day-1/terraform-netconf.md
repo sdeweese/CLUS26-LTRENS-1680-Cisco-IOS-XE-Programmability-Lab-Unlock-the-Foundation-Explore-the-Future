@@ -550,7 +550,7 @@ show vlan id 999
 
 **Step 4: Modify a VLAN (demonstrating updates)**
 
-Open `vlans.tf` in your preferred editor and change the Management VLAN name from `MANAGEMENT` to `MGMT_UPDATED`:
+Open `vlans.tf` in your file editor and change the Management VLAN name from `MANAGEMENT` to `MGMT_UPDATED`:
 
 ```hcl
 resource "iosxe_vlan" "mgmt_vlan" {
@@ -563,6 +563,7 @@ resource "iosxe_vlan" "mgmt_vlan" {
 Save the file, then apply:
 
 ```bash
+terraform plan
 terraform apply --auto-approve
 ```
 
