@@ -1560,7 +1560,7 @@
 <tr>
 <td>Catalyst 9350</td>
 <td><code>10.1.1.15</code></td>
-<td>Primary device for most Day 0–2 modules (telnet target)</td>
+<td>Primary device for most Day 0–2 modules (ssh to  target)</td>
 </tr>
 <tr>
 <td>Catalyst 9300</td>
@@ -1587,7 +1587,7 @@
 <li>
 <p><strong>Terminal 1</strong>: VM configuration and automation</p>
 </li>
-<li><strong>Terminal 2</strong>: Direct switch access via telnet</li>
+<li><strong>Terminal 2</strong>: Direct switch access via ssh</li>
 </ol>
 <!-- -L 18000:localhost:8000  -->
 
@@ -1607,12 +1607,12 @@
 </span></code></pre></div>
    Use the same credentials.</li>
 </ol>
-<p>Then telnet to the Catalyst 9350:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>telnet<span class="w"> </span><span class="m">10</span>.1.1.15
+<p>Then SSH to the Catalyst 9350:
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SSH<span class="w"> </span>admin@10.1.1.15
 </span></code></pre></div>
-   Credentials: <code>admin</code> / <code>Cisco123</code></p>
+   Password: <code>Cisco123</code></p>
 <ol>
-<li><strong>You're ready!</strong> Once connected via SSH and telnet, you can proceed with the lab modules.</li>
+<li><strong>You're ready!</strong> Once connected via SSH, you can proceed with the lab modules.</li>
 </ol>
 <h2 id="learning-path">Learning Path<a class="headerlink" href="#learning-path" title="Permanent link">&para;</a></h2>
 <p>This lab follows a structured "Day 0 to Day N" approach, mirroring real-world network device lifecycle management:</p>

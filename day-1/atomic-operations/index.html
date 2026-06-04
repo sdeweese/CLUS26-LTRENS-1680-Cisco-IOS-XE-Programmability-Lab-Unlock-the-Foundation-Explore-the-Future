@@ -820,6 +820,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#why-acr-context-from-tecops-2314" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why ACR? (Context from TECOPS-2314)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1591,6 +1602,40 @@
 </ul>
 <p>Both workflows use the candidate datastore and atomic commit, with no SSH/CLI pushes involved. This lab focuses on the first (CLI RPC). For full details, see the GitHub Repository for this project: <a href="https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible">https://github.com/jeremycohoe/iosxe-atomic-netconf-ansible</a></p>
 <p>This toolkit (<code>atomic-netconf-ansible</code>) replaces the entire device configuration atomically. It either fully succeeds or keeps the current config on the device. No partial config states. No risk of half-applied changes.</p>
+<h2 id="why-acr-context-from-tecops-2314">Why ACR? (Context from TECOPS-2314)<a class="headerlink" href="#why-acr-context-from-tecops-2314" title="Permanent link">&para;</a></h2>
+<p>The Cisco Live TECOPS-2314 deck frames Atomic Config Replace as the answer to
+three long-standing pain points of CLI-driven change management:</p>
+<table>
+<thead>
+<tr>
+<th>Pillar</th>
+<th>What CLI-only gives you</th>
+<th>What ACR adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Creating configs that just work</td>
+<td>Line-by-line execution, partial state on failure</td>
+<td>Declarative config + <strong>two-phase commit</strong> (validate before apply)</td>
+</tr>
+<tr>
+<td>Error handling &amp; rollback</td>
+<td>No native rollback — you script it yourself</td>
+<td><strong>Atomic transaction</strong>: all changes succeed or none do, plus instant and post-deployment rollback options</td>
+</tr>
+<tr>
+<td>Scalability &amp; operational efficiency</td>
+<td>Vendor- and version-specific syntax</td>
+<td>Programmable interfaces (NETCONF/RESTCONF) on standard YANG models, ready for IaC</td>
+</tr>
+</tbody>
+</table>
+<p>The ACR transaction itself is the <strong>Validate → Stage → Apply → (auto-)Rollback</strong>
+loop diagrammed in the deck: IOSd validates the candidate in a staging
+environment, only writes to running config on commit, and reverts cleanly if
+anything in the transaction fails. That is exactly what the playbooks in this
+lab drive over NETCONF — you're just operating the deck slide.</p>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
@@ -2062,6 +2107,13 @@ confirm the day-1 state is live.</p>
 <ul>
 <li><a href="https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/26x/26x-programmability-cg.html">Cisco IOS XE 26.1 Programmability Guide</a></li>
 <li>YANG model: <code>Cisco-IOS-XE-cli-rpc</code> (revision 2026-02-01, v1.3.0)</li>
+<li>Supporting YANG models surfaced in TECOPS-2314 (used by these workflows under the hood):<ul>
+<li><code>Cisco-IOS-XE-cli-preview-rpc</code> — <code>candidate-preview</code> RPC for the <strong>config diff/preview</strong> shown in playbook <code>07_diff_preview_cli.yml</code>.</li>
+<li><code>tail-f.com/ns/netconf/rollback</code> — <code>&lt;rollback-comment&gt;</code> on <code>edit-config</code> so every atomic change is auditable.</li>
+<li><code>Cisco-IOS-XE-rescue-config-rpc</code> — <code>&lt;rescue-config-save/&gt;</code> to mark a known-good config plus rollback-by-ID for post-deployment recovery.</li>
+</ul>
+</li>
+<li>TECOPS-2314 Cisco Live deck — <em>Programmability and Automation with Cisco IOS XE</em> (ACR rationale, Validate/Stage/Apply/Rollback architecture, comment + rescue + diff RPCs): <a href="../../resources/slides/TECOPS-2314-Programmability-and-Automation-with-Cisco-IOS-XE.pdf">TECOPS-2314 slides (PDF)</a></li>
 <li>Detailed walkthrough: <code>docs/quickstart.md</code> (in the lab repo)</li>
 <li>Jinja pod generation workflow: <code>docs/jinja-pod-workflow.md</code> (in the lab repo)</li>
 </ul>
