@@ -13,6 +13,23 @@ Both workflows use the candidate datastore and atomic commit, with no SSH/CLI pu
 
 This toolkit (`atomic-netconf-ansible`) replaces the entire device configuration atomically. It either fully succeeds or keeps the current config on the device. No partial config states. No risk of half-applied changes.
 
+## Why ACR? (Context from TECOPS-2314)
+
+The Cisco Live TECOPS-2314 deck frames Atomic Config Replace as the answer to
+three long-standing pain points of CLI-driven change management:
+
+| Pillar | What CLI-only gives you | What ACR adds |
+|---|---|---|
+| Creating configs that just work | Line-by-line execution, partial state on failure | Declarative config + **two-phase commit** (validate before apply) |
+| Error handling & rollback | No native rollback — you script it yourself | **Atomic transaction**: all changes succeed or none do, plus instant and post-deployment rollback options |
+| Scalability & operational efficiency | Vendor- and version-specific syntax | Programmable interfaces (NETCONF/RESTCONF) on standard YANG models, ready for IaC |
+
+The ACR transaction itself is the **Validate → Stage → Apply → (auto-)Rollback**
+loop diagrammed in the deck: IOSd validates the candidate in a staging
+environment, only writes to running config on commit, and reverts cleanly if
+anything in the transaction fails. That is exactly what the playbooks in this
+lab drive over NETCONF — you're just operating the deck slide.
+
 ## How It Works
 
 ### Architecture
@@ -446,6 +463,11 @@ Work with familiar IOS CLI text. The payload is delivered over NETCONF using the
 
 - [Cisco IOS XE 26.1 Programmability Guide](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/prog/configuration/26x/26x-programmability-cg.html)
 - YANG model: `Cisco-IOS-XE-cli-rpc` (revision 2026-02-01, v1.3.0)
+- Supporting YANG models surfaced in TECOPS-2314 (used by these workflows under the hood):
+    - `Cisco-IOS-XE-cli-preview-rpc` — `candidate-preview` RPC for the **config diff/preview** shown in playbook `07_diff_preview_cli.yml`.
+    - `tail-f.com/ns/netconf/rollback` — `<rollback-comment>` on `edit-config` so every atomic change is auditable.
+    - `Cisco-IOS-XE-rescue-config-rpc` — `<rescue-config-save/>` to mark a known-good config plus rollback-by-ID for post-deployment recovery.
+- TECOPS-2314 Cisco Live deck — *Programmability and Automation with Cisco IOS XE* (ACR rationale, Validate/Stage/Apply/Rollback architecture, comment + rescue + diff RPCs): [TECOPS-2314 slides (PDF)](../resources/slides/TECOPS-2314-Programmability-and-Automation-with-Cisco-IOS-XE.pdf)
 - Detailed walkthrough: `docs/quickstart.md` (in the lab repo)
 - Jinja pod generation workflow: `docs/jinja-pod-workflow.md` (in the lab repo)
 

@@ -44,7 +44,7 @@ flowchart LR
 | Device | IP | Role in the lab |
 |---|---|---|
 | Ubuntu VM | `10.1.1.3` | SSH jump host, automation tooling, OTel collector, Splunk |
-| Catalyst 9350 | `10.1.1.15` | Primary device for most Day 0–2 modules (telnet target) |
+| Catalyst 9350 | `10.1.1.15` | Primary device for most Day 0–2 modules (ssh to  target) |
 | Catalyst 9300 | `10.1.1.55` | Terraform / Ansible target |
 | Catalyst 9300X | `10.1.1.5` | DEVWKS-2810 atomic-config / ACR target |
 
@@ -59,7 +59,7 @@ flowchart LR
 2. **Open two terminal windows** for SSH connections:
 
    - **Terminal 1**: VM configuration and automation
-   - **Terminal 2**: Direct switch access via telnet
+   - **Terminal 2**: Direct switch access via ssh
 
    <!-- -L 18000:localhost:8000  -->
 
@@ -81,13 +81,13 @@ flowchart LR
    ```
    Use the same credentials.
    
-   Then telnet to the Catalyst 9350:
+   Then SSH to the Catalyst 9350:
    ```bash
-   telnet 10.1.1.15
+   SSH admin@10.1.1.15
    ```
-   Credentials: `admin` / `Cisco123`
+   Password: `Cisco123`
 
-5. **You're ready!** Once connected via SSH and telnet, you can proceed with the lab modules.
+5. **You're ready!** Once connected via SSH, you can proceed with the lab modules.
 
 ## Learning Path
 

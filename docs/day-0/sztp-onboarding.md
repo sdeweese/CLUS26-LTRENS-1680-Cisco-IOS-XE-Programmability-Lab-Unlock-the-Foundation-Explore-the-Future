@@ -70,7 +70,7 @@ The repository includes comprehensive scripts for voucher generation:
 
 ### Scripts Run in This Lab (Day 0)
 
-Use this quick list during lab execution:
+NOTE: The following has been done for you in this lab envrionment. If you were doing this on your own, thsese are steps you can follow to create vouchers for multiple devices at scale:
 
 1. `./run_bulk_vouchers.sh --serial-source pod-devices-table.md`
     - Generates ownership vouchers for listed serials.
@@ -260,7 +260,7 @@ Here the vouchers, SUDI certificates, and Pinned-domain-cert files are stored. T
 
 9. Reset and reload the switch (`10.1.1.15`) so SZTP re-triggers
 
-1 liner: pnpa service reset no-prompt
+1 liner: `pnpa service reset no-prompt`
 
 Detailed method:
 
